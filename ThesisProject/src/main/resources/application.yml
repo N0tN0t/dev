@@ -1,0 +1,22 @@
+spring.datasource:
+  url: jdbc:postgresql://localhost:8080/tasklib
+  username: postgres
+  password: testtest
+  driver-class-name: org.postgresql.Driver
+
+spring:
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    hibernate.ddl-auto: update
+server:
+    port: 8090
+
+blog:
+  title: DevPub
+  subtitle: Рассказы разработчиков
+  phone: +7 903 666-44-55
+  email: mail@mail.ru
+  copyright: Дмитрий Сергеев
+  copyrightFrom: 2005
+
