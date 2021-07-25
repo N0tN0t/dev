@@ -20,3 +20,8 @@ blog:
   copyright: Дмитрий Сергеев
   copyrightFrom: 2005
 
+flyway:
+  user: root
+  password: testtest
+  schemas: postegres
+

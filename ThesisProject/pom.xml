@@ -17,6 +17,18 @@
                     <target>8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>4.0.3</version>
+                <configuration>
+                    <user>root</user>
+                    <password>testtest</password>
+                    <schemas>
+                        <schema>postgres</schema>
+                    </schemas>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <parent>
@@ -30,6 +42,11 @@
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.196</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
