@@ -11,4 +11,3 @@ create table posts (
     view_count integer,
     primary key (id)
 );
-insert into posts (id,is_active,moderation_id,user_id,time,title,text,view_count) VALUES (1,1,"NEW",null,1,0,"Как создать проект","Смотрите во второй части ->",0)
