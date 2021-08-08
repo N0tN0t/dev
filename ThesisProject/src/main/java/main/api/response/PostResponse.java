@@ -1,13 +1,13 @@
 package main.api.response;
 
-import main.Entities.Posts;
-import main.Entities.Users;
+import main.entities.Posts;
+import main.entities.Users;
 
 import java.util.ArrayList;
 
 public class PostResponse {
     private int count;
-    private ArrayList posts;
+    private ArrayList posts = new ArrayList();
     private ArrayList users;
 
     public int getCount() {

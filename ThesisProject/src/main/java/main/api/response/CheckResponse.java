@@ -1,6 +1,6 @@
 package main.api.response;
 
-import main.Entities.Users;
+import main.entities.Users;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

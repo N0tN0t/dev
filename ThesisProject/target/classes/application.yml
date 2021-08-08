@@ -1,5 +1,5 @@
 spring.datasource:
-  url: jdbc:postgresql://localhost:8080/tasklib
+  url: jdbc:postgresql://localhost:8080/postgres
   username: postgres
   password: testtest
   driver-class-name: org.postgresql.Driver
@@ -9,6 +9,10 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
     hibernate.ddl-auto: update
+  flyway:
+    user: postgres
+    password: testtest
+    schemas: postgres
 server:
     port: 8090
 
@@ -19,9 +23,4 @@ blog:
   email: mail@mail.ru
   copyright: Дмитрий Сергеев
   copyrightFrom: 2005
-
-flyway:
-  user: root
-  password: testtest
-  schemas: postegres
 
