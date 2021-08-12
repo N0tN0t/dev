@@ -1,12 +1,12 @@
 drop table if exists users;
 create table users (
-    id integer not null auto_increment,
-    is_moderator boolean,
-    reg_time date,
-    name varchar(255),
-    email varchar(255),
-    password varchar(255),
-    code varchar(255),
-    photo varchar(255),
-    primary key (id)
+  id integer NOT NULL,
+  code varchar(255) NOT NULL,
+  email varchar(255) NOT NULL,
+  is_moderator boolean NOT NULL,
+  name varchar(255) NOT NULL,
+  password varchar(255) NOT NULL,
+  photo varchar(255) NOT NULL,
+  reg_time timestamp NOT NULL,
+  CONSTRAINT users_pkey PRIMARY KEY (id)
 );

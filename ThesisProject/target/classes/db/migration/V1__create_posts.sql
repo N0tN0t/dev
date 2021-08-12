@@ -1,13 +1,13 @@
 drop table if exists posts;
 create table posts (
-    id integer not null auto_increment,
-    is_active integer,
-    moderation_status ENUM("NEW","ACCEPTED","DECLINED") not null,
-    moderation_id integer,
-    user_id integer,
-    time date,
-    title varchar(255),
-    text varchar(255),
-    view_count integer,
-    primary key (id)
+   id int4 NOT NULL,
+   is_active boolean NOT NULL,
+   moderation_status varchar(255) NOT NULL,
+   moderation_id integer NOT NULL,
+   user_id int4 NOT NULL,
+   time timestamp NOT NULL,
+   title varchar(255) NOT NULL,
+   text text NOT NULL,
+   view_count int4 NOT NULL,
+   CONSTRAINT posts_pkey PRIMARY KEY (id)
 );
