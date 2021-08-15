@@ -13,6 +13,7 @@ spring:
     user: postgres
     password: testtest
     schemas: my_blog
+    locations: classpath:db/migration
 server:
     port: 8090
 
