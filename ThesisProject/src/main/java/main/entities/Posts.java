@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+import static java.time.Instant.now;
+
 @Entity
 public class Posts {
     @Id
@@ -24,7 +26,7 @@ public class Posts {
     @NotNull
     private int user_id;
     @NotNull
-    private Date time;
+    private Date time = Date.from(now());
     @NotNull
     private String title;
     @NotNull
