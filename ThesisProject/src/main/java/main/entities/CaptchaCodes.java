@@ -17,9 +17,26 @@ public class CaptchaCodes {
     @NotNull
     private Date time;
     @NotNull
-    private int code;
+    private String code;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getSecret_code() {
+        return secret_code;
+    }
+
+    public void setSecret_code(String secret_code) {
+        this.secret_code = secret_code;
+    }
+
     @NotNull
-    private int secret_code;
+    private String secret_code;
 
     public int getId() {
         return id;
@@ -35,21 +52,5 @@ public class CaptchaCodes {
 
     public void setTime(Date time) {
         this.time = time;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public int getSecret_code() {
-        return secret_code;
-    }
-
-    public void setSecret_code(int secret_code) {
-        this.secret_code = secret_code;
     }
 }

@@ -54,8 +54,8 @@ drop table if exists captcha_codes;
 create table captcha_codes (
   id SERIAL NOT NULL,
   time timestamp without time zone NOT NULL,
-  code TEXT NOT NULL,
-  secret_code TEXT NOT NULL
+  code int4 NOT NULL,
+  secret_code int4 NOT NULL
 );
 
 drop table if exists global_settings;
