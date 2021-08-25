@@ -1,11 +1,9 @@
 package main.entities;
 
 import com.sun.istack.NotNull;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -17,8 +15,11 @@ public class CaptchaCodes {
     @NotNull
     private Date time;
     @NotNull
+    @Column(name = "code", columnDefinition = "TINYTEXT")
     private String code;
-
+    @NotNull
+    @Column(name = "secret_code", columnDefinition = "TINYTEXT")
+    private String secret_code;
     public String getCode() {
         return code;
     }
@@ -35,8 +36,7 @@ public class CaptchaCodes {
         this.secret_code = secret_code;
     }
 
-    @NotNull
-    private String secret_code;
+
 
     public int getId() {
         return id;
