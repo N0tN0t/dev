@@ -1,5 +1,8 @@
 package main.entities;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Id;
 
 import javax.persistence.Entity;
@@ -11,87 +14,30 @@ import java.util.Date;
 @Entity
 public class Users {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
+    @Getter @Setter
     private int id;
     @NotNull
-    private boolean is_moderator;
+    @Getter @Setter
+    private int is_moderator;
     @NotNull
+    @Getter @Setter
     private Date reg_time;
     @NotNull
+    @Getter @Setter
     private String name;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public boolean isIs_moderator() {
-        return is_moderator;
-    }
-
-    public void setIs_moderator(boolean is_moderator) {
-        this.is_moderator = is_moderator;
-    }
-
-    public Date getReg_time() {
-        return reg_time;
-    }
-
-    public void setReg_time(Date reg_time) {
-        this.reg_time = reg_time;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
     @NotNull
+    @Getter @Setter
     private String email;
     @NotNull
+    @Getter @Setter
     private String password;
     @NotNull
+    @Getter @Setter
     private String code;
     @NotNull
+    @Getter @Setter
     private String photo;
 
 }

@@ -1,6 +1,9 @@
 package main.entities;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,45 +13,18 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class GlobalSettings {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
+    @Getter
+    @Setter
     private int id;
     @NotNull
-    private int code;
+    @Getter @Setter
+    private String code;
     @NotNull
+    @Getter @Setter
     private String name;
     @NotNull
+    @Getter @Setter
     private String value;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
 }

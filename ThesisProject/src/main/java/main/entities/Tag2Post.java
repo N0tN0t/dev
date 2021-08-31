@@ -1,5 +1,8 @@
 package main.entities;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Id;
 
 import javax.persistence.Entity;
@@ -9,36 +12,16 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 public class Tag2Post {
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getPost_id() {
-        return post_id;
-    }
-
-    public void setPost_id(int post_id) {
-        this.post_id = post_id;
-    }
-
-    public int getTag_id() {
-        return tag_id;
-    }
-
-    public void setTag_id(int tag_id) {
-        this.tag_id = tag_id;
-    }
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
+    @Getter
+    @Setter
     private int id;
     @NotNull
+    @Getter @Setter
     private int post_id;
     @NotNull
+    @Getter @Setter
     private int tag_id;
 }

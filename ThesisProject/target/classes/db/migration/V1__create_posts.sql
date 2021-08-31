@@ -2,7 +2,7 @@ drop table if exists posts;
 create table posts (
    id SERIAL NOT NULL,
    is_active integer NOT NULL,
-   moderation_status varchar(255),
+   moderation_status int4,
    moderation_id integer,
    user_id int4 NOT NULL,
    time timestamp without time zone NOT NULL,
@@ -17,7 +17,7 @@ create table users (
   id SERIAL NOT NULL,
   code varchar(255) NOT NULL,
   email varchar(255) NOT NULL,
-  is_moderator boolean NOT NULL,
+  is_moderator integer NOT NULL,
   name varchar(255) NOT NULL,
   password varchar(255) NOT NULL,
   photo varchar(255) NOT NULL,
@@ -42,6 +42,13 @@ create table tags (
 
 drop table if exists tag2post;
 create table tag2post (
+  id SERIAL NOT NULL,
+  post_id integer NOT NULL,
+  tag_id integer NOT NULL
+);
+
+drop table if exists post_comments;
+create table post_comments (
   id SERIAL NOT NULL,
   parent_id integer,
   post_id integer NOT NULL,
