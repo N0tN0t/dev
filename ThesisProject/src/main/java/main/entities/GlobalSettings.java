@@ -11,20 +11,16 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Getter @Setter
 public class GlobalSettings {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    @Getter
-    @Setter
-    private int id;
+    private Integer id;
     @NotNull
-    @Getter @Setter
     private String code;
     @NotNull
-    @Getter @Setter
     private String name;
     @NotNull
-    @Getter @Setter
     private String value;
 }

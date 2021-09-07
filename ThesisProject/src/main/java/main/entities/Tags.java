@@ -11,14 +11,12 @@ import javax.persistence.GenerationType;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Getter @Setter
 public class Tags {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    @Getter
-    @Setter
-    private int id;
+    private Integer id;
     @NotNull
-    @Getter @Setter
     private String name;
 }

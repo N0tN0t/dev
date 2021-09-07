@@ -12,25 +12,19 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
+@Getter @Setter
 public class PostComments {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    @Getter
-    @Setter
-    private int id;
-    @Getter @Setter
-    private int parent_id;
+    private Integer id;
+    private Integer parent_id;
     @NotNull
-    @Getter @Setter
-    private int post_id;
+    private Integer post_id;
     @NotNull
-    @Getter @Setter
-    private int user_id;
+    private Integer user_id;
     @NotNull
-    @Getter @Setter
     private Date time;
     @NotNull
-    @Getter @Setter
     private String text;
 }

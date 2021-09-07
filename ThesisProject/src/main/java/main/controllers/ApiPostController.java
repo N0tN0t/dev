@@ -4,19 +4,16 @@ import main.entities.Posts;
 import main.api.response.PostResponse;
 import main.respositories.PostCommentsRepository;
 import main.respositories.PostVotesRepository;
-import main.respositories.TaskRepository;
+import main.respositories.PostRepository;
 import main.respositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 public class ApiPostController {
     @Autowired
-    private TaskRepository taskRepository;
+    private PostRepository postRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -29,10 +26,10 @@ public class ApiPostController {
         PostResponse postResponse = new PostResponse();
         if (mode.equals("recent")) {
             System.out.println("recent");
-            if (taskRepository.count() != 0) {
-                postResponse.setCount((int) taskRepository.count());
-                for (int i = 0; i < taskRepository.count(); i++) {
-                    Posts post = taskRepository.findById(i).get();
+            if (postRepository.count() != 0) {
+                postResponse.setCount((int) postRepository.count());
+                for (int i = 0; i < postRepository.count(); i++) {
+                    Posts post = postRepository.findById(i).get();
                     int likes = 0;
                     int dislikes = 0;
                     for (int b = 0; b < postVotesRepository.count(); b++) {
@@ -42,7 +39,7 @@ public class ApiPostController {
                             dislikes++;
                         }
                     }
-                    postResponse.addPosts(taskRepository.findById(i).get(), 1592338706, userRepository.findById(post.getUser_id()).get(), likes, dislikes, (int) postCommentsRepository.count());
+                    postResponse.addPosts(postRepository.findById(i).get(), 1592338706, userRepository.findById(post.getUser_id()).get(), likes, dislikes, (int) postCommentsRepository.count());
                 }
             } else {
                 postResponse.setCount(0);
@@ -51,10 +48,10 @@ public class ApiPostController {
         }
         else if (mode.equals("popular")) {
             System.out.println("popular");
-            if (taskRepository.count() != 0) {
-                postResponse.setCount((int) taskRepository.count());
-                for (int i = 0; i < taskRepository.count(); i++) {
-                    Posts post = taskRepository.findById(i).get();
+            if (postRepository.count() != 0) {
+                postResponse.setCount((int) postRepository.count());
+                for (int i = 0; i < postRepository.count(); i++) {
+                    Posts post = postRepository.findById(i).get();
                     int likes = 0;
                     int dislikes = 0;
                     for (int b = 0; b < postVotesRepository.count(); b++) {
@@ -64,7 +61,7 @@ public class ApiPostController {
                             dislikes++;
                         }
                     }
-                    postResponse.addPosts(taskRepository.findById(i).get(), 1592338706, userRepository.findById(post.getUser_id()).get(), likes, dislikes, (int) postCommentsRepository.count());
+                    postResponse.addPosts(postRepository.findById(i).get(), 1592338706, userRepository.findById(post.getUser_id()).get(), likes, dislikes, (int) postCommentsRepository.count());
                 }
             } else {
                 postResponse.setCount(0);
@@ -72,10 +69,10 @@ public class ApiPostController {
         }
         else if (mode.equals("best")) {
             System.out.println("best");
-            if (taskRepository.count() != 0) {
-                postResponse.setCount((int) taskRepository.count());
-                for (int i = 0; i < taskRepository.count(); i++) {
-                    Posts post = taskRepository.findById(i).get();
+            if (postRepository.count() != 0) {
+                postResponse.setCount((int) postRepository.count());
+                for (int i = 0; i < postRepository.count(); i++) {
+                    Posts post = postRepository.findById(i).get();
                     int likes = 0;
                     int dislikes = 0;
                     for (int b = 0; b < postVotesRepository.count(); b++) {
@@ -85,7 +82,7 @@ public class ApiPostController {
                             dislikes++;
                         }
                     }
-                    postResponse.addPosts(taskRepository.findById(i).get(), 1592338706, userRepository.findById(post.getUser_id()).get(), likes, dislikes, (int) postCommentsRepository.count());
+                    postResponse.addPosts(postRepository.findById(i).get(), 1592338706, userRepository.findById(post.getUser_id()).get(), likes, dislikes, (int) postCommentsRepository.count());
                 }
             } else {
                 postResponse.setCount(0);
@@ -93,10 +90,10 @@ public class ApiPostController {
         }
         else if (mode.equals("early")) {
             System.out.println("early");
-            if (taskRepository.count() != 0) {
-                postResponse.setCount((int) taskRepository.count());
-                for (int i = 0; i < taskRepository.count(); i++) {
-                    Posts post = taskRepository.findById(i).get();
+            if (postRepository.count() != 0) {
+                postResponse.setCount((int) postRepository.count());
+                for (int i = 0; i < postRepository.count(); i++) {
+                    Posts post = postRepository.findById(i).get();
                     int likes = 0;
                     int dislikes = 0;
                     for (int b = 0; b < postVotesRepository.count(); b++) {
@@ -106,7 +103,7 @@ public class ApiPostController {
                             dislikes++;
                         }
                     }
-                    postResponse.addPosts(taskRepository.findById(i).get(), 1592338706, userRepository.findById(post.getUser_id()).get(), likes, dislikes, (int) postCommentsRepository.count());
+                    postResponse.addPosts(postRepository.findById(i).get(), 1592338706, userRepository.findById(post.getUser_id()).get(), likes, dislikes, (int) postCommentsRepository.count());
                 }
             } else {
                 postResponse.setCount(0);

@@ -9,22 +9,18 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@Getter @Setter
 public class CaptchaCodes {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    @Getter
-    @Setter
-    private int id;
+    private Integer id;
     @NotNull
-    @Getter @Setter
     private Date time;
     @NotNull
-    @Getter @Setter
     @Column(name = "code", columnDefinition = "TINYTEXT")
     private String code;
     @NotNull
-    @Getter @Setter
     @Column(name = "secret_code", columnDefinition = "TINYTEXT")
     private String secret_code;
 }

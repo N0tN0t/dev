@@ -12,22 +12,17 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
+@Getter @Setter
 public class PostVotes {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    @Getter
-    @Setter
-    private int id;
+    private Integer id;
     @NotNull
-    @Getter @Setter
-    private int user_id;
+    private Integer user_id;
     @NotNull
-    @Getter @Setter
-    private int post_id;
+    private Integer post_id;
     @NotNull
-    @Getter @Setter
     private Date time;
-    @Getter @Setter
-    private int value;
+    private Integer value;
 }

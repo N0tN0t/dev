@@ -15,34 +15,25 @@ import java.util.Date;
 import static java.time.Instant.now;
 
 @Entity
+@Getter @Setter
 public class Posts {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    @Getter @Setter
-    private int id;
+    private Integer id;
     @NotNull
-    @Getter @Setter
-    private int is_active;
+    private Integer is_active;
     @NotNull
-    @Getter @Setter
     private ModerationStatus moderation_status;
-    @Getter @Setter
-    private int moderation_id;
+    private Integer moderation_id;
     @NotNull
-    @Getter @Setter
-    private int user_id;
+    private Integer user_id;
     @NotNull
-    @Getter @Setter
     private Date time = Date.from(now());
     @NotNull
-    @Getter @Setter
     private String title;
     @NotNull
-    @Getter @Setter
     private String text;
     @NotNull
-    @Getter
-    @Setter
-    private int view_count;
+    private Integer view_count;
 }

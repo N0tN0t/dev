@@ -12,32 +12,25 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
+@Getter @Setter
 public class Users {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    @Getter @Setter
-    private int id;
+    private Integer id;
     @NotNull
-    @Getter @Setter
-    private int is_moderator;
+    private Integer is_moderator;
     @NotNull
-    @Getter @Setter
     private Date reg_time;
     @NotNull
-    @Getter @Setter
     private String name;
     @NotNull
-    @Getter @Setter
     private String email;
     @NotNull
-    @Getter @Setter
     private String password;
     @NotNull
-    @Getter @Setter
     private String code;
     @NotNull
-    @Getter @Setter
     private String photo;
 
 }
