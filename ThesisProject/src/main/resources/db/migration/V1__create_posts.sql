@@ -72,3 +72,6 @@ create table global_settings (
   name varchar(255) NOT NULL,
   value varchar(255) NOT NULL
 );
+
+drop sequence if exists hibernate_sequence;
+create sequence hibernate_sequence start 1 increment 1;

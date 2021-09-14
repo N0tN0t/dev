@@ -1,7 +1,12 @@
-spring.datasource:
-  url: jdbc:postgresql://localhost:3306/my_blog
-  username: postgres
+db:
+  user: postgres
   password: testtest
+  schema: my_blog
+
+spring.datasource:
+  url: jdbc:postgresql://localhost:3306/${db.schema}
+  username: ${db.user}
+  password: ${db.password}
   driver-class-name: org.postgresql.Driver
 
 spring:
@@ -10,9 +15,9 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
     hibernate.ddl-auto: validate
   flyway:
-    user: postgres
-    password: testtest
-    schemas: my_blog
+    user: ${db.user}
+    password: ${db.password}
+    schemas: ${db.schema}
     locations: classpath:db/migration
 server:
     port: 8090
