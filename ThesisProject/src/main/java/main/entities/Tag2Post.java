@@ -16,9 +16,9 @@ public class Tag2Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    private Integer id;
+    private int id;
     @NotNull
-    private Integer post_id;
+    private int post_id;
     @NotNull
-    private Integer tag_id;
+    private int tag_id;
 }

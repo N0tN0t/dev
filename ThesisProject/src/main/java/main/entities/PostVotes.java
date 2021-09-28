@@ -17,12 +17,12 @@ public class PostVotes {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    private Integer id;
+    private int id;
     @NotNull
-    private Integer user_id;
+    private int user_id;
     @NotNull
-    private Integer post_id;
+    private int post_id;
     @NotNull
     private Date time;
-    private Integer value;
+    private int value;
 }

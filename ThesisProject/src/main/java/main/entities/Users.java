@@ -17,9 +17,9 @@ public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    private Integer id;
+    private int id;
     @NotNull
-    private Integer is_moderator;
+    private int is_moderator;
     @NotNull
     private Date reg_time;
     @NotNull

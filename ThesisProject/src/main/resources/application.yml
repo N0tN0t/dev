@@ -19,6 +19,7 @@ spring:
     password: ${db.password}
     schemas: ${db.schema}
     locations: classpath:db/migration
+    baseline-on-migrate: true
 server:
     port: 8090
 

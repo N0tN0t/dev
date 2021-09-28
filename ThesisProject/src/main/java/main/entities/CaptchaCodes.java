@@ -14,7 +14,7 @@ public class CaptchaCodes {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    private Integer id;
+    private int id;
     @NotNull
     private Date time;
     @NotNull
