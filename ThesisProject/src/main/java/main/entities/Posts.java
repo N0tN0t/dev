@@ -20,14 +20,14 @@ public class Posts {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    private int id;
+    private Integer id;
     @NotNull
-    private int is_active;
+    private Integer is_active;
     @NotNull
     private ModerationStatus moderation_status;
-    private int moderation_id;
+    private Integer moderation_id;
     @NotNull
-    private int user_id;
+    private Integer user_id;
     @NotNull
     private Date time = Date.from(now());
     @NotNull
@@ -35,5 +35,5 @@ public class Posts {
     @NotNull
     private String text;
     @NotNull
-    private int view_count;
+    private Integer view_count;
 }

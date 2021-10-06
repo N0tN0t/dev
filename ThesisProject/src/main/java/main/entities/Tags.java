@@ -16,7 +16,7 @@ public class Tags {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    private int id;
+    private Integer id;
     @NotNull
     private String name;
 }

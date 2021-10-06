@@ -17,12 +17,12 @@ public class PostComments {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    private int id;
-    private int parent_id;
+    private Integer id;
+    private Integer parent_id;
     @NotNull
-    private int post_id;
+    private Integer post_id;
     @NotNull
-    private int user_id;
+    private Integer user_id;
     @NotNull
     private Date time;
     @NotNull

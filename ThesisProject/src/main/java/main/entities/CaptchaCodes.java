@@ -14,13 +14,11 @@ public class CaptchaCodes {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    private int id;
+    private Integer id;
     @NotNull
     private Date time;
     @NotNull
-    @Column(name = "code", columnDefinition = "TINYTEXT")
     private String code;
     @NotNull
-    @Column(name = "secret_code", columnDefinition = "TINYTEXT")
     private String secret_code;
 }

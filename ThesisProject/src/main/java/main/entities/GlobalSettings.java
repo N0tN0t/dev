@@ -16,7 +16,7 @@ public class GlobalSettings {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
-    private int id;
+    private Integer id;
     @NotNull
     private String code;
     @NotNull

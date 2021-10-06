@@ -22,7 +22,17 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="17eff610-92e2-41a5-a508-e7950cf0fbba" name="Default Changelist" comment="" />
+    <list default="true" id="17eff610-92e2-41a5-a508-e7950cf0fbba" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/entities/CaptchaCodes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/entities/CaptchaCodes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/entities/GlobalSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/entities/GlobalSettings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/entities/PostComments.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/entities/PostComments.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/entities/PostVotes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/entities/PostVotes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/entities/Posts.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/entities/Posts.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/entities/Tag2Post.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/entities/Tag2Post.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/entities/Tags.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/entities/Tags.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/entities/Users.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/entities/Users.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -54,12 +64,16 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.notifications" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
@@ -146,29 +160,29 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="827" y="290" key="EnvironmentVariablesDialog/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1626088646163" />
-    <state x="740" y="295" key="FileChooserDialogImpl" timestamp="1626089875816">
+    <state x="740" y="295" key="FileChooserDialogImpl" timestamp="1633542343575">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="740" y="295" key="FileChooserDialogImpl/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1626089875816" />
-    <state width="1877" height="224" key="GridCell.Tab.0.bottom" timestamp="1632846816462">
+    <state x="740" y="295" key="FileChooserDialogImpl/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1633542343575" />
+    <state width="1877" height="224" key="GridCell.Tab.0.bottom" timestamp="1632849539795">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="224" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1632846816462" />
+    <state width="1877" height="224" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1632849539795" />
     <state width="1877" height="224" key="GridCell.Tab.0.bottom/0.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1631649708815" />
-    <state width="1877" height="224" key="GridCell.Tab.0.center" timestamp="1632846816462">
+    <state width="1877" height="224" key="GridCell.Tab.0.center" timestamp="1632849539795">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="224" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1632846816462" />
+    <state width="1877" height="224" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1632849539795" />
     <state width="1877" height="224" key="GridCell.Tab.0.center/0.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1631649708815" />
-    <state width="1877" height="224" key="GridCell.Tab.0.left" timestamp="1632846816462">
+    <state width="1877" height="224" key="GridCell.Tab.0.left" timestamp="1632849539794">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="224" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1632846816462" />
+    <state width="1877" height="224" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1632849539794" />
     <state width="1877" height="224" key="GridCell.Tab.0.left/0.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1631649708814" />
-    <state width="1877" height="224" key="GridCell.Tab.0.right" timestamp="1632846816462">
+    <state width="1877" height="224" key="GridCell.Tab.0.right" timestamp="1632849539795">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="224" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1632846816462" />
+    <state width="1877" height="224" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1632849539795" />
     <state width="1877" height="224" key="GridCell.Tab.0.right/0.0.1920.1080/1920.0.1920.1080@1920.0.1920.1080" timestamp="1631649708815" />
     <state width="1877" height="363" key="GridCell.Tab.1.bottom" timestamp="1629649190024">
       <screen x="0" y="0" width="1920" height="1080" />
@@ -186,14 +200,18 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state width="1877" height="363" key="GridCell.Tab.1.right/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1629649190023" />
-    <state x="440" y="114" key="SettingsEditor" timestamp="1632837897554">
+    <state x="759" y="111" key="SettingsEditor" timestamp="1633542818490">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="440" y="114" key="SettingsEditor/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1632837897554" />
+    <state x="759" y="111" key="SettingsEditor/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1633542818490" />
     <state x="552" y="273" key="Vcs.Push.Dialog.v2" timestamp="1626087411920">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="552" y="273" key="Vcs.Push.Dialog.v2/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1626087411920" />
+    <state x="664" y="432" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1633542683086">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="664" y="432" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD/0.0.1920.1080/1920.0.1920.1080@0.0.1920.1080" timestamp="1633542683086" />
     <state x="528" y="215" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1629630622370">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
