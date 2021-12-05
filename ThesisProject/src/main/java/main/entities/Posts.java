@@ -3,6 +3,7 @@ package main.entities;
 import lombok.Getter;
 import lombok.Setter;
 import main.ModerationStatus;
+import org.springframework.context.annotation.PropertySource;
 
 import javax.persistence.Id;
 
@@ -16,6 +17,7 @@ import static java.time.Instant.now;
 
 @Entity
 @Getter @Setter
+@PropertySource("classpath:my_blog.posts")
 public class Posts {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

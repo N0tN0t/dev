@@ -2,6 +2,7 @@ package main.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.context.annotation.PropertySource;
 
 import javax.persistence.Id;
 
@@ -13,6 +14,7 @@ import java.util.Date;
 
 @Entity
 @Getter @Setter
+@PropertySource("classpath:my_blog.post_votes")
 public class PostVotes {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

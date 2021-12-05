@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class DefaultController {
@@ -27,6 +28,10 @@ public class DefaultController {
         model.addAttribute("posts",posts);
         model.addAttribute("postsCount",posts.size());
                 model.addAttribute("someParameter",someParameter);*/
+        return "index";
+    }
+    @RequestMapping(method = {RequestMethod.OPTIONS, RequestMethod.GET}, value = "/**/{path:[^\\.]*}")
+    public String redirectToIndex() {
         return "index";
     }
 }

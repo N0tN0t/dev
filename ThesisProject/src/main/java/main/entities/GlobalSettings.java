@@ -3,6 +3,7 @@ package main.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.context.annotation.PropertySource;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter @Setter
+@PropertySource("classpath:my_blog.global_settings")
 public class GlobalSettings {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
