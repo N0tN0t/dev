@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+
 @RestController
 public class ApiPostController {
     @Autowired
@@ -29,17 +31,17 @@ public class ApiPostController {
             if (postRepository.count() != 0) {
                 postResponse.setCount((int) postRepository.count());
                 for (int i = 0; i < postRepository.count(); i++) {
-                    Posts post = postRepository.findById(i).get();
+                    Iterable<Posts> post = postRepository.findAllById(Collections.singleton(i));
                     int likes = 0;
                     int dislikes = 0;
                     for (int b = 0; b < postVotesRepository.count(); b++) {
-                        if (postVotesRepository.findById(b).get().getValue() == 1) {
+                        if (postVotesRepository.findAllById(Collections.singleton(b)).iterator().next().getValue() == 1) {
                             likes++;
                         } else if (postVotesRepository.findById(b).get().getValue() == -1) {
                             dislikes++;
                         }
                     }
-                    postResponse.addPosts(postRepository.findById(i).get(), 1592338706, userRepository.findById(post.getUser_id()).get(), likes, dislikes, (int) postCommentsRepository.count());
+                    postResponse.addPosts(postRepository.findById(i).get(), 1592338706, userRepository.findById(post.iterator().next().getUser_id()).get(), likes, dislikes, (int) postCommentsRepository.count());
                 }
             } else {
                 postResponse.setCount(0);
@@ -48,66 +50,12 @@ public class ApiPostController {
         }
         else if (mode.equals("popular")) {
             System.out.println("popular");
-            if (postRepository.count() != 0) {
-                postResponse.setCount((int) postRepository.count());
-                for (int i = 0; i < postRepository.count(); i++) {
-                    Posts post = postRepository.findById(i).get();
-                    int likes = 0;
-                    int dislikes = 0;
-                    for (int b = 0; b < postVotesRepository.count(); b++) {
-                        if (postVotesRepository.findById(b).get().getValue() == 1) {
-                            likes++;
-                        } else if (postVotesRepository.findById(b).get().getValue() == -1) {
-                            dislikes++;
-                        }
-                    }
-                    postResponse.addPosts(postRepository.findById(i).get(), 1592338706, userRepository.findById(post.getUser_id()).get(), likes, dislikes, (int) postCommentsRepository.count());
-                }
-            } else {
-                postResponse.setCount(0);
-            }
         }
         else if (mode.equals("best")) {
             System.out.println("best");
-            if (postRepository.count() != 0) {
-                postResponse.setCount((int) postRepository.count());
-                for (int i = 0; i < postRepository.count(); i++) {
-                    Posts post = postRepository.findById(i).get();
-                    int likes = 0;
-                    int dislikes = 0;
-                    for (int b = 0; b < postVotesRepository.count(); b++) {
-                        if (postVotesRepository.findById(b).get().getValue() == 1) {
-                            likes++;
-                        } else if (postVotesRepository.findById(b).get().getValue() == -1) {
-                            dislikes++;
-                        }
-                    }
-                    postResponse.addPosts(postRepository.findById(i).get(), 1592338706, userRepository.findById(post.getUser_id()).get(), likes, dislikes, (int) postCommentsRepository.count());
-                }
-            } else {
-                postResponse.setCount(0);
-            }
         }
         else if (mode.equals("early")) {
             System.out.println("early");
-            if (postRepository.count() != 0) {
-                postResponse.setCount((int) postRepository.count());
-                for (int i = 0; i < postRepository.count(); i++) {
-                    Posts post = postRepository.findById(i).get();
-                    int likes = 0;
-                    int dislikes = 0;
-                    for (int b = 0; b < postVotesRepository.count(); b++) {
-                        if (postVotesRepository.findById(b).get().getValue() == 1) {
-                            likes++;
-                        } else if (postVotesRepository.findById(b).get().getValue() == -1) {
-                            dislikes++;
-                        }
-                    }
-                    postResponse.addPosts(postRepository.findById(i).get(), 1592338706, userRepository.findById(post.getUser_id()).get(), likes, dislikes, (int) postCommentsRepository.count());
-                }
-            } else {
-                postResponse.setCount(0);
-            }
         }
         ResponseEntity.ok();
         return postResponse;
