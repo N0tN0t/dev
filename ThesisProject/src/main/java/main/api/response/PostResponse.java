@@ -10,6 +10,8 @@ import main.respositories.PostVotesRepository;
 import main.respositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,42 +26,29 @@ public class PostResponse {
     private UserResponse user;      //такой же класс с информацией о пользователе
     private String title;
     private String announce;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private long likeCount;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private long dislikeCount;
+    @ManyToOne
+    @JoinColumn(name = "post_id")
     private int commentCount;
     private int viewCount;
     private int userId;
     private String userName;
     private List<List> posts;
 
-    public PostResponse(Posts post,UserRepository userRepository, PostVotesRepository postVotesRepository, PostCommentsRepository postCommentsRepository) {
-        Iterable<Users> AllUsers = userRepository.findAll();
-        Users users = null;
-        for (Users currentUser:AllUsers) {
-            if (currentUser.getId() == post.getUser_id()){
-                users = currentUser;
-            }
-        }
+    public PostResponse(Posts post) {
         id = post.getId();
         timestamp = post.getTime();
-        user = new UserResponse(users);
+        user = new UserResponse("?");
         title = post.getTitle();
         announce = post.getText();
-        int likes = 0;
-        int dislikes = 0;
-        for (int b = 0; b < Iterables.size(postVotesRepository.findAll()); b++) {
-            if (Iterables.get(postVotesRepository.findAll(), b).getValue() == 1) {
-                likes++;
-            } else if (Iterables.get(postVotesRepository.findAll(), b).getValue() == -1) {
-                dislikes++;
-            }
-        }
-        likeCount = likes;
-        dislikeCount = dislikes;
-        commentCount = Iterables.size(postCommentsRepository.findAll());
         viewCount = post.getView_count();
         userId = post.getUser_id();
-        userName = users.getName();
+        userName = null;
 
         posts.add(Arrays.asList(id,timestamp,user,title,announce,likeCount,dislikeCount,commentCount,viewCount,userId,userName));
     }
