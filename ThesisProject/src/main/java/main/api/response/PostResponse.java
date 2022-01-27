@@ -40,15 +40,15 @@ public class PostResponse {
     private String userName;
     private List<List> posts;
 
-    public PostResponse(Posts post) {
+    public PostResponse(Posts post,Users user) {
         id = post.getId();
         timestamp = post.getTime();
-        user = new UserResponse("?");
+        user = user;
         title = post.getTitle();
         announce = post.getText();
         viewCount = post.getView_count();
         userId = post.getUser_id();
-        userName = null;
+        userName = user.getName();
 
         posts.add(Arrays.asList(id,timestamp,user,title,announce,likeCount,dislikeCount,commentCount,viewCount,userId,userName));
     }

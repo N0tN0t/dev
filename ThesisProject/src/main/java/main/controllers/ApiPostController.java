@@ -31,9 +31,12 @@ public class ApiPostController {
     public PostResponse getPosts(@RequestParam(name = "mode", defaultValue = "recent") String mode) {
         PostResponse postResponse = null;
         Iterable<Posts> AllPosts = postRepository.findAll();
+        Iterable<Users> AllUsers = userRepository.findAll();
         if (mode.equals("recent")) {
             for (Posts post:AllPosts) {
-                postResponse = new PostResponse(post,userRepository,postVotesRepository,postCommentsRepository);
+                for (Users user:AllUsers) {
+                    postResponse = new PostResponse(post,user);
+                }
             }
         }
         else if (mode.equals("popular")) {
