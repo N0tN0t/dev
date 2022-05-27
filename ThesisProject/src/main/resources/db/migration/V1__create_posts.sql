@@ -1,7 +1,7 @@
 drop table if exists posts;
 create table posts (
    id SERIAL NOT NULL,
-   is_active integer NOT NULL,
+   is_active bit NOT NULL,
    moderation_status int4,
    moderation_id integer,
    user_id int4 NOT NULL,
@@ -17,7 +17,7 @@ create table users (
   id SERIAL NOT NULL,
   code varchar(255) NOT NULL,
   email varchar(255) NOT NULL,
-  is_moderator integer NOT NULL,
+  is_moderator bit NOT NULL,
   name varchar(255) NOT NULL,
   password varchar(255) NOT NULL,
   photo varchar(255) NOT NULL,

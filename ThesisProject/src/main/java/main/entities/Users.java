@@ -21,7 +21,7 @@ public class Users {
     @NotNull
     private Integer id;
     @NotNull
-    private Integer is_moderator;
+    private Boolean is_moderator;
     @NotNull
     private Date reg_time;
     @NotNull
