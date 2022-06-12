@@ -16,13 +16,12 @@ import java.util.Date;
 public class CaptchaCodes {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @NotNull
+    @Column(columnDefinition = "Integer", nullable = false)
     private int id;
-    @NotNull
+    @Column(columnDefinition = "DATE", nullable = false)
     private Date time;
-    @NotNull
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String code;
-    @NotNull
     @Column(name = "secret_code", columnDefinition = "TINYTEXT", nullable = false)
     private String secretCode;
 }

@@ -1,10 +1,12 @@
 package main.api.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Iterables;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import main.dto.UserDTO;
 import main.entities.Posts;
 import main.entities.Users;
 import main.respositories.PostCommentsRepository;
@@ -26,7 +28,8 @@ import java.util.List;
 public class PostResponse {
     private Integer id;
     private Date timestamp;
-    private UserResponse user;
+    @JsonIgnoreProperties
+    private UserDTO user;
     private String title;
     private String announce;
     private long likeCount;

@@ -27,9 +27,4 @@ public class ApiGeneralController {
     @GetMapping("/api/tag")
     private TagListResponse tags() {return new TagListResponse();
     }
-
-    @GetMapping("/api/init")
-    private InitResponse init() {
-        return initResponse;
-    }
 }

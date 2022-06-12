@@ -15,15 +15,15 @@ import java.util.Date;
 public class PostVotes {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @NotNull
+    @Column(columnDefinition = "Integer", nullable = false)
     private int id;
-    @NotNull
-    @Column(name = "user_id", columnDefinition = "INTEGER", nullable = false)
-    private int userId;
-    @NotNull
-    @Column(name = "post_id", columnDefinition = "INTEGER", nullable = false)
-    private int postId;
-    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private Users users;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
+    private Posts posts;
+    @Column(columnDefinition = "DATE", nullable = false)
     private Date time;
     private int value;
 }

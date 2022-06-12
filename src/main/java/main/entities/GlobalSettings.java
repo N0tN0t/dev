@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.annotation.PropertySource;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -17,12 +14,12 @@ import javax.validation.constraints.NotNull;
 public class GlobalSettings {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @NotNull
+    @Column(columnDefinition = "Integer", nullable = false)
     private int id;
-    @NotNull
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String code;
-    @NotNull
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String name;
-    @NotNull
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String value;
 }

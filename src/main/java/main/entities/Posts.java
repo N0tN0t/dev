@@ -17,25 +17,23 @@ import static java.time.Instant.now;
 public class Posts {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @NotNull
+    @Column(columnDefinition = "Integer", nullable = false)
     private int id;
-    @NotNull
     @Column(name = "is_active", columnDefinition = "BIT", nullable = false)
     private int isActive;
-    @NotNull
     @Column(name = "moderation_status", columnDefinition = "INT4", nullable = false)
     private ModerationStatus moderationStatus;
     @Column(name = "moderation_id", columnDefinition = "INTEGER", nullable = false)
     private int moderationId;
-    @NotNull
-    private int user_id;
-    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private Users user;
+    @Column(columnDefinition = "DATE", nullable = false)
     private Date time = Date.from(now());
-    @NotNull
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String title;
-    @NotNull
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String text;
-    @NotNull
     @Column(name = "view_count", columnDefinition = "INT4", nullable = false)
     private int viewCount;
 }

@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 @Getter
 @Setter
-@Component
 public class CheckResponse {
     private boolean result = false;
     @JsonInclude(JsonInclude.Include.NON_NULL)

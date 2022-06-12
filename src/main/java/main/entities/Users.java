@@ -2,6 +2,7 @@ package main.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import main.dto.UserDTO;
 import org.springframework.context.annotation.PropertySource;
 
 import javax.persistence.*;
@@ -12,26 +13,24 @@ import java.util.Date;
 @Entity
 @Getter @Setter
 @PropertySource("classpath:my_blog.users")
-public class Users {
+public class Users{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @NotNull
+    @Column(columnDefinition = "Integer", nullable = false)
     private int id;
-    @NotNull
     @Column(name = "is_moderator", columnDefinition = "BOOLEAN", nullable = false)
     private boolean isModerator;
-    @NotNull
     @Column(name = "reg_time", columnDefinition = "DATE", nullable = false)
     private Date regTime;
-    @NotNull
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String name;
-    @NotNull
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String email;
-    @NotNull
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String password;
-    @NotNull
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String code;
-    @NotNull
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String photo;
 
 }

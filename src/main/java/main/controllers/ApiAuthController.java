@@ -1,11 +1,8 @@
 package main.controllers;
 
 import main.api.response.CheckResponse;
-import main.api.response.InitResponse;
-import main.entities.Users;
-import main.respositories.UserRepository;
-import main.service.SettingsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import main.dto.UserDTO;
+import main.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,34 +11,28 @@ import java.util.List;
 @RequestMapping("/api/auth")
 public class ApiAuthController {
     private final CheckResponse checkResponse;
-    @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     public ApiAuthController(CheckResponse checkResponse) {
         this.checkResponse = checkResponse;
     }
 
     @GetMapping()
-    public List<Users> getList() {
-        return (List<Users>)userRepository.findAll();
+    public List<UserDTO> getList() {
+        return userService.findAll();
     }
     @PostMapping()
-    public void post(Users task) {
-        userRepository.save(task);
+    public void post(UserDTO task) {
+        userService.findAll().set(userService.findAll().size(),task);
     }
     @PutMapping()
-    public void putAll(@PathVariable Users task) {
-        for (int i = 0;i<userRepository.count()-1;i++) {
-            userRepository.findAll().forEach(task1 -> task1 = task);
+    public void putAll(@PathVariable UserDTO task) {
+        for (int i = 0;i<userService.findAll().size()-1;i++) {
+            userService.findAll().forEach(task1 -> task1 = task);
         }
     }
     @DeleteMapping()
     public void deleteAll() {
-        userRepository.deleteAll();
-    }
-
-    @GetMapping("/check")
-    private CheckResponse check() {
-        return checkResponse;
+        userService.findAll().clear();
     }
 }

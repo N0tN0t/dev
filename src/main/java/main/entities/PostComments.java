@@ -4,11 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.annotation.PropertySource;
 
-import javax.persistence.Id;
+import javax.persistence.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -21,12 +18,14 @@ public class PostComments {
     @NotNull
     private int id;
     private int parent_id;
-    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
     private Posts post;
-    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private Users user;
-    @NotNull
+    @Column(columnDefinition = "DATE", nullable = false)
     private Date time;
-    @NotNull
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String text;
 }

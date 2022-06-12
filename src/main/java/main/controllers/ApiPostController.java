@@ -1,15 +1,12 @@
 package main.controllers;
 
-import com.google.common.collect.Iterables;
-import main.entities.PostComments;
-import main.entities.PostVotes;
-import main.entities.Posts;
+import main.dto.PostDTO;
 import main.api.response.PostResponse;
-import main.entities.Users;
+import main.dto.UserDTO;
 import main.respositories.PostCommentsRepository;
 import main.respositories.PostVotesRepository;
-import main.respositories.PostRepository;
-import main.respositories.UserRepository;
+import main.service.PostService;
+import main.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +15,8 @@ import java.util.List;
 
 @RestController
 public class ApiPostController {
-    @Autowired
-    private PostRepository postRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+    private PostService postService;
     @Autowired
     private PostVotesRepository postVotesRepository;
     @Autowired
@@ -30,14 +25,10 @@ public class ApiPostController {
     @ResponseBody
     public PostResponse getPosts(@RequestParam(name = "mode", defaultValue = "recent") String mode) {
         PostResponse postResponse = null;
-        Iterable<Posts> AllPosts = postRepository.findAll();
-        Iterable<Users> AllUsers = userRepository.findAll();
+        List<PostDTO> AllPosts = postService.findAll();
+        List<UserDTO> AllUsers = userService.findAll();
         if (mode.equals("recent")) {
-            for (Posts post:AllPosts) {
-                for (Users user:AllUsers) {
-                    postResponse = new PostResponse(post,user);
-                }
-            }
+            System.out.println("recent");
         }
         else if (mode.equals("popular")) {
             System.out.println("popular");
