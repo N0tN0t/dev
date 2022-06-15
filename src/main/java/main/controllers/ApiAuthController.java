@@ -35,4 +35,8 @@ public class ApiAuthController {
     public void deleteAll() {
         userService.findAll().clear();
     }
+    @GetMapping("/check")
+    private CheckResponse check() {
+        return checkResponse;
+    }
 }

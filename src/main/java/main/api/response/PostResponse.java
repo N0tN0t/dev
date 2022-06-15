@@ -28,7 +28,7 @@ import java.util.List;
 public class PostResponse {
     private Integer id;
     private Date timestamp;
-    @JsonIgnoreProperties
+    @JsonIgnoreProperties({"photo","email","moderation","moderationCount","settings"})
     private UserDTO user;
     private String title;
     private String announce;

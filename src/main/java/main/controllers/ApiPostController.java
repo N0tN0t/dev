@@ -17,29 +17,15 @@ import java.util.List;
 public class ApiPostController {
     private UserService userService;
     private PostService postService;
-    @Autowired
-    private PostVotesRepository postVotesRepository;
-    @Autowired
-    private PostCommentsRepository postCommentsRepository;
-    @GetMapping("/api/post")
-    @ResponseBody
-    public PostResponse getPosts(@RequestParam(name = "mode", defaultValue = "recent") String mode) {
-        PostResponse postResponse = null;
-        List<PostDTO> AllPosts = postService.findAll();
-        List<UserDTO> AllUsers = userService.findAll();
-        if (mode.equals("recent")) {
-            System.out.println("recent");
-        }
-        else if (mode.equals("popular")) {
-            System.out.println("popular");
-        }
-        else if (mode.equals("best")) {
-            System.out.println("best");
-        }
-        else if (mode.equals("early")) {
-            System.out.println("early");
-        }
-        ResponseEntity.ok();
-        return postResponse;
+//    @Autowired
+//    private PostVotesRepository postVotesRepository;
+//    @Autowired
+//    private PostCommentsRepository postCommentsRepository;
+    @GetMapping("/post")
+    public ResponseEntity<PostResponse> posts(
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(defaultValue = "recent") String mode) {
+        return ResponseEntity.ok(postService.findAll(offset, limit, mode));
     }
 }

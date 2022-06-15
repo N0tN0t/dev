@@ -7,6 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 import javax.persistence.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -18,4 +19,9 @@ public class Tags {
     private int id;
     @Column(columnDefinition = "TEXT", nullable = false)
     private String name;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "tag2post",
+            joinColumns = @JoinColumn(name = "tag_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id"))
+    List<Posts> posts;
 }

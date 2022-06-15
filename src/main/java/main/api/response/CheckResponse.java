@@ -12,7 +12,7 @@ import java.util.ArrayList;
 @Getter
 @Setter
 public class CheckResponse {
-    private boolean result = false;
+    private boolean result;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private UserDTO user;
 }

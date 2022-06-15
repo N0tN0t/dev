@@ -18,6 +18,11 @@ public class ApiGeneralController {
         this.settingsService = settingsService;
     }
 
+    @GetMapping("/api/init")
+    private InitResponse init() {
+        return initResponse;
+    }
+
     @GetMapping("/api/settings")
     private SettingsResponse settings(){
         return settingsService.getGlobalSettings();

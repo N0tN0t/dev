@@ -8,6 +8,7 @@ import javax.persistence.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 import static java.time.Instant.now;
 
@@ -36,4 +37,13 @@ public class Posts {
     private String text;
     @Column(name = "view_count", columnDefinition = "INT4", nullable = false)
     private int viewCount;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PostVotes> postVotes;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PostComments> postComments;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "tag2post",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    List<Tags> tags;
 }
