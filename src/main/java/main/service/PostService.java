@@ -18,4 +18,7 @@ public class PostService {
     public PostDTO findById(Integer id){
         return mappingUtils.mapToPostDto(postRepository.findById(id).orElse(new Posts()));
     }
+    public boolean getPosts(Integer offset, Integer limit, String mode) {
+        return postRepository.findAll().subList(offset,offset+limit).contains(mode);
+    }
 }
