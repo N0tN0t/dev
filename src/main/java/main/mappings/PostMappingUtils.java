@@ -14,7 +14,7 @@ public class PostMappingUtils {
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
         dto.setTimestamp(entity.getTime());
-        dto.setUser(userRepository.findById(entity.getUser_id()).orElse(new Users()));
+        dto.setUser(userRepository.findById(entity.getUser().getId()).orElse(new Users()));
         dto.setAnnounce(entity.getTitle());
         return dto;
     }
@@ -23,7 +23,7 @@ public class PostMappingUtils {
         entity.setId(dto.getId());
         entity.setTitle(dto.getTitle());
         entity.setText(dto.getAnnounce());
-        entity.setUser_id(dto.getUser().getId());
+        entity.setUser(dto.getUser());
         entity.setTime(dto.getTimestamp());
         return entity;
     }
