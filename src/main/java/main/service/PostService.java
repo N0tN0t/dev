@@ -5,7 +5,6 @@ import main.dto.PostsResponseDTO;
 import main.mappings.PostMappingUtils;
 import main.dto.PostDTO;
 import main.entities.Posts;
-import main.respositories.PostInfoRepository;
 import main.respositories.PostRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +16,6 @@ import java.util.stream.Collectors;
 
 public class PostService {
     private PostRepository postRepository;
-    private PostInfoRepository postInfoRepository;
     private PostMappingUtils mappingUtils;
 
     public List<PostDTO> findAll() {
@@ -26,18 +24,18 @@ public class PostService {
     public PostDTO findById(Integer id){
         return mappingUtils.mapToPostDto(postRepository.findById(id).orElse(new Posts()));
     }
-    public boolean getPosts(Integer offset, Integer limit, String mode) {
+    public PostsResponseDTO getPosts(Integer offset, Integer limit, String mode) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
-        Page<Posts> pagePosts = postInfoRepository.findAllOrderByTimeDesc(pageable);
+        Page<Posts> pagePosts = postRepository.findRecentPosts(pageable);
         switch (mode) {
-            case early:
-                pagePosts = postInfoRepository.findALLOrderByTimeAsc(pageable);
+            case "early":
+                pagePosts = postRepository.findEarlyPosts(pageable);
                 break;
-            case popular:
-                pagePosts = postInfoRepository.findALLOrderByPostCommentsDesc(pageable);
+            case "popular":
+                pagePosts = postRepository.findPopularPosts(pageable);
                 break;
-            case best:
-                pagePosts = postInfoRepository.findALLOrderByPostVotes(pageable);
+            case "best":
+                pagePosts = postRepository.findBestPosts(pageable);
                 break;
         }
         return getPostsResponseDTO(pagePosts);
@@ -48,7 +46,7 @@ public class PostService {
         pagePosts.forEach(posts::add);
         List<PostInfoResponse> list = new ArrayList<>();
         for (Posts p : posts) {
-            list.add(converter.convertPostToDTO(p));
+            list.add(mappingUtils.mapToPostDto(p));
         }
         return new PostsResponseDTO(pagePosts.getTotalElements(), list);
     }

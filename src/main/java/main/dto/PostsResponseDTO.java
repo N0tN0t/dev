@@ -8,6 +8,11 @@ import java.util.List;
 
 @Data
 public class PostsResponseDTO {
-    private List<Posts> posts;
-    private List<PostInfoResponse> postInfoResponses;
+    private long totalElements;
+    private List<PostInfoResponse> list;
+
+    public PostsResponseDTO(long totalElements, List<PostInfoResponse> list) {
+        this.totalElements = totalElements;
+        this.list = list;
+    }
 }
