@@ -1,6 +1,6 @@
 package main.service;
 
-import main.api.response.PostInfoResponse;
+import main.api.response.PostListResponse;
 import main.dto.PostsResponseDTO;
 import main.mappings.PostMappingUtils;
 import main.dto.PostDTO;
@@ -24,27 +24,38 @@ public class PostService {
     public PostDTO findById(Integer id){
         return mappingUtils.mapToPostDto(postRepository.findById(id).orElse(new Posts()));
     }
-    public PostsResponseDTO getPosts(Integer offset, Integer limit, String mode) {
+    public PostListResponse getPosts(Integer offset, Integer limit, String mode) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
-        Page<Posts> pagePosts = postRepository.findRecentPosts(pageable);
+        Page<Posts> page;
         switch (mode) {
-            case "early":
-                pagePosts = postRepository.findEarlyPosts(pageable);
-                break;
             case "popular":
-                pagePosts = postRepository.findPopularPosts(pageable);
+                page = postRepository.findPopularPosts(pageable);
+                break;
+            case "early":
+                page = postRepository.findEarlyPosts(pageable);
                 break;
             case "best":
-                pagePosts = postRepository.findBestPosts(pageable);
+                page = postRepository.findBestPosts(pageable);
                 break;
+            default:
+                page = postRepository.findRecentPosts(pageable);
         }
-        return getPostsResponseDTO(pagePosts);
+
+        PostListResponse apiList = new PostListResponse();
+        List<Posts> posts = new ArrayList<>();
+        posts.addAll(page.getContent());
+        apiList.setCount(page.getTotalElements());
+
+        List<PostDTO> postDtoList = posts.stream().map(mappingUtils::mapToPostDto)
+                .collect(Collectors.toList());
+        apiList.setPosts(postDtoList);
+        return apiList;
     }
 
     private PostsResponseDTO getPostsResponseDTO(Page<Posts> pagePosts) {
         List<Posts> posts = new ArrayList<>();
         pagePosts.forEach(posts::add);
-        List<PostInfoResponse> list = new ArrayList<>();
+        List<PostDTO> list = new ArrayList<>();
         for (Posts p : posts) {
             list.add(mappingUtils.mapToPostDto(p));
         }

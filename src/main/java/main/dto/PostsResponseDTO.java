@@ -11,7 +11,7 @@ public class PostsResponseDTO {
     private long totalElements;
     private List<PostInfoResponse> list;
 
-    public PostsResponseDTO(long totalElements, List<PostInfoResponse> list) {
+    public PostsResponseDTO(long totalElements, List<PostDTO> list) {
         this.totalElements = totalElements;
         this.list = list;
     }
