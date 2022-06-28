@@ -1,5 +1,6 @@
 package main.controllers;
 
+import main.dto.PostsResponseDTO;
 import main.service.PostService;
 import main.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ public class ApiPostController {
 //    private PostCommentsRepository postCommentsRepository;
     @GetMapping("/post")
     //public ResponseEntity<List<PostResponse>> posts(
-    public ResponseEntity<Boolean> posts(
+    public ResponseEntity<PostsResponseDTO> posts(
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(defaultValue = "recent") String mode) {

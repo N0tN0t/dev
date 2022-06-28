@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Posts,Integer> {
-    
+
     @Query(value = "SELECT * FROM posts WHERE is_active = 1 " +
             "AND moderation_status = 'ACCEPTED' AND posts.time <= NOW() " +
             "ORDER BY time DESC",
