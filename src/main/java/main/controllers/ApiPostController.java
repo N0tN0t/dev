@@ -10,10 +10,6 @@ import org.springframework.web.bind.annotation.*;
 public class ApiPostController {
     private UserService userService;
     private PostService postService;
-//    @Autowired
-//    private PostVotesRepository postVotesRepository;
-//    @Autowired
-//    private PostCommentsRepository postCommentsRepository;
     @GetMapping("/post")
     //public ResponseEntity<List<PostResponse>> posts(
     public ResponseEntity<PostListResponse> posts(
