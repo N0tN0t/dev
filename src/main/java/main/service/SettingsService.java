@@ -10,12 +10,13 @@ public class SettingsService {
 
     public SettingsResponse getGlobalSettings() {
         SettingsResponse settingsResponse = new SettingsResponse();
-        settingsResponse.setMultiuserMode(true);
+        settingsResponse.setMultiuserMode(
+                settingsRepository.findSettingValue("MULTIUSER_MODE").equals("YES"));
+        settingsResponse.setPostPremoderation(
+                settingsRepository.findSettingValue("POST_PREMODERATION").equals("YES"));
+        settingsResponse.setStatisticIsPublic(
+                settingsRepository.findSettingValue("STATISTICS_IS_PUBLIC").equals("YES"));
         return settingsResponse;
-    }
-
-    public boolean findByValue(String value,String equalsTo) {
-        return settingsRepository.findSettingValue(value).equals(equalsTo);
     }
 
 }

@@ -5,6 +5,7 @@ import main.api.response.SettingsResponse;
 import main.api.response.TagListResponse;
 import main.respositories.SettingsRepository;
 import main.service.SettingsService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -24,19 +25,10 @@ public class ApiGeneralController {
     }
 
     @GetMapping("/api/settings")
-    public SettingsResponse getGlobalSettings() {
-        SettingsResponse settingsResponse = new SettingsResponse();
-        settingsResponse.setMultiuserMode(
-                settingsService.findByValue("MULTIUSER_MODE","YES"));
-        settingsResponse.setPostPremoderation(
-                settingsService.findByValue("POST_PREMODERATION","YES"));
-        settingsResponse.setStatisticIsPublic(
-                settingsService.findByValue("MULTIUSER_MODE","YES"));
-        return settingsResponse;
+    public ResponseEntity<SettingsResponse> settings() {
+        return ResponseEntity.ok(settingsService.getGlobalSettings());
     }
-
 
     @GetMapping("/api/tag")
-    private TagListResponse tags() {return new TagListResponse();
-    }
+    private TagListResponse tags() {return new TagListResponse();}
 }

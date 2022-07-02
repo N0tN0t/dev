@@ -22,9 +22,6 @@ public class UserService {
     public UserDTO findById(Integer id){
         return mappingUtils.mapToPostDto(userRepository.findById(id).orElse(new Users()));
     }
-    public void saveToRepository(Users user) {
-        userRepository.save(user);
-    }
 
     public List register(String email, String password, String name, String captcha, String captcha_secret) throws IOException {
         ArrayList list = new ArrayList();
@@ -54,7 +51,7 @@ public class UserService {
             errors.add("Код с картинки введён неверно");
         }
         if (!errors.isEmpty()){
-            saveToRepository(user);
+            userRepository.save(user);
             list.add(true);
         }
         else {
