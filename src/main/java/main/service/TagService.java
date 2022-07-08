@@ -14,20 +14,18 @@ public class TagService {
     private PostRepository postRepository;
     public TagListResponse getTags(String query) {
         int count = 0;
+        Map<String,Integer> list = null;
         for (int i=0;i<postRepository.count();i++) {
             for (int ii = 0;ii<postRepository.getOne(i).getTags().size();ii++) {
-                if (postRepository.getOne(i).getTags().get(ii).equals(query)) {
-                    count++;
+                if (postRepository.getOne(i).getIsActive() == 1) {
+                    if (postRepository.getOne(i).getTags().get(ii).equals(query)) {
+                        count++;
+                    }
+                    list.put(postRepository.getOne(i).getTags().get(ii).getName(),list.get(list.containsKey(postRepository.getOne(i).getTags().get(ii).getName())).intValue()+1);
                 }
             }
         }
         double dWeight = count/postRepository.count();
-        Map<String,Integer> list = null;
-        for (int i=0;i<postRepository.count();i++) {
-            for (int ii = 0;ii<postRepository.getOne(i).getTags().size();ii++) {
-                list.put(postRepository.getOne(i).getTags().get(ii).getName(),list.get(list.containsKey(postRepository.getOne(i).getTags().get(ii).getName())).intValue()+1);
-            }
-        }
         String biggest = "Java";
         for (int i=0;i<list.size();i++) {
             Object[] obj = list.keySet().toArray();
