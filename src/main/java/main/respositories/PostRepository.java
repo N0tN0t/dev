@@ -9,9 +9,15 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Posts,Integer> {
+    @Query(value = "SELECT COUNT(*) FROM Post p " +
+            "WHERE p.isActive = 1 " +
+            "AND p.moderationStatus = 'ACCEPTED' " +
+            "AND p.time <= CURRENT_TIMESTAMP()")
+    Optional<Integer> countAllActiveAndAccepted();
 
     @Query(value = "SELECT * FROM posts WHERE is_active = 1 " +
             "AND moderation_status = 'ACCEPTED' AND posts.time <= NOW() " +
