@@ -26,6 +26,21 @@ public interface PostRepository extends JpaRepository<Posts,Integer> {
     public Page<Posts> findRecentPosts(Pageable pageable);
 
     @Query(value = "SELECT * FROM posts WHERE is_active = 1 " +
+            "AND moderation_status = 'ACCEPTED'",
+            nativeQuery = true)
+    public Page<Posts> findAcceptedPosts(Pageable pageable);
+
+    @Query(value = "SELECT * FROM posts WHERE is_active = 1 " +
+            "AND moderation_status = 'DECLINED'",
+            nativeQuery = true)
+    public Page<Posts> findDeclinedPosts(Pageable pageable);
+
+    @Query(value = "SELECT * FROM posts WHERE is_active = 1 " +
+            "AND moderation_status = 'NEW'",
+            nativeQuery = true)
+    public Page<Posts> findNewPosts(Pageable pageable);
+
+    @Query(value = "SELECT * FROM posts WHERE is_active = 1 " +
             "AND moderation_status = 'ACCEPTED' AND posts.time <= NOW() " +
             "ORDER BY (SELECT COUNT(*) FROM post_votes WHERE post_id = posts.id) DESC",
             nativeQuery = true)

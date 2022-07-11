@@ -7,15 +7,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api")
 public class ApiPostController {
     private UserService userService;
     private PostService postService;
     @GetMapping("/post")
-    //public ResponseEntity<List<PostResponse>> posts(
     public ResponseEntity<PostListResponse> posts(
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(defaultValue = "recent") String mode) {
+        return ResponseEntity.ok(postService.getPosts(offset, limit, mode));
+    }
+    @GetMapping("/post/moderation")
+    public ResponseEntity<PostListResponse> postsWithStatus(
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(defaultValue = "new") String mode) {
         return ResponseEntity.ok(postService.getPosts(offset, limit, mode));
     }
 }

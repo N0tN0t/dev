@@ -52,6 +52,31 @@ public class PostService {
         return apiList;
     }
 
+    public PostListResponse getPostsWithStatus(Integer offset, Integer limit, String status) {
+        Pageable pageable = PageRequest.of(offset / limit, limit);
+        Page<Posts> page;
+        switch (status) {
+            case "new":
+                page = postRepository.findNewPosts(pageable);
+                break;
+            case "declined":
+                page = postRepository.findDeclinedPosts(pageable);
+                break;
+            default:
+                page = postRepository.findAcceptedPosts(pageable);
+        }
+
+        PostListResponse apiList = new PostListResponse();
+        List<Posts> posts = new ArrayList<>();
+        posts.addAll(page.getContent());
+        apiList.setCount(page.getTotalElements());
+
+        List<PostDTO> postDtoList = posts.stream().map(mappingUtils::mapToPostDto)
+                .collect(Collectors.toList());
+        apiList.setPosts(postDtoList);
+        return apiList;
+    }
+
     private PostsResponseDTO getPostsResponseDTO(Page<Posts> pagePosts) {
         List<Posts> posts = new ArrayList<>();
         pagePosts.forEach(posts::add);

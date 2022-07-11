@@ -28,14 +28,6 @@ public class TagService {
             }
         }
         double dWeight = count/postRepository.count();
-//        String biggest = null;
-//        for (int i=0;i<list.size();i++) {
-//            Object[] obj = list.keySet().toArray();
-//            if (list.get(obj[i].toString()).intValue() > list.get(biggest).intValue() || list.get(biggest) == null) {
-//                biggest = obj[i].toString();
-//            }
-//        }
-//        double dWeightMax = list.get(biggest).intValue()/postRepository.count();
         double k = 1 / tagWeightsNoNormalize.values()
                 .stream().max(Comparator.naturalOrder()).orElse(0.0);
         Map<String, Double> tagWeightsNormalize = tagWeightsNoNormalize.entrySet()
