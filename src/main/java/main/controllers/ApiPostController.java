@@ -25,4 +25,12 @@ public class ApiPostController {
             @RequestParam(defaultValue = "new") String mode) {
         return ResponseEntity.ok(postService.getPosts(offset, limit, mode));
     }
+
+    @GetMapping("/post/moderation")
+    public ResponseEntity<PostListResponse> myPosts(
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(defaultValue = "published") String status) {
+        return ResponseEntity.ok(postService.getMyPosts(offset, limit, status));
+    }
 }

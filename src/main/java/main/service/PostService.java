@@ -86,4 +86,32 @@ public class PostService {
         }
         return new PostsResponseDTO(pagePosts.getTotalElements(), list);
     }
+
+    public PostListResponse getMyPosts(int offset, int limit, String status) {
+        Pageable pageable = PageRequest.of(offset / limit, limit);
+        Page<Posts> page;
+        switch (status) {
+            case "inactive":
+                page = postRepository.findMyInActivePosts(pageable);
+                break;
+            case "pending":
+                page = postRepository.findMyPendingPosts(pageable);
+                break;
+            case "declined":
+                page = postRepository.findMyDeclinedPosts(pageable);
+                break;
+            default:
+                page = postRepository.findMyPublishedPosts(pageable);
+        }
+
+        PostListResponse apiList = new PostListResponse();
+        List<Posts> posts = new ArrayList<>();
+        posts.addAll(page.getContent());
+        apiList.setCount(page.getTotalElements());
+
+        List<PostDTO> postDtoList = posts.stream().map(mappingUtils::mapToPostDto)
+                .collect(Collectors.toList());
+        apiList.setPosts(postDtoList);
+        return apiList;
+    }
 }
