@@ -6,7 +6,6 @@ import org.springframework.context.annotation.PropertySource;
 
 import javax.persistence.*;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class Posts {
     private int moderationId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private Users user;
+    private User user;
     @Column(columnDefinition = "DATE", nullable = false)
     private Date time = Date.from(now());
     @Column(columnDefinition = "TEXT", nullable = false)

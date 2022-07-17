@@ -1,11 +1,23 @@
 package main.controllers;
 
 import main.api.response.CheckResponse;
+import main.requests.LoginRequest;
+import main.api.response.LoginResponse;
+import main.api.response.UserLoginResponse;
 import main.dto.UserDTO;
+import main.entities.User;
+import main.requests.RegRequest;
 import main.service.UserService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -13,9 +25,12 @@ import java.util.List;
 public class ApiAuthController {
     private final CheckResponse checkResponse;
     private UserService userService;
+    private final AuthenticationManager authenticationManager;
 
-    public ApiAuthController(CheckResponse checkResponse) {
+    public ApiAuthController(CheckResponse checkResponse, UserService userService, AuthenticationManager authenticationManager) {
         this.checkResponse = checkResponse;
+        this.userService = userService;
+        this.authenticationManager = authenticationManager;
     }
 
     @GetMapping()
@@ -37,21 +52,44 @@ public class ApiAuthController {
         userService.findAll().clear();
     }
     @GetMapping("/check")
-    private CheckResponse check() {
-        return checkResponse;
+//    private CheckResponse check() {
+//        return checkResponse;
+//    }
+    private ResponseEntity<LoginResponse> check(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.ok(new LoginResponse());
+        }
+        return ResponseEntity.ok(getLoginResponse(principal.getName()));
     }
 
-    @GetMapping("/register")
-    public List register(String email, String password, String name, String captcha, String captcha_secret) throws IOException {
-        return userService.register(email,password,name,captcha,captcha_secret);
+    @PostMapping("/register")
+    public ArrayList register(RegRequest regRequest) throws IOException {
+        return userService.register(regRequest);
     }
 
     @GetMapping("/login")
-    public List login(String email, String password) {
-        return userService.login(email,password);
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        User user = (User) auth.getPrincipal();
+        return ResponseEntity.ok(getLoginResponse(user.getEmail()));
     }
     @GetMapping("/logout")
-    public boolean login(String email) {
+    public boolean logout(String email) {
         return userService.logout(email);
+    }
+
+    private LoginResponse getLoginResponse(String email) {
+        UserDTO currentUser = userService.findByEmail(email);
+        UserLoginResponse userResponse = new UserLoginResponse();
+        userResponse.setEmail(currentUser.getEmail());
+        userResponse.setName(currentUser.getName());
+        userResponse.setModeration(currentUser.isModeration());
+        userResponse.setId(currentUser.getId());
+
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setResult(true);
+        loginResponse.setUserLoginResponse(userResponse);
+        return loginResponse;
     }
 }

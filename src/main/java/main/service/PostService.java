@@ -11,7 +11,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class PostService {
@@ -113,5 +115,53 @@ public class PostService {
                 .collect(Collectors.toList());
         apiList.setPosts(postDtoList);
         return apiList;
+    }
+
+    public PostListResponse findPostsByQuery(int offset, int limit, String query) {
+        Pageable pageable = PageRequest.of(offset / limit, limit);
+        Page<Posts> page;
+        PostListResponse listResponse = new PostListResponse();
+        ArrayList postsList = new ArrayList();
+        Long count = null;
+        for (Posts post:postRepository.findAll()) {
+            if (post.getText().contains(query) || post.getTitle().contains(query)) {
+                count++;
+                postsList.add(post);
+            }
+        }
+        listResponse.setCount(count);
+        listResponse.setPosts(postsList);
+        return listResponse;
+    }
+
+    public ArrayList calendar(int year) {
+        ArrayList result = new ArrayList();
+        int[] years = new int[0];
+        Map<Date,Integer> posts = null;
+        for (Posts post:postRepository.findAll()) {
+            boolean db = false;
+            for (int year1: years) {
+                if (db == false) {
+                    if (year1 == post.getTime().getYear()) {
+                        db = true;
+                        break;
+                    }
+                }
+            }
+            if (db == false) {
+                years[years.length] = post.getTime().getYear();
+            }
+            posts.put(post.getTime(),posts.get(post.getTime()).intValue()+1);
+        }
+        result.add(years);
+        result.add(posts);
+        return result;
+    }
+
+    public PostListResponse findPostsByDate(int offset, int limit, Date date) {
+        PostListResponse listResponse = new PostListResponse();
+        ArrayList postsList = new ArrayList();
+        Long count = null;
+        return listResponse;
     }
 }

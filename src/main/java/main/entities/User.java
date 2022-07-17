@@ -13,7 +13,7 @@ import java.util.Date;
 @Entity
 @Getter @Setter
 @PropertySource("classpath:my_blog.users")
-public class Users{
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "Integer", nullable = false)
@@ -32,5 +32,7 @@ public class Users{
     private String code;
     @Column(columnDefinition = "TEXT", nullable = false)
     private String photo;
-
+    private Role getRole(){
+        return isModerator == true ? Role.MODERATOR : Role.USER;
+    }
 }

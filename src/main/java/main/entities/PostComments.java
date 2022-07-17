@@ -23,7 +23,7 @@ public class PostComments {
     private Posts post;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private Users user;
+    private User user;
     @Column(columnDefinition = "DATE", nullable = false)
     private Date time;
     @Column(columnDefinition = "TEXT", nullable = false)

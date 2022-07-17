@@ -2,7 +2,7 @@ package main.mappings;
 
 import main.dto.PostDTO;
 import main.entities.Posts;
-import main.entities.Users;
+import main.entities.User;
 import main.respositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class PostMappingUtils {
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
         dto.setTimestamp(entity.getTime());
-        dto.setUser(userRepository.findById(entity.getUser().getId()).orElse(new Users()));
+        dto.setUser(userRepository.findById(entity.getUser().getId()).orElse(new User()));
         dto.setAnnounce(entity.getTitle());
         return dto;
     }

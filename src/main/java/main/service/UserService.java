@@ -1,9 +1,11 @@
 package main.service;
 
 import main.dto.UserDTO;
-import main.entities.Users;
+import main.entities.User;
 import main.mappings.UserMappingUtils;
+import main.requests.RegRequest;
 import main.respositories.UserRepository;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,34 +22,37 @@ public class UserService {
         return userRepository.findAll().stream().map(mappingUtils::mapToPostDto).collect(Collectors.toList());
     }
     public UserDTO findById(Integer id){
-        return mappingUtils.mapToPostDto(userRepository.findById(id).orElse(new Users()));
+        return mappingUtils.mapToPostDto(userRepository.findById(id).orElse(new User()));
+    }
+    public UserDTO findByEmail(String email) {
+        return mappingUtils.mapToPostDto(userRepository.findByEmail(email).orElse(new User()));
     }
 
-    public List register(String email, String password, String name, String captcha, String captcha_secret) throws IOException {
+    public ArrayList register(@RequestBody RegRequest regRequest) throws IOException {
         ArrayList list = new ArrayList();
         ArrayList errors = new ArrayList();
-        Users user = new Users();
-        if (email.contains("@") && email.contains(".")) {
-            if (!name.contains(" ")) {
-                if (password.length() > 6) {
-                    if (captchaService.getCaptcha().getSecret().equals(captcha_secret) && captchaService.getCaptcha().getCode().equals(captcha)) {
-                        user.setName(name);
-                        user.setEmail(email);
-                        user.setPassword(password);
+        User user = new User();
+        if (regRequest.getEmail().contains("@") && regRequest.getEmail().contains(".")) {
+            if (!regRequest.getName().contains(" ")) {
+                if (regRequest.getPassword().length() > 6) {
+                    if (captchaService.getCaptcha().getSecret().equals(regRequest.getCaptchaSecret()) && captchaService.getCaptcha().getCode().equals(regRequest.getCaptcha())) {
+                        user.setName(regRequest.getName());
+                        user.setEmail(regRequest.getEmail());
+                        user.setPassword(regRequest.getPassword());
                     }
                 }
             }
         }
-        if (!email.contains("@") && !email.contains(".")) {
+        if (!regRequest.getEmail().contains("@") && !regRequest.getEmail().contains(".")) {
             errors.add("Этот e-mail уже зарегистрирован");
         }
-        if (name.contains(" ")) {
+        if (regRequest.getName().contains(" ")) {
             errors.add("Имя указано неверно");
         }
-        if (password.length() <= 6) {
+        if (regRequest.getPassword().length() <= 6) {
             errors.add("Пароль короче 6-ти символов");
         }
-        if (!captchaService.getCaptcha().getSecret().equals(captcha_secret) && !captchaService.getCaptcha().getCode().equals(captcha)) {
+        if (!captchaService.getCaptcha().getSecret().equals(regRequest.getCaptchaSecret()) && !captchaService.getCaptcha().getCode().equals(regRequest.getCaptcha())) {
             errors.add("Код с картинки введён неверно");
         }
         if (!errors.isEmpty()){
@@ -63,8 +68,8 @@ public class UserService {
 
     public List login(String email, String password) {
         ArrayList result = new ArrayList();
-        Users user = null;
-        for (Users userr: userRepository.findAll()) {
+        User user = null;
+        for (User userr: userRepository.findAll()) {
             if (userr.getEmail() == email) {
                 user = userr;
             }

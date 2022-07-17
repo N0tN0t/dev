@@ -1,16 +1,15 @@
 package main.dto;
 
 import lombok.Data;
-import main.entities.Users;
+import main.entities.User;
 
 import java.util.Date;
-import java.util.Optional;
 
 @Data
 public class PostDTO {
     int id;
     Date timestamp;
-    Users user;
+    User user;
     String title;
     String announce;
     int likeCount;

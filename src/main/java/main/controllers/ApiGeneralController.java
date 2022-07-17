@@ -22,6 +22,8 @@ public class ApiGeneralController {
         this.tagService = tagService;
     }
 
+
+
     @GetMapping("/init")
     private InitResponse init() {
         return initResponse;

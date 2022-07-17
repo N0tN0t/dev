@@ -25,6 +25,10 @@ public interface PostRepository extends JpaRepository<Posts,Integer> {
             nativeQuery = true)
     public Page<Posts> findRecentPosts(Pageable pageable);
 
+    @Query(value = "SELECT * FROM posts WHERE CONTAINS(text,)",
+            nativeQuery = true)
+    public Page<Posts> findByQueryPosts(Pageable pageable);
+
     @Query(value = "SELECT * FROM posts WHERE is_active = 1 " +
             "AND moderation_status = 'ACCEPTED'",
             nativeQuery = true)
