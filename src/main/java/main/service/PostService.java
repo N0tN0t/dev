@@ -2,10 +2,12 @@ package main.service;
 
 import main.api.response.PostListResponse;
 import main.dto.PostsResponseDTO;
+import main.entities.Tags;
 import main.mappings.PostMappingUtils;
 import main.dto.PostDTO;
 import main.entities.Posts;
 import main.respositories.PostRepository;
+import main.respositories.TagRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 
 public class PostService {
     private PostRepository postRepository;
+    private TagRepository tagRepository;
     private PostMappingUtils mappingUtils;
 
     public List<PostDTO> findAll() {
@@ -119,18 +122,54 @@ public class PostService {
 
     public PostListResponse findPostsByQuery(int offset, int limit, String query) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
-        Page<Posts> page;
+        Page<Posts> page = postRepository.findByQueryPosts(pageable,query);
         PostListResponse listResponse = new PostListResponse();
-        ArrayList postsList = new ArrayList();
-        Long count = null;
-        for (Posts post:postRepository.findAll()) {
-            if (post.getText().contains(query) || post.getTitle().contains(query)) {
-                count++;
-                postsList.add(post);
-            }
-        }
-        listResponse.setCount(count);
-        listResponse.setPosts(postsList);
+        List<Posts> posts = new ArrayList<>();
+        posts.addAll(page.getContent());
+        List<PostDTO> postDtoList = posts.stream().map(mappingUtils::mapToPostDto)
+                .collect(Collectors.toList());
+        listResponse.setCount(page.getTotalElements());
+        listResponse.setPosts(postDtoList);
+        return listResponse;
+    }
+
+    public PostListResponse findPostsByDate(int offset, int limit, Date date) {
+        Pageable pageable = PageRequest.of(offset / limit, limit);
+        Page<Posts> page = postRepository.findByDate(pageable,date);
+        PostListResponse listResponse = new PostListResponse();
+        List<Posts> posts = new ArrayList<>();
+        posts.addAll(page.getContent());
+        List<PostDTO> postDtoList = posts.stream().map(mappingUtils::mapToPostDto)
+                .collect(Collectors.toList());
+        listResponse.setCount(page.getTotalElements());
+        listResponse.setPosts(postDtoList);
+        return listResponse;
+    }
+
+    public PostListResponse findPostsByTag(int offset, int limit, String tag) {
+        Pageable pageable = PageRequest.of(offset / limit, limit);
+        Tags Tag = tagRepository.findTagByName(tag);
+        Page<Posts> page = postRepository.findByTag(pageable,Tag.getId());
+        PostListResponse listResponse = new PostListResponse();
+        List<Posts> posts = new ArrayList<>();
+        posts.addAll(page.getContent());
+        List<PostDTO> postDtoList = posts.stream().map(mappingUtils::mapToPostDto)
+                .collect(Collectors.toList());
+        listResponse.setCount(page.getTotalElements());
+        listResponse.setPosts(postDtoList);
+        return listResponse;
+    }
+
+    public PostListResponse findPostsById(int offset, int limit, Integer id) {
+        Pageable pageable = PageRequest.of(offset / limit, limit);
+        Page<Posts> page = postRepository.findPostById(pageable,id);
+        PostListResponse listResponse = new PostListResponse();
+        List<Posts> posts = new ArrayList<>();
+        posts.addAll(page.getContent());
+        List<PostDTO> postDtoList = posts.stream().map(mappingUtils::mapToPostDto)
+                .collect(Collectors.toList());
+        listResponse.setCount(page.getTotalElements());
+        listResponse.setPosts(postDtoList);
         return listResponse;
     }
 
@@ -156,12 +195,5 @@ public class PostService {
         result.add(years);
         result.add(posts);
         return result;
-    }
-
-    public PostListResponse findPostsByDate(int offset, int limit, Date date) {
-        PostListResponse listResponse = new PostListResponse();
-        ArrayList postsList = new ArrayList();
-        Long count = null;
-        return listResponse;
     }
 }

@@ -39,6 +39,22 @@ public class ApiPostController {
         return ResponseEntity.ok(postService.findPostsByDate(offset, limit, date));
     }
 
+    @GetMapping("/post/byTag")
+    public ResponseEntity<PostListResponse> postsByTag(
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam String tag) {
+        return ResponseEntity.ok(postService.findPostsByTag(offset, limit, tag));
+    }
+    @GetMapping("/post/{id}")
+    public ResponseEntity<PostListResponse> postsById(
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam Integer id) {
+        return ResponseEntity.ok(postService.findPostsById(offset, limit, id));
+    }
+
+
     @GetMapping("/calendar")
     public ResponseEntity<ArrayList> calendar(
             @RequestParam(defaultValue = "2022") int year) {
