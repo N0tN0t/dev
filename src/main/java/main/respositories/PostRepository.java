@@ -27,7 +27,7 @@ public interface PostRepository extends JpaRepository<Posts,Integer> {
             nativeQuery = true)
     public Page<Posts> findRecentPosts(Pageable pageable);
 
-    @Query(value = "SELECT * FROM posts WHERE WHERE is_active = 1 AND AND moderation_status = 'ACCEPTED' AND time <= NOW() AND CONTAINS(text,:date) ORDER BY posts.time DESC",
+    @Query(value = "SELECT * FROM posts WHERE WHERE is_active = 1 AND AND moderation_status = 'ACCEPTED' AND time <= NOW() AND CONTAINS(text,:query) ORDER BY posts.time DESC",
             nativeQuery = true)
     public Page<Posts> findByQueryPosts(Pageable pageable, @Param("query") String query);
 
@@ -100,5 +100,5 @@ public interface PostRepository extends JpaRepository<Posts,Integer> {
             "AND moderation_status = 'ACCEPTED' AND posts.time <= NOW() AND posts.id = :id " +
             "ORDER BY posts.time DESC",
             nativeQuery = true)
-    Page<Posts> findPostById(Pageable pageable, @Param("id") Integer id);
+    Posts findPostById(@Param("id") Integer id);
 }

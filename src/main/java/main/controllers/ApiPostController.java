@@ -1,5 +1,6 @@
 package main.controllers;
 
+import main.api.response.PostByIdResponse;
 import main.api.response.PostListResponse;
 import main.service.PostService;
 import main.service.UserService;
@@ -46,20 +47,11 @@ public class ApiPostController {
             @RequestParam String tag) {
         return ResponseEntity.ok(postService.findPostsByTag(offset, limit, tag));
     }
-    @GetMapping("/post/{id}")
-    public ResponseEntity<PostListResponse> postsById(
-            @RequestParam(defaultValue = "0") int offset,
-            @RequestParam(defaultValue = "10") int limit,
-            @RequestParam Integer id) {
-        return ResponseEntity.ok(postService.findPostsById(offset, limit, id));
+    @GetMapping("post/{id}")
+    public ResponseEntity<PostByIdResponse> getById(@PathVariable int id) {
+        return ResponseEntity.ok(postService.findPostsById(id));
     }
 
-
-    @GetMapping("/calendar")
-    public ResponseEntity<ArrayList> calendar(
-            @RequestParam(defaultValue = "2022") int year) {
-        return ResponseEntity.ok(postService.calendar(year));
-    }
     @GetMapping("/post/moderation")
     public ResponseEntity<PostListResponse> postsWithStatus(
             @RequestParam(defaultValue = "0") int offset,

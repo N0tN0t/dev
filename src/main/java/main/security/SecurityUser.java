@@ -1,9 +1,9 @@
 package main.security;
 
 import lombok.Data;
+import main.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -51,10 +51,11 @@ public class SecurityUser implements UserDetails {
     }
 
     public static UserDetails fromUser(User user) {
-        return new User(
-                user.getUsername(),
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
                 user.getPassword(),
-                user.getAuthorities()
+                true, true, true, true,
+                user.getRole().getAuthorities()
         );
     }
 }

@@ -1,11 +1,15 @@
 package main.service;
 
+import main.api.response.CalendarResponse;
+import main.api.response.PostByIdResponse;
 import main.api.response.PostListResponse;
 import main.dto.PostsResponseDTO;
+import main.entities.PostComments;
 import main.entities.Tags;
 import main.mappings.PostMappingUtils;
 import main.dto.PostDTO;
 import main.entities.Posts;
+import main.respositories.PostCommentsRepository;
 import main.respositories.PostRepository;
 import main.respositories.TagRepository;
 import org.springframework.data.domain.Page;
@@ -20,6 +24,7 @@ import java.util.stream.Collectors;
 
 public class PostService {
     private PostRepository postRepository;
+    private PostCommentsRepository postCommentsRepository;
     private TagRepository tagRepository;
     private PostMappingUtils mappingUtils;
 
@@ -160,40 +165,43 @@ public class PostService {
         return listResponse;
     }
 
-    public PostListResponse findPostsById(int offset, int limit, Integer id) {
-        Pageable pageable = PageRequest.of(offset / limit, limit);
-        Page<Posts> page = postRepository.findPostById(pageable,id);
-        PostListResponse listResponse = new PostListResponse();
-        List<Posts> posts = new ArrayList<>();
-        posts.addAll(page.getContent());
-        List<PostDTO> postDtoList = posts.stream().map(mappingUtils::mapToPostDto)
-                .collect(Collectors.toList());
-        listResponse.setCount(page.getTotalElements());
-        listResponse.setPosts(postDtoList);
-        return listResponse;
-    }
-
-    public ArrayList calendar(int year) {
-        ArrayList result = new ArrayList();
-        int[] years = new int[0];
-        Map<Date,Integer> posts = null;
+    public CalendarResponse calendar() {
+        String[] years = new String[0];
+        Map<String,Integer> posts = null;
         for (Posts post:postRepository.findAll()) {
             boolean db = false;
-            for (int year1: years) {
+            for (String year1: years) {
                 if (db == false) {
-                    if (year1 == post.getTime().getYear()) {
+                    if (year1 == String.valueOf(post.getTime().getYear())) {
                         db = true;
                         break;
                     }
                 }
             }
             if (db == false) {
-                years[years.length] = post.getTime().getYear();
+                years[years.length] = String.valueOf(post.getTime().getYear());
             }
-            posts.put(post.getTime(),posts.get(post.getTime()).intValue()+1);
+            posts.put(String.valueOf(post.getTime()),posts.get(post.getTime()).intValue()+1);
         }
-        result.add(years);
-        result.add(posts);
-        return result;
+        CalendarResponse calendarResponse = new CalendarResponse(years,posts);
+        return calendarResponse;
+    }
+
+    public PostByIdResponse findPostsById(int id) {
+        Posts post = postRepository.findPostById(id);
+        PostDTO postDTO = mappingUtils.mapToPostDto(post);
+        PostByIdResponse postByIdResponse = new PostByIdResponse();
+        postByIdResponse.setActive(post.getIsActive());
+        postByIdResponse.setId(post.getId());
+        postByIdResponse.setTitle(post.getTitle());
+        postByIdResponse.setText(post.getText());
+        postByIdResponse.setTimestamp(post.getTime());
+        postByIdResponse.setUser(post.getUser());
+        postByIdResponse.setComments(postCommentsRepository.findPostById(post.getId()));
+        postByIdResponse.setDislikeCount(postDTO.getDislikeCount());
+        postByIdResponse.setLikeCount(postDTO.getLikeCount());
+        postByIdResponse.setTags(post.getTags());
+        postByIdResponse.setViewCount(post.getViewCount());
+        return postByIdResponse;
     }
 }

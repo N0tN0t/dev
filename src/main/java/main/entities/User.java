@@ -32,7 +32,7 @@ public class User {
     private String code;
     @Column(columnDefinition = "TEXT", nullable = false)
     private String photo;
-    private Role getRole(){
+    public Role getRole(){
         return isModerator == true ? Role.MODERATOR : Role.USER;
     }
 }
