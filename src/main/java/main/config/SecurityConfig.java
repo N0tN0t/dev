@@ -31,14 +31,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().antMatchers("/**").permitAll().anyRequest().authenticated().and().formLogin().disable().httpBasic();
-    }
-
-    @Bean
-    protected UserDetailsService userDetailsService() {
-        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        return new InMemoryUserDetailsManager(User.builder().username("User").password(passwordEncoder().encode("user")).authorities(Role.USER.getAuthorities()).build(),
-                User.builder().username("moderator").password(passwordEncoder().encode("moderator")).authorities(Role.MODERATOR.getAuthorities()).build());
+        http
+                .csrf().disable()
+                .httpBasic().disable()
+                .formLogin().disable()
+                .authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/**").permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .logout()
+                .logoutUrl("api/auth/logout")
+                .clearAuthentication(true);
     }
 
     @Bean

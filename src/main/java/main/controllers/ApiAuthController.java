@@ -1,18 +1,17 @@
 package main.controllers;
 
 import com.github.cage.GCage;
-import main.api.response.CaptchaResponse;
-import main.api.response.CheckResponse;
+import main.api.response.*;
 import main.entities.CaptchaCodes;
 import main.requests.LoginRequest;
-import main.api.response.LoginResponse;
-import main.api.response.UserLoginResponse;
 import main.dto.UserDTO;
 import main.entities.User;
 import main.requests.RegRequest;
+import main.service.AuthCheckService;
 import main.service.CaptchaService;
 import main.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,6 +33,7 @@ public class ApiAuthController {
     private UserService userService;
     private CaptchaService captchaService;
     private final AuthenticationManager authenticationManager;
+    private AuthCheckService authCheckService;
 
     public ApiAuthController(CheckResponse checkResponse, UserService userService, AuthenticationManager authenticationManager) {
         this.checkResponse = checkResponse;
@@ -79,9 +79,10 @@ public class ApiAuthController {
         User user = (User) auth.getPrincipal();
         return ResponseEntity.ok(getLoginResponse(user.getEmail()));
     }
+    @PreAuthorize("hasAuthority('user:write')")
     @GetMapping("/logout")
-    public boolean logout(String email) {
-        return userService.logout(email);
+    public ResponseEntity<ResultResponse> logout() {
+        return ResponseEntity.ok(authCheckService.getLogoutResponse());
     }
 
     private LoginResponse getLoginResponse(String email) {

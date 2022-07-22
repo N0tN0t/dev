@@ -15,6 +15,8 @@ import main.respositories.TagRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +29,7 @@ public class PostService {
     private PostCommentsRepository postCommentsRepository;
     private TagRepository tagRepository;
     private PostMappingUtils mappingUtils;
+    private UserService userService;
 
     public List<PostDTO> findAll() {
         return postRepository.findAll().stream().map(mappingUtils::mapToPostDto).collect(Collectors.toList());
@@ -100,18 +103,19 @@ public class PostService {
     public PostListResponse getMyPosts(int offset, int limit, String status) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Posts> page;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         switch (status) {
             case "inactive":
-                page = postRepository.findMyInActivePosts(pageable);
+                page = postRepository.findMyInActivePosts(pageable,userService.findByEmail(auth.getName()).getId());
                 break;
             case "pending":
-                page = postRepository.findMyPendingPosts(pageable);
+                page = postRepository.findMyPendingPosts(pageable,userService.findByEmail(auth.getName()).getId());
                 break;
             case "declined":
-                page = postRepository.findMyDeclinedPosts(pageable);
+                page = postRepository.findMyDeclinedPosts(pageable,userService.findByEmail(auth.getName()).getId());
                 break;
             default:
-                page = postRepository.findMyPublishedPosts(pageable);
+                page = postRepository.findMyPublishedPosts(pageable,userService.findByEmail(auth.getName()).getId());
         }
 
         PostListResponse apiList = new PostListResponse();
@@ -201,7 +205,15 @@ public class PostService {
         postByIdResponse.setDislikeCount(postDTO.getDislikeCount());
         postByIdResponse.setLikeCount(postDTO.getLikeCount());
         postByIdResponse.setTags(post.getTags());
-        postByIdResponse.setViewCount(post.getViewCount());
+        if (post.getUser().isModerator()) {
+            postByIdResponse.setViewCount(0);
+        }
+        else if (SecurityContextHolder.getContext().getAuthentication() == post.getUser()) {
+            postByIdResponse.setViewCount(0);
+        }
+        else{
+            postByIdResponse.setViewCount(post.getViewCount());
+        }
         return postByIdResponse;
     }
 }
