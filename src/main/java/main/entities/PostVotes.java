@@ -18,10 +18,10 @@ public class PostVotes {
     private int id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private Users users;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
-    private Posts posts;
+    private Posts post;
     @Column(columnDefinition = "DATE", nullable = false)
     private Date time;
     private int value;

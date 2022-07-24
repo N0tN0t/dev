@@ -27,7 +27,7 @@ public class Posts {
     private int moderationId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private Users users;
     @Column(columnDefinition = "DATE", nullable = false)
     private Date time = Date.from(now());
     @Column(columnDefinition = "TEXT", nullable = false)

@@ -127,4 +127,11 @@
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint enabled="true" type="java-exception" />
+      </default-breakpoints>
+    </breakpoint-manager>
+  </component>
 </project>

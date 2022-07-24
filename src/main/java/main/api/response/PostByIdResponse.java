@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import main.entities.PostComments;
 import main.entities.Tags;
-import main.entities.User;
+import main.entities.Users;
 
 import java.util.Date;
 import java.util.List;
@@ -15,7 +15,7 @@ public class PostByIdResponse {
     Integer id;
     Date timestamp;
     Integer active;
-    User user;
+    Users users;
     String title;
     String text;
     Integer likeCount;

@@ -4,7 +4,6 @@ import main.api.response.CalendarResponse;
 import main.api.response.PostByIdResponse;
 import main.api.response.PostListResponse;
 import main.dto.PostsResponseDTO;
-import main.entities.PostComments;
 import main.entities.Tags;
 import main.mappings.PostMappingUtils;
 import main.dto.PostDTO;
@@ -200,15 +199,15 @@ public class PostService {
         postByIdResponse.setTitle(post.getTitle());
         postByIdResponse.setText(post.getText());
         postByIdResponse.setTimestamp(post.getTime());
-        postByIdResponse.setUser(post.getUser());
+        postByIdResponse.setUsers(post.getUsers());
         postByIdResponse.setComments(postCommentsRepository.findPostById(post.getId()));
         postByIdResponse.setDislikeCount(postDTO.getDislikeCount());
         postByIdResponse.setLikeCount(postDTO.getLikeCount());
         postByIdResponse.setTags(post.getTags());
-        if (post.getUser().isModerator()) {
+        if (post.getUsers().isModerator()) {
             postByIdResponse.setViewCount(0);
         }
-        else if (SecurityContextHolder.getContext().getAuthentication() == post.getUser()) {
+        else if (SecurityContextHolder.getContext().getAuthentication() == post.getUsers()) {
             postByIdResponse.setViewCount(0);
         }
         else{

@@ -13,7 +13,7 @@ import java.util.Date;
 @Entity
 @Getter @Setter
 @PropertySource("classpath:my_blog.users")
-public class User {
+public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "Integer", nullable = false)

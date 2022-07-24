@@ -1,12 +1,12 @@
 package main.mappings;
 
 import main.dto.UserDTO;
-import main.entities.User;
+import main.entities.Users;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserMappingUtils {
-    public UserDTO mapToPostDto(User entity){
+    public UserDTO mapToPostDto(Users entity){
         UserDTO dto = new UserDTO();
         dto.setId(entity.getId());
         dto.setEmail(entity.getEmail());
@@ -15,13 +15,13 @@ public class UserMappingUtils {
         dto.setModeration(entity.isModerator());
         return dto;
     }
-    public User mapToPostEntity(UserDTO dto){
-        User user = new User();
-        user.setEmail(dto.getEmail());
-        user.setId(dto.getId());
-        user.setPhoto(dto.getPhoto());
-        user.setModerator(dto.isModeration());
-        user.setName(dto.getName());
-        return user;
+    public Users mapToPostEntity(UserDTO dto){
+        Users users = new Users();
+        users.setEmail(dto.getEmail());
+        users.setId(dto.getId());
+        users.setPhoto(dto.getPhoto());
+        users.setModerator(dto.isModeration());
+        users.setName(dto.getName());
+        return users;
     }
 }

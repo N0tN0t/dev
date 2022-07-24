@@ -1,11 +1,9 @@
 package main.controllers;
 
-import com.github.cage.GCage;
 import main.api.response.*;
-import main.entities.CaptchaCodes;
+import main.entities.Users;
 import main.requests.LoginRequest;
 import main.dto.UserDTO;
-import main.entities.User;
 import main.requests.RegRequest;
 import main.service.AuthCheckService;
 import main.service.CaptchaService;
@@ -18,13 +16,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -76,8 +71,8 @@ public class ApiAuthController {
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(auth);
-        User user = (User) auth.getPrincipal();
-        return ResponseEntity.ok(getLoginResponse(user.getEmail()));
+        Users users = (Users) auth.getPrincipal();
+        return ResponseEntity.ok(getLoginResponse(users.getEmail()));
     }
     @PreAuthorize("hasAuthority('user:write')")
     @GetMapping("/logout")
