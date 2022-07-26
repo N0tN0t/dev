@@ -17,7 +17,7 @@ create table users (
   id SERIAL NOT NULL,
   code varchar(255) NOT NULL,
   email varchar(255) NOT NULL,
-  is_moderator int NOT NULL,
+  is_moderator TINYINT NOT NULL,
   name varchar(255) NOT NULL,
   password varchar(255) NOT NULL,
   photo varchar(255) NOT NULL,

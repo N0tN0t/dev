@@ -12,7 +12,7 @@ public class UserMappingUtils {
         dto.setEmail(entity.getEmail());
         dto.setName(entity.getName());
         dto.setPhoto(entity.getPhoto());
-        dto.setModeration(entity.isModerator());
+        dto.setModeration(entity.getIsModerator());
         return dto;
     }
     public Users mapToPostEntity(UserDTO dto){
@@ -20,7 +20,7 @@ public class UserMappingUtils {
         users.setEmail(dto.getEmail());
         users.setId(dto.getId());
         users.setPhoto(dto.getPhoto());
-        users.setModerator(dto.isModeration());
+        users.setIsModerator(dto.getModeration());
         users.setName(dto.getName());
         return users;
     }

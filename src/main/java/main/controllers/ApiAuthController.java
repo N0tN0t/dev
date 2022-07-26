@@ -85,7 +85,7 @@ public class ApiAuthController {
         UserLoginResponse userResponse = new UserLoginResponse();
         userResponse.setEmail(currentUser.getEmail());
         userResponse.setName(currentUser.getName());
-        userResponse.setModeration(currentUser.isModeration());
+        userResponse.setModeration(currentUser.getModeration());
         userResponse.setId(currentUser.getId());
 
         LoginResponse loginResponse = new LoginResponse();

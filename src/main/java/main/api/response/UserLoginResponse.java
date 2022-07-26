@@ -8,7 +8,7 @@ public class UserLoginResponse {
     private String name;
     private String photo;
     private String email;
-    private boolean moderation;
+    private byte moderation;
     private int moderationCount;
     private boolean settings;
 }

@@ -204,7 +204,7 @@ public class PostService {
         postByIdResponse.setDislikeCount(postDTO.getDislikeCount());
         postByIdResponse.setLikeCount(postDTO.getLikeCount());
         postByIdResponse.setTags(post.getTags());
-        if (post.getUsers().isModerator()) {
+        if (post.getUsers().getIsModerator() == 1) {
             postByIdResponse.setViewCount(0);
         }
         else if (SecurityContextHolder.getContext().getAuthentication() == post.getUsers()) {

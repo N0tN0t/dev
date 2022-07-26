@@ -18,8 +18,8 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "Integer", nullable = false)
     private int id;
-    @Column(name = "is_moderator", columnDefinition = "BOOLEAN", nullable = false)
-    private boolean isModerator;
+    @Column(name = "is_moderator", columnDefinition = "TINYINT", nullable = false)
+    private byte isModerator;
     @Column(name = "reg_time", columnDefinition = "DATE", nullable = false)
     private Date regTime;
     @Column(columnDefinition = "TEXT", nullable = false)
@@ -33,6 +33,6 @@ public class Users {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String photo;
     public Role getRole(){
-        return isModerator == true ? Role.MODERATOR : Role.USER;
+        return isModerator == 1 ? Role.MODERATOR : Role.USER;
     }
 }
