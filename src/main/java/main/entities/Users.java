@@ -18,8 +18,8 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "Integer", nullable = false)
     private int id;
-    @Column(name = "is_moderator", columnDefinition = "TINYINT", nullable = false)
-    private byte isModerator;
+    @Column(name = "is_moderator", columnDefinition = "SMALLINT", nullable = false)
+    private short isModerator;
     @Column(name = "reg_time", columnDefinition = "DATE", nullable = false)
     private Date regTime;
     @Column(columnDefinition = "TEXT", nullable = false)

@@ -8,7 +8,7 @@ public class UserDTO {
     String name;
     String photo;
     String email;
-    byte moderation;
+    short moderation;
     int moderationCount;
     boolean settings;
 }
