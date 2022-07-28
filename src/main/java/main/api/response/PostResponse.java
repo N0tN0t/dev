@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import main.dto.UserDTO;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Getter
 @Setter
+@Service
 @AllArgsConstructor
 public class PostResponse {
     private Integer id;

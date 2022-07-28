@@ -24,16 +24,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/auth")
 public class ApiAuthController {
-    private final CheckResponse checkResponse;
     private UserService userService;
     private CaptchaService captchaService;
-    private final AuthenticationManager authenticationManager;
     private AuthCheckService authCheckService;
 
-    public ApiAuthController(CheckResponse checkResponse, UserService userService, AuthenticationManager authenticationManager) {
-        this.checkResponse = checkResponse;
+    public ApiAuthController(AuthCheckService authCheckService, UserService userService) {
+        this.authCheckService = authCheckService;
         this.userService = userService;
-        this.authenticationManager = authenticationManager;
     }
 
     @GetMapping()
@@ -59,7 +56,7 @@ public class ApiAuthController {
         if (principal == null) {
             return ResponseEntity.ok(new LoginResponse());
         }
-        return ResponseEntity.ok(getLoginResponse(principal.getName()));
+        return ResponseEntity.ok(authCheckService.getLoginResponse(principal.getName()));
     }
 
     @PostMapping("/register")
@@ -69,29 +66,12 @@ public class ApiAuthController {
 
     @GetMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(auth);
-        Users users = (Users) auth.getPrincipal();
-        return ResponseEntity.ok(getLoginResponse(users.getEmail()));
+        return ResponseEntity.ok(authCheckService.getLogin(loginRequest));
     }
     @PreAuthorize("hasAuthority('user:write')")
     @GetMapping("/logout")
     public ResponseEntity<ResultResponse> logout() {
         return ResponseEntity.ok(authCheckService.getLogoutResponse());
-    }
-
-    private LoginResponse getLoginResponse(String email) {
-        UserDTO currentUser = userService.findByEmail(email);
-        UserLoginResponse userResponse = new UserLoginResponse();
-        userResponse.setEmail(currentUser.getEmail());
-        userResponse.setName(currentUser.getName());
-        userResponse.setModeration(currentUser.getModeration());
-        userResponse.setId(currentUser.getId());
-
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setResult(true);
-        loginResponse.setUserLoginResponse(userResponse);
-        return loginResponse;
     }
     @GetMapping("/captcha")
     public ResponseEntity<CaptchaResponse> captcha() throws IOException {

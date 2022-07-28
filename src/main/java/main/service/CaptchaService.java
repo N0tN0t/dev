@@ -5,12 +5,14 @@ import com.github.cage.GCage;
 import main.api.response.CaptchaResponse;
 import main.entities.CaptchaCodes;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.UUID;
 
+@Service
 public class CaptchaService {
     @Scheduled(fixedRate = 10000)
     public CaptchaResponse getCaptcha() throws IOException {

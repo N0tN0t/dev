@@ -5,12 +5,14 @@ import lombok.Setter;
 import main.entities.PostComments;
 import main.entities.Tags;
 import main.entities.Users;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
+@Service
 public class PostByIdResponse {
     Integer id;
     Date timestamp;

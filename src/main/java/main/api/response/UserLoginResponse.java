@@ -1,8 +1,10 @@
 package main.api.response;
 
 import lombok.Data;
+import org.springframework.stereotype.Service;
 
 @Data
+@Service
 public class UserLoginResponse {
     private long id;
     private String name;

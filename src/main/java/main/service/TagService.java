@@ -6,12 +6,13 @@ import main.entities.Posts;
 import main.entities.Tags;
 import main.respositories.PostRepository;
 import main.respositories.TagRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+@Service
 public class TagService {
     private TagRepository tagRepository;
     private PostRepository postRepository;
