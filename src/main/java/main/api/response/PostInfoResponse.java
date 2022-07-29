@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 @Getter
 @Setter
-@Service
 @AllArgsConstructor
 public class PostInfoResponse {
     private ArrayList comments;

@@ -11,7 +11,6 @@ import java.util.Date;
 
 @Getter
 @Setter
-@Service
 @AllArgsConstructor
 public class PostResponse {
     private Integer id;

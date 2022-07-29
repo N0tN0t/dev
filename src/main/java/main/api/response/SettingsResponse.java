@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 
 @Getter
 @Setter
-@Service
-
 public class SettingsResponse {
     @JsonProperty("MULTIUSER_MODE")
     private boolean multiuserMode;

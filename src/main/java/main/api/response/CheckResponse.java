@@ -13,7 +13,6 @@ import javax.annotation.PostConstruct;
 
 @Getter
 @Setter
-@Service
 public class CheckResponse {
     private boolean result;
     @JsonInclude(JsonInclude.Include.NON_NULL)

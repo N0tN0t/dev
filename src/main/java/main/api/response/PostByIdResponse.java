@@ -12,7 +12,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@Service
 public class PostByIdResponse {
     Integer id;
     Date timestamp;

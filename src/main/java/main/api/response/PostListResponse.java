@@ -8,7 +8,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@Service
 public class PostListResponse {
     private Long count;
     private List posts;

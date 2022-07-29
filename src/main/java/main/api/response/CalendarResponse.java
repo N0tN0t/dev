@@ -9,7 +9,6 @@ import java.util.Map;
 
 @Getter
 @Setter
-@Service
 @AllArgsConstructor
 public class CalendarResponse {
     private String[] years;

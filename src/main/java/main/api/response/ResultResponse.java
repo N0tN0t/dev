@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 @Getter
 @Setter
-@Service
 public class ResultResponse {
     boolean isAuthenticated;
 }
