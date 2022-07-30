@@ -16,6 +16,10 @@ import java.util.Date;
 public class ApiPostController {
     private UserService userService;
     private PostService postService;
+    public ApiPostController(UserService userService,PostService postService) {
+        this.userService = userService;
+        this.postService = postService;
+    }
     @GetMapping("/post")
     @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<PostListResponse> posts(

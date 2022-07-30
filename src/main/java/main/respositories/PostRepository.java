@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Posts,Integer> {
-    @Query(value = "SELECT COUNT(*) FROM Post p " +
+    @Query(value = "SELECT COUNT(*) FROM Posts p " +
             "WHERE p.isActive = 1 " +
             "AND p.moderationStatus = 'ACCEPTED' " +
             "AND p.time <= CURRENT_TIMESTAMP()")

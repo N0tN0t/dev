@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 public class SettingsService {
     private SettingsRepository settingsRepository;
 
+    public SettingsService(SettingsRepository settingsRepository) {
+        this.settingsRepository = settingsRepository;
+    }
+
     public SettingsResponse getGlobalSettings() {
         SettingsResponse settingsResponse = new SettingsResponse();
         settingsResponse.setMultiuserMode(

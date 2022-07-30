@@ -32,6 +32,14 @@ public class PostService {
     private PostMappingUtils mappingUtils;
     private UserService userService;
 
+    public PostService(PostRepository postRepository,PostCommentsRepository postCommentsRepository,TagRepository tagRepository,PostMappingUtils mappingUtils,UserService userService) {
+        this.postRepository = postRepository;
+        this.postCommentsRepository = postCommentsRepository;
+        this.tagRepository = tagRepository;
+        this.mappingUtils = mappingUtils;
+        this.userService = userService;
+    }
+
     public List<PostDTO> findAll() {
         return postRepository.findAll().stream().map(mappingUtils::mapToPostDto).collect(Collectors.toList());
     }

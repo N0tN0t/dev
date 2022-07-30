@@ -4,6 +4,7 @@ import main.api.response.CalendarResponse;
 import main.api.response.InitResponse;
 import main.api.response.SettingsResponse;
 import main.api.response.TagListResponse;
+import main.entities.GlobalSettings;
 import main.service.PostService;
 import main.service.SettingsService;
 import main.service.TagService;
