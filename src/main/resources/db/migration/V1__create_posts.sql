@@ -2,7 +2,7 @@ drop table if exists posts;
 create table posts (
    id SERIAL NOT NULL,
    is_active int NOT NULL,
-   moderation_status int4,
+   moderation_status varchar(255),
    moderation_id integer,
    user_id int4 NOT NULL,
    time timestamp without time zone NOT NULL,

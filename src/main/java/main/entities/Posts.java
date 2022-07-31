@@ -21,8 +21,8 @@ public class Posts {
     private int id;
     @Column(name = "is_active", columnDefinition = "BIT", nullable = false)
     private int isActive;
-    @Column(name = "moderation_status", columnDefinition = "INT4", nullable = false)
-    private ModerationStatus moderationStatus;
+    @Column(name = "moderation_status", columnDefinition = "varchar(255) default 'NEW'", nullable = false)
+    private String moderationStatus;
     @Column(name = "moderation_id", columnDefinition = "INTEGER", nullable = false)
     private int moderationId;
     @ManyToOne(fetch = FetchType.LAZY)
