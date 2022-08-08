@@ -32,7 +32,7 @@ public class ApiPostController {
     public ResponseEntity<PostListResponse> postsWithQuery(
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "10") int limit,
-            @RequestParam String query) {
+            @RequestParam(required = false) String query) {
         return ResponseEntity.ok(postService.findPostsByQuery(offset, limit, query));
     }
 

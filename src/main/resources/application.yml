@@ -20,6 +20,7 @@ spring:
     schemas: ${db.schema}
     locations: classpath:db/migration
     baseline-on-migrate: true
+    open-in-view: false
 server:
     port: 8090
 
