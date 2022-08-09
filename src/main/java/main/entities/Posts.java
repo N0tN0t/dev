@@ -24,7 +24,7 @@ public class Posts {
     @Column(name = "moderation_status", columnDefinition = "varchar(255) default 'NEW'", nullable = false)
     private String moderationStatus;
     @Column(name = "moderation_id", columnDefinition = "INTEGER", nullable = false)
-    private int moderationId;
+    private Integer moderationId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private Users users;

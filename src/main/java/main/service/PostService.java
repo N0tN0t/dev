@@ -18,10 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -180,7 +177,7 @@ public class PostService {
 
     public CalendarResponse calendar() {
         String[] years = new String[0];
-        Map<String,Integer> posts = null;
+        Map<String,Integer> posts = new HashMap<>();
         for (Posts post:postRepository.findAll()) {
             boolean db = false;
             for (String year1: years) {
@@ -191,10 +188,15 @@ public class PostService {
                     }
                 }
             }
-            if (db == false) {
+            if (db == false && years.length>0) {
                 years[years.length] = String.valueOf(post.getTime().getYear());
             }
-            posts.put(String.valueOf(post.getTime()),posts.get(post.getTime()).intValue()+1);
+            if (posts.get(post.getTime()) != null) {
+                posts.put(String.valueOf(post.getTime()), posts.get(post.getTime()).intValue() + 1);
+            }
+            else {
+                posts.put(String.valueOf(post.getTime()), 0);
+            }
         }
         CalendarResponse calendarResponse = new CalendarResponse(years,posts);
         return calendarResponse;

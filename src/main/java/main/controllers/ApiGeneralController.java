@@ -44,7 +44,7 @@ public class ApiGeneralController {
     }
 
     @GetMapping("/tag")
-    public ResponseEntity<TagListResponse> tags(@RequestParam String query) {
+    public ResponseEntity<TagListResponse> tags(@RequestParam(required = false) String query) {
         return ResponseEntity.ok(tagService.getTags(query));
     }
 }
