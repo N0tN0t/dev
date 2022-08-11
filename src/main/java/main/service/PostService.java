@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -74,25 +75,29 @@ public class PostService {
     public PostListResponse getPostsWithStatus(Integer offset, Integer limit, String status) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Posts> page;
-        switch (status) {
-            case "new":
-                page = postRepository.findNewPosts(pageable);
-                break;
-            case "declined":
-                page = postRepository.findDeclinedPosts(pageable);
-                break;
-            default:
-                page = postRepository.findAcceptedPosts(pageable);
-        }
-
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         PostListResponse apiList = new PostListResponse();
-        List<Posts> posts = new ArrayList<>();
-        posts.addAll(page.getContent());
-        apiList.setCount(page.getTotalElements());
+        if (auth.isAuthenticated()) {
+            switch (status) {
+                case "new":
+                    page = postRepository.findNewPosts(pageable);
+                    break;
+                case "declined":
+                    page = postRepository.findDeclinedPosts(pageable);
+                    break;
+                default:
+                    page = postRepository.findAcceptedPosts(pageable);
+            }
 
-        List<PostDTO> postDtoList = posts.stream().map(mappingUtils::mapToPostDto)
-                .collect(Collectors.toList());
-        apiList.setPosts(postDtoList);
+
+            List<Posts> posts = new ArrayList<>();
+            posts.addAll(page.getContent());
+            apiList.setCount(page.getTotalElements());
+
+            List<PostDTO> postDtoList = posts.stream().map(mappingUtils::mapToPostDto)
+                    .collect(Collectors.toList());
+            apiList.setPosts(postDtoList);
+        }
         return apiList;
     }
 
@@ -110,28 +115,31 @@ public class PostService {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Posts> page;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        switch (status) {
-            case "inactive":
-                page = postRepository.findMyInActivePosts(pageable,userService.findByEmail(auth.getName()).getId());
-                break;
-            case "pending":
-                page = postRepository.findMyPendingPosts(pageable,userService.findByEmail(auth.getName()).getId());
-                break;
-            case "declined":
-                page = postRepository.findMyDeclinedPosts(pageable,userService.findByEmail(auth.getName()).getId());
-                break;
-            default:
-                page = postRepository.findMyPublishedPosts(pageable,userService.findByEmail(auth.getName()).getId());
-        }
-
         PostListResponse apiList = new PostListResponse();
-        List<Posts> posts = new ArrayList<>();
-        posts.addAll(page.getContent());
-        apiList.setCount(page.getTotalElements());
+        if (auth.isAuthenticated()) {
+            switch (status) {
+                case "inactive":
+                    page = postRepository.findMyInActivePosts(pageable, userService.findByEmail(auth.getName()).getId());
+                    break;
+                case "pending":
+                    page = postRepository.findMyPendingPosts(pageable, userService.findByEmail(auth.getName()).getId());
+                    break;
+                case "declined":
+                    page = postRepository.findMyDeclinedPosts(pageable, userService.findByEmail(auth.getName()).getId());
+                    break;
+                default:
+                    page = postRepository.findMyPublishedPosts(pageable, userService.findByEmail(auth.getName()).getId());
+            }
 
-        List<PostDTO> postDtoList = posts.stream().map(mappingUtils::mapToPostDto)
-                .collect(Collectors.toList());
-        apiList.setPosts(postDtoList);
+
+            List<Posts> posts = new ArrayList<>();
+            posts.addAll(page.getContent());
+            apiList.setCount(page.getTotalElements());
+
+            List<PostDTO> postDtoList = posts.stream().map(mappingUtils::mapToPostDto)
+                    .collect(Collectors.toList());
+            apiList.setPosts(postDtoList);
+        }
         return apiList;
     }
 
