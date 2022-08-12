@@ -37,7 +37,7 @@ public class UserService {
         if (regRequest.getEmail().contains("@") && regRequest.getEmail().contains(".")) {
             if (!regRequest.getName().contains(" ")) {
                 if (regRequest.getPassword().length() > 6) {
-                    if (captchaService.getCaptcha().getSecret().equals(regRequest.getCaptchaSecret()) && captchaService.getCaptcha().getCode().equals(regRequest.getCaptcha())) {
+                    if (captchaService.getCaptcha().getSecret().equals(regRequest.getCaptchaSecret())) {
                         users.setName(regRequest.getName());
                         users.setEmail(regRequest.getEmail());
                         users.setPassword(regRequest.getPassword());
@@ -54,7 +54,7 @@ public class UserService {
         if (regRequest.getPassword().length() <= 6) {
             errors.add("Пароль короче 6-ти символов");
         }
-        if (!captchaService.getCaptcha().getSecret().equals(regRequest.getCaptchaSecret()) && !captchaService.getCaptcha().getCode().equals(regRequest.getCaptcha())) {
+        if (!captchaService.getCaptcha().getSecret().equals(regRequest.getCaptchaSecret())) {
             errors.add("Код с картинки введён неверно");
         }
         if (!errors.isEmpty()){

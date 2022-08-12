@@ -1,13 +1,16 @@
 package main.service;
 
 import main.api.response.CalendarResponse;
+import main.api.response.CheckResponse;
 import main.api.response.PostByIdResponse;
 import main.api.response.PostListResponse;
 import main.dto.PostsResponseDTO;
+import main.dto.UserDTO;
 import main.entities.Tags;
 import main.mappings.PostMappingUtils;
 import main.dto.PostDTO;
 import main.entities.Posts;
+import main.mappings.UserMappingUtils;
 import main.respositories.PostCommentsRepository;
 import main.respositories.PostRepository;
 import main.respositories.TagRepository;
@@ -18,7 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,7 +30,9 @@ public class PostService {
     private PostCommentsRepository postCommentsRepository;
     private TagRepository tagRepository;
     private PostMappingUtils mappingUtils;
+    private UserMappingUtils userMappingUtils;
     private UserService userService;
+    private AuthCheckService checkService;
 
     public PostService(PostRepository postRepository,PostCommentsRepository postCommentsRepository,TagRepository tagRepository,PostMappingUtils mappingUtils,UserService userService) {
         this.postRepository = postRepository;
@@ -224,14 +228,18 @@ public class PostService {
         postByIdResponse.setDislikeCount(postDTO.getDislikeCount());
         postByIdResponse.setLikeCount(postDTO.getLikeCount());
         postByIdResponse.setTags(post.getTags());
-        if (post.getUsers().getIsModerator() == 1) {
-            postByIdResponse.setViewCount(0);
-        }
-        else if (SecurityContextHolder.getContext().getAuthentication() == post.getUsers()) {
-            postByIdResponse.setViewCount(0);
-        }
-        else{
-            postByIdResponse.setViewCount(post.getViewCount());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated()) {
+            UserDTO user = userService.findByEmail(auth.getName());
+            if (user != null) {
+                if (user.getModeration() != 1 && user.getId() != post.getUsers().getId()) {
+                    post.setViewCount(post.getViewCount()+1);
+                    postRepository.save(post);
+                }
+            }else {
+                post.setViewCount(post.getViewCount()+1);
+                postRepository.save(post);
+            }
         }
         return postByIdResponse;
     }
