@@ -1,12 +1,14 @@
 package main.service;
 
 import main.api.response.CalendarResponse;
-import main.api.response.CheckResponse;
 import main.api.response.PostByIdResponse;
 import main.api.response.PostListResponse;
+import main.dto.CommentDTO;
 import main.dto.PostsResponseDTO;
 import main.dto.UserDTO;
+import main.entities.PostComments;
 import main.entities.Tags;
+import main.mappings.CommentMappingUtils;
 import main.mappings.PostMappingUtils;
 import main.dto.PostDTO;
 import main.entities.Posts;
@@ -31,15 +33,19 @@ public class PostService {
     private TagRepository tagRepository;
     private PostMappingUtils mappingUtils;
     private UserMappingUtils userMappingUtils;
+    private CommentMappingUtils commentMappingUtils;
     private UserService userService;
     private AuthCheckService checkService;
 
-    public PostService(PostRepository postRepository,PostCommentsRepository postCommentsRepository,TagRepository tagRepository,PostMappingUtils mappingUtils,UserService userService) {
+    public PostService(CommentMappingUtils commentMappingUtils,UserMappingUtils userMappingUtils,AuthCheckService checkService,PostRepository postRepository,PostCommentsRepository postCommentsRepository,TagRepository tagRepository,PostMappingUtils mappingUtils,UserService userService) {
         this.postRepository = postRepository;
         this.postCommentsRepository = postCommentsRepository;
         this.tagRepository = tagRepository;
         this.mappingUtils = mappingUtils;
         this.userService = userService;
+        this.userMappingUtils = userMappingUtils;
+        this.commentMappingUtils = commentMappingUtils;
+        this.checkService = checkService;
     }
 
     public List<PostDTO> findAll() {
@@ -217,17 +223,26 @@ public class PostService {
     public PostByIdResponse findPostsById(int id) {
         Posts post = postRepository.findPostById(id);
         PostDTO postDTO = mappingUtils.mapToPostDto(post);
-        PostByIdResponse postByIdResponse = new PostByIdResponse();
-        postByIdResponse.setActive(post.getIsActive());
+        UserDTO userDTO = userMappingUtils.mapToPostDto(post.getUsers());
+        PostByIdResponse postByIdResponse = null;
+        postByIdResponse.setActive(post.getIsActive() == 1 ? true : false);
         postByIdResponse.setId(post.getId());
         postByIdResponse.setTitle(post.getTitle());
         postByIdResponse.setText(post.getText());
-        postByIdResponse.setTimestamp(post.getTime());
-        postByIdResponse.setUsers(post.getUsers());
-        postByIdResponse.setComments(postCommentsRepository.findPostById(post.getId()));
+        postByIdResponse.setTimestamp(post.getTime().getTime());
+        postByIdResponse.setUser(userDTO);
+        List<CommentDTO> commentslist = null;
+        for (PostComments postComments:postCommentsRepository.findPostById(post.getId())) {
+            commentslist.add(commentMappingUtils.mapToPostDto(postComments));
+        }
+        postByIdResponse.setComments(commentslist);
         postByIdResponse.setDislikeCount(postDTO.getDislikeCount());
         postByIdResponse.setLikeCount(postDTO.getLikeCount());
-        postByIdResponse.setTags(post.getTags());
+        List<String> tagslist = null;
+        for (Tags tag:post.getTags()) {
+            tagslist.add(tag.toString());
+        }
+        postByIdResponse.setTags(tagslist);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated()) {
             UserDTO user = userService.findByEmail(auth.getName());

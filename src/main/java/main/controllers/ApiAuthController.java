@@ -42,11 +42,11 @@ public class ApiAuthController {
     }
 
     @PostMapping("/register")
-    public ArrayList register(RegRequest regRequest) throws IOException {
+    public ArrayList register(@RequestBody RegRequest regRequest) throws IOException {
         return userService.register(regRequest);
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(authCheckService.getLogin(loginRequest));
     }
