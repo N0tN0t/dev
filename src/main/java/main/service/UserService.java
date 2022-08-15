@@ -6,6 +6,9 @@ import main.entities.Users;
 import main.mappings.UserMappingUtils;
 import main.requests.RegRequest;
 import main.respositories.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -21,6 +24,7 @@ public class UserService {
     private UserMappingUtils mappingUtils;
     private CaptchaService captchaService;
     private Map<String,Integer> logedIn;
+    public static final PasswordEncoder BCRYPT = new BCryptPasswordEncoder(12);
 
     public UserService(UserRepository userRepository,UserMappingUtils mappingUtils,CaptchaService captchaService) {
         this.userRepository = userRepository;
@@ -47,12 +51,11 @@ public class UserService {
             if (!regRequest.getName().contains(" ")) {
                 if (regRequest.getPassword().length() > 6) {
                     System.out.println(captchaService.findCaptcha(regRequest.getCaptchaSecret()).getSecretCode());
-                    System.out.println(captchaResponse.getSecret());
                     System.out.println(regRequest.getCaptchaSecret());
                     if (captchaService.findCaptcha(regRequest.getCaptchaSecret()) != null) {
                         users.setName(regRequest.getName());
                         users.setEmail(regRequest.getEmail());
-                        users.setPassword(regRequest.getPassword());
+                        users.setPassword(BCRYPT.encode(regRequest.getPassword()));
                         users.setCode(captchaResponse.getSecret());
                         users.setPhoto("");
                         Date date = new Date(System.currentTimeMillis());
@@ -74,8 +77,10 @@ public class UserService {
         if (captchaService.findCaptcha(regRequest.getCaptchaSecret()) == null) {
             errors.add("Код с картинки введён неверно");
         }
-        if (!errors.isEmpty()){
+        System.out.println(errors.isEmpty());
+        if (errors.isEmpty()){
             userRepository.save(users);
+            System.out.println(userRepository.findAll());
             list.add(true);
         }
         else {
