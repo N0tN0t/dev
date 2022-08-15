@@ -1,15 +1,14 @@
 package main.controllers;
 
-import main.api.response.CalendarResponse;
-import main.api.response.InitResponse;
-import main.api.response.SettingsResponse;
-import main.api.response.TagListResponse;
-import main.entities.GlobalSettings;
+import main.api.response.*;
+import main.requests.PostRequest;
 import main.service.PostService;
 import main.service.SettingsService;
 import main.service.TagService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 
 @RestController
@@ -46,5 +45,14 @@ public class ApiGeneralController {
     @GetMapping("/tag")
     public ResponseEntity<TagListResponse> tags(@RequestParam(required = false) String query) {
         return ResponseEntity.ok(tagService.getTags(query));
+    }
+
+    @PostMapping("/post")
+    public ResponseEntity<ArrayList> postPost(@RequestParam PostRequest postRequest) {
+        return ResponseEntity.ok(postService.postPost(postRequest));
+    }
+    @PostMapping("/post/{ID}")
+    public ResponseEntity<ArrayList> editPost(@RequestParam PostRequest postRequest) {
+        return ResponseEntity.ok(postService.editPost(postRequest));
     }
 }

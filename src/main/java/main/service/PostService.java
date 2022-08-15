@@ -13,6 +13,7 @@ import main.mappings.PostMappingUtils;
 import main.dto.PostDTO;
 import main.entities.Posts;
 import main.mappings.UserMappingUtils;
+import main.requests.PostRequest;
 import main.respositories.PostCommentsRepository;
 import main.respositories.PostRepository;
 import main.respositories.TagRepository;
@@ -257,5 +258,72 @@ public class PostService {
             }
         }
         return postByIdResponse;
+    }
+
+    public ArrayList editPost(PostRequest postRequest) {
+        Posts post = new Posts();
+        List<String> errors = null;
+        ArrayList response = new ArrayList();
+        if (postRepository.findByDateTitle(postRequest.getTimestamp(),postRequest.getTitle()) != null) {
+            if (postRequest.getTitle().length() > 3) {
+                if (postRequest.getText().length() > 50) {
+                    post.setId(postRepository.findAll().iterator().next().getId() + 1);
+                    post.setTime(postRequest.getTimestamp());
+                    post.setTitle(postRequest.getTitle());
+                    post.setText(postRequest.getText());
+                    post.setTags(postRequest.getTags());
+                    post.setIsActive(postRequest.getActive());
+                }
+            }
+        }
+        if (postRepository.findByDateTitle(postRequest.getTimestamp(),postRequest.getTitle()) == null) {
+            errors.add("Пост не найден");
+        }
+        if (postRequest.getTitle().length()<=3) {
+            errors.add("Заголовок не установлен");
+        }
+        if (postRequest.getText().length() <= 50) {
+            errors.add("Текст публикации слишком короткий");
+        }
+        if (errors.isEmpty()) {
+            postRepository.save(post);
+            response.add(true);
+        }
+        else {
+            response.add(false);
+            response.add(errors);
+        }
+        return response;
+    }
+
+    public ArrayList postPost(PostRequest postRequest) {
+        Posts post = new Posts();
+        List<String> errors = null;
+        ArrayList response = new ArrayList();
+        if (postRequest.getTitle().length()>3) {
+            if (postRequest.getText().length() > 50) {
+                post.setId(postRepository.findAll().iterator().next().getId()+1);
+                post.setTime(postRequest.getTimestamp());
+                post.setTitle(postRequest.getTitle());
+                post.setText(postRequest.getText());
+                post.setTags(postRequest.getTags());
+                post.setIsActive(postRequest.getActive());
+            }
+        }
+        if (postRequest.getTitle().length()<=3) {
+            errors.add("Заголовок не установлен");
+        }
+        if (postRequest.getText().length() <= 50) {
+            errors.add("Текст публикации слишком короткий");
+        }
+        if (errors.isEmpty()) {
+            postRepository.save(post);
+            response.add(true);
+        }
+        else {
+            response.add(false);
+            response.add(errors);
+        }
+        return response;
     }
 }

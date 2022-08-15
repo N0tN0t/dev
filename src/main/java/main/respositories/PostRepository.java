@@ -99,4 +99,7 @@ public interface PostRepository extends JpaRepository<Posts,Integer> {
             "ORDER BY posts.time DESC",
             nativeQuery = true)
     Posts findPostById(@Param("id") Integer id);
+
+    @Query(value = "SELECT * FROM posts WHERE posts.time <= NOW() AND AND moderation_status = 'ACCEPTED' AND DATE_FORMAT(posts.time, '%Y-%m-%d') = :date AND posts.title = :title",nativeQuery = true)
+    Posts findByDateTitle(@Param("date") Date timestamp,@Param("title") String title);
 }
