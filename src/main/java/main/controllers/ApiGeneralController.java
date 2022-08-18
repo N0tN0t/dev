@@ -46,13 +46,4 @@ public class ApiGeneralController {
     public ResponseEntity<TagListResponse> tags(@RequestParam(required = false) String query) {
         return ResponseEntity.ok(tagService.getTags(query));
     }
-
-    @PostMapping("/post")
-    public ResponseEntity<ArrayList> postPost(@RequestParam PostRequest postRequest) {
-        return ResponseEntity.ok(postService.postPost(postRequest));
-    }
-    @PostMapping("/post/{ID}")
-    public ResponseEntity<ArrayList> editPost(@RequestParam PostRequest postRequest) {
-        return ResponseEntity.ok(postService.editPost(postRequest));
-    }
 }

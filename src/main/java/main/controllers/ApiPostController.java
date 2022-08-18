@@ -2,6 +2,7 @@ package main.controllers;
 
 import main.api.response.PostByIdResponse;
 import main.api.response.PostListResponse;
+import main.requests.PostRequest;
 import main.service.PostService;
 import main.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +55,15 @@ public class ApiPostController {
     @GetMapping("post/{id}")
     public ResponseEntity<PostByIdResponse> getById(@PathVariable int id) {
         return ResponseEntity.ok(postService.findPostsById(id));
+    }
+
+    @PostMapping("/post")
+    public ResponseEntity<ArrayList> postPost(@RequestParam PostRequest postRequest) {
+        return ResponseEntity.ok(postService.postPost(postRequest));
+    }
+    @PutMapping("/post/{ID}")
+    public ResponseEntity<ArrayList> editPost(@RequestParam PostRequest postRequest) {
+        return ResponseEntity.ok(postService.editPost(postRequest));
     }
 
     @GetMapping("/post/moderation")
