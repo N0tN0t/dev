@@ -10,9 +10,9 @@ import java.util.List;
 @Getter
 @Setter
 public class PostRequest {
-    Date timestamp;
-    int active;
+    long timestamp;
+    boolean active;
     String title;
-    List<Tags> tags;
+    List<String> tags;
     String text;
 }

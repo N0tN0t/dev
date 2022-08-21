@@ -58,11 +58,11 @@ public class ApiPostController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<ArrayList> postPost(@RequestParam PostRequest postRequest) {
+    public ResponseEntity<ArrayList> postPost(@RequestBody PostRequest postRequest) {
         return ResponseEntity.ok(postService.postPost(postRequest));
     }
     @PutMapping("/post/{ID}")
-    public ResponseEntity<ArrayList> editPost(@RequestParam PostRequest postRequest) {
+    public ResponseEntity<ArrayList> editPost(@RequestBody PostRequest postRequest) {
         return ResponseEntity.ok(postService.editPost(postRequest));
     }
 

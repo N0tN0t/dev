@@ -20,6 +20,7 @@ import main.respositories.TagRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -262,21 +263,28 @@ public class PostService {
 
     public ArrayList editPost(PostRequest postRequest) {
         Posts post = new Posts();
-        List<String> errors = null;
+        List<String> errors = new ArrayList();
         ArrayList response = new ArrayList();
-        if (postRepository.findByDateTitle(postRequest.getTimestamp(),postRequest.getTitle()) != null) {
+        Date newDate = new Date();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        newDate.setTime(postRequest.getTimestamp());
+        if (postRepository.findByDateTitle(newDate,postRequest.getTitle()) != null) {
             if (postRequest.getTitle().length() > 3) {
                 if (postRequest.getText().length() > 50) {
                     post.setId(postRepository.findAll().iterator().next().getId() + 1);
-                    post.setTime(postRequest.getTimestamp());
+                    post.setTime(newDate);
                     post.setTitle(postRequest.getTitle());
                     post.setText(postRequest.getText());
-                    post.setTags(postRequest.getTags());
-                    post.setIsActive(postRequest.getActive());
+                    post.setUsers(userMappingUtils.mapToPostEntity(userService.findByEmail(auth.getName())));
+                    List<Tags> tags = new ArrayList<>();
+                    postRequest.getTags().forEach(i -> {tags.add(tagRepository.findTagByName(i));});
+                    post.setTags(tags);
+                    post.setIsActive(postRequest.isActive() ? 1 : 0);
+                    post.setModerationStatus("NEW");
                 }
             }
         }
-        if (postRepository.findByDateTitle(postRequest.getTimestamp(),postRequest.getTitle()) == null) {
+        if (postRepository.findByDateTitle(newDate,postRequest.getTitle()) == null) {
             errors.add("Пост не найден");
         }
         if (postRequest.getTitle().length()<=3) {
@@ -298,16 +306,22 @@ public class PostService {
 
     public ArrayList postPost(PostRequest postRequest) {
         Posts post = new Posts();
-        List<String> errors = null;
+        List<String> errors = new ArrayList();
         ArrayList response = new ArrayList();
+        Date newDate = new Date();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        newDate.setTime(postRequest.getTimestamp());
         if (postRequest.getTitle().length()>3) {
             if (postRequest.getText().length() > 50) {
                 post.setId(postRepository.findAll().iterator().next().getId()+1);
-                post.setTime(postRequest.getTimestamp());
+                post.setTime(newDate);
                 post.setTitle(postRequest.getTitle());
                 post.setText(postRequest.getText());
-                post.setTags(postRequest.getTags());
-                post.setIsActive(postRequest.getActive());
+                post.setUsers(userMappingUtils.mapToPostEntity(userService.findByEmail(auth.getName())));
+                List<Tags> tags = new ArrayList<>();
+                postRequest.getTags().forEach(i -> {tags.add(tagRepository.findTagByName(i));});
+                post.setTags(tags);
+                post.setIsActive(postRequest.isActive() ? 1 : 0);
             }
         }
         if (postRequest.getTitle().length()<=3) {
