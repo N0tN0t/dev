@@ -8,6 +8,7 @@ import main.dto.PostsResponseDTO;
 import main.dto.UserDTO;
 import main.entities.PostComments;
 import main.entities.Tags;
+import main.entities.Users;
 import main.mappings.CommentMappingUtils;
 import main.mappings.PostMappingUtils;
 import main.dto.PostDTO;
@@ -17,6 +18,7 @@ import main.requests.PostRequest;
 import main.respositories.PostCommentsRepository;
 import main.respositories.PostRepository;
 import main.respositories.TagRepository;
+import main.respositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,8 +40,9 @@ public class PostService {
     private CommentMappingUtils commentMappingUtils;
     private UserService userService;
     private AuthCheckService checkService;
+    private UserRepository userRepository;
 
-    public PostService(CommentMappingUtils commentMappingUtils,UserMappingUtils userMappingUtils,AuthCheckService checkService,PostRepository postRepository,PostCommentsRepository postCommentsRepository,TagRepository tagRepository,PostMappingUtils mappingUtils,UserService userService) {
+    public PostService(UserRepository userRepository,CommentMappingUtils commentMappingUtils,UserMappingUtils userMappingUtils,AuthCheckService checkService,PostRepository postRepository,PostCommentsRepository postCommentsRepository,TagRepository tagRepository,PostMappingUtils mappingUtils,UserService userService) {
         this.postRepository = postRepository;
         this.postCommentsRepository = postCommentsRepository;
         this.tagRepository = tagRepository;
@@ -48,6 +51,7 @@ public class PostService {
         this.userMappingUtils = userMappingUtils;
         this.commentMappingUtils = commentMappingUtils;
         this.checkService = checkService;
+        this.userRepository = userRepository;
     }
 
     public List<PostDTO> findAll() {
@@ -271,11 +275,15 @@ public class PostService {
         if (postRepository.findByDateTitle(newDate,postRequest.getTitle()) != null) {
             if (postRequest.getTitle().length() > 3) {
                 if (postRequest.getText().length() > 50) {
+                    System.out.println(postRepository.findAll().iterator().next().getId());
                     post.setId(postRepository.findAll().iterator().next().getId() + 1);
                     post.setTime(newDate);
                     post.setTitle(postRequest.getTitle());
                     post.setText(postRequest.getText());
-                    post.setUsers(userMappingUtils.mapToPostEntity(userService.findByEmail(auth.getName())));
+                    String email = auth.getName();
+                    Users user = userRepository.findByEmail(email)
+                            .orElseThrow(() -> new NoSuchElementException("user " + email + " not found"));
+                    post.setUsers(user);
                     List<Tags> tags = new ArrayList<>();
                     postRequest.getTags().forEach(i -> {tags.add(tagRepository.findTagByName(i));});
                     post.setTags(tags);
@@ -317,7 +325,10 @@ public class PostService {
                 post.setTime(newDate);
                 post.setTitle(postRequest.getTitle());
                 post.setText(postRequest.getText());
-                post.setUsers(userMappingUtils.mapToPostEntity(userService.findByEmail(auth.getName())));
+                String email = auth.getName();
+                Users user = userRepository.findByEmail(email)
+                        .orElseThrow(() -> new NoSuchElementException("user " + email + " not found"));
+                post.setUsers(user);
                 List<Tags> tags = new ArrayList<>();
                 postRequest.getTags().forEach(i -> {tags.add(tagRepository.findTagByName(i));});
                 post.setTags(tags);
