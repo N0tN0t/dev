@@ -50,8 +50,6 @@ public class UserService {
         if (regRequest.getEmail().contains("@") && regRequest.getEmail().contains(".")) {
             if (!regRequest.getName().contains(" ")) {
                 if (regRequest.getPassword().length() > 6) {
-                    System.out.println(captchaService.findCaptcha(regRequest.getCaptchaSecret()).getSecretCode());
-                    System.out.println(regRequest.getCaptchaSecret());
                     if (captchaService.findCaptcha(regRequest.getCaptchaSecret()) != null) {
                         users.setName(regRequest.getName());
                         users.setEmail(regRequest.getEmail());
@@ -77,10 +75,8 @@ public class UserService {
         if (captchaService.findCaptcha(regRequest.getCaptchaSecret()) == null) {
             errors.add("Код с картинки введён неверно");
         }
-        System.out.println(errors.isEmpty());
         if (errors.isEmpty()){
             userRepository.save(users);
-            System.out.println(userRepository.findAll());
             list.add(true);
         }
         else {

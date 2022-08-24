@@ -275,7 +275,6 @@ public class PostService {
         if (postRepository.findByDateTitle(newDate,postRequest.getTitle()) != null) {
             if (postRequest.getTitle().length() > 3) {
                 if (postRequest.getText().length() > 50) {
-                    System.out.println(postRepository.findAll().iterator().next().getId());
                     post.setId(postRepository.findAll().iterator().next().getId() + 1);
                     post.setTime(newDate);
                     post.setTitle(postRequest.getTitle());

@@ -22,7 +22,6 @@ public class ApiPostController {
         this.postService = postService;
     }
     @GetMapping("/post")
-    @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<PostListResponse> posts(
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "10") int limit,
