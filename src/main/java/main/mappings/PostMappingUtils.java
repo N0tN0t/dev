@@ -9,6 +9,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class PostMappingUtils {
     UserRepository userRepository;
+
+    public PostMappingUtils(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public PostDTO mapToPostDto(Posts entity){
         PostDTO dto = new PostDTO();
         dto.setId(entity.getId());

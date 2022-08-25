@@ -324,6 +324,7 @@ public class PostService {
                 post.setTime(newDate);
                 post.setTitle(postRequest.getTitle());
                 post.setText(postRequest.getText());
+                post.setModerationStatus("NEW");
                 String email = auth.getName();
                 Users user = userRepository.findByEmail(email)
                         .orElseThrow(() -> new NoSuchElementException("user " + email + " not found"));
