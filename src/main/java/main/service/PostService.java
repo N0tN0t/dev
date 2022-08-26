@@ -27,6 +27,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -172,8 +176,9 @@ public class PostService {
         return listResponse;
     }
 
-    public PostListResponse findPostsByDate(int offset, int limit, Date date) {
+    public PostListResponse findPostsByDate(int offset, int limit, String strdate) throws ParseException {
         Pageable pageable = PageRequest.of(offset / limit, limit);
+        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(strdate);
         Page<Posts> page = postRepository.findByDate(pageable,date);
         PostListResponse listResponse = new PostListResponse();
         List<Posts> posts = new ArrayList<>();
@@ -200,29 +205,35 @@ public class PostService {
     }
 
     public CalendarResponse calendar() {
-        String[] years = new String[0];
+        List<Integer> years = new ArrayList<>();
         Map<String,Integer> posts = new HashMap<>();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         for (Posts post:postRepository.findAll()) {
             boolean db = false;
-            for (String year1: years) {
+            for (Integer year1: years) {
                 if (db == false) {
-                    if (year1 == String.valueOf(post.getTime().getYear())) {
+                    if (year1 == post.getTime().getYear()+1900) {
                         db = true;
                         break;
                     }
                 }
             }
-            if (db == false && years.length>0) {
-                years[years.length] = String.valueOf(post.getTime().getYear());
+            if (db == false) {
+                if (!years.contains(String.valueOf(post.getTime().getYear()+1900))) {
+                    years.add(post.getTime().getYear()+1900);
+                    if (posts.containsKey(dateFormat.format(post.getTime()))) {
+                        posts.put(dateFormat.format(post.getTime()), posts.get(dateFormat.format(post.getTime()))+1);
+                    }
+                    else {
+                        posts.put(dateFormat.format(post.getTime()), 1);
+                    }
+                }
             }
-            if (posts.get(post.getTime()) != null) {
-                posts.put(String.valueOf(post.getTime()), posts.get(post.getTime()).intValue() + 1);
-            }
-            else {
-                posts.put(String.valueOf(post.getTime()), 0);
+            if (posts.get(dateFormat.format(post.getTime())) == null) {
+                posts.put(dateFormat.format(post.getTime()), 0);
             }
         }
-        CalendarResponse calendarResponse = new CalendarResponse(years,posts);
+        CalendarResponse calendarResponse = new CalendarResponse(years.toArray(new Integer[years.size()]),posts);
         return calendarResponse;
     }
 
@@ -230,25 +241,11 @@ public class PostService {
         Posts post = postRepository.findPostById(id);
         PostDTO postDTO = mappingUtils.mapToPostDto(post);
         UserDTO userDTO = userMappingUtils.mapToPostDto(post.getUsers());
-        PostByIdResponse postByIdResponse = null;
-        postByIdResponse.setActive(post.getIsActive() == 1 ? true : false);
-        postByIdResponse.setId(post.getId());
-        postByIdResponse.setTitle(post.getTitle());
-        postByIdResponse.setText(post.getText());
-        postByIdResponse.setTimestamp(post.getTime().getTime());
-        postByIdResponse.setUser(userDTO);
-        List<CommentDTO> commentslist = null;
-        for (PostComments postComments:postCommentsRepository.findPostById(post.getId())) {
-            commentslist.add(commentMappingUtils.mapToPostDto(postComments));
-        }
-        postByIdResponse.setComments(commentslist);
-        postByIdResponse.setDislikeCount(postDTO.getDislikeCount());
-        postByIdResponse.setLikeCount(postDTO.getLikeCount());
-        List<String> tagslist = null;
-        for (Tags tag:post.getTags()) {
-            tagslist.add(tag.toString());
-        }
-        postByIdResponse.setTags(tagslist);
+        List<CommentDTO> commentDTOS = new ArrayList<>();
+        post.getPostComments().forEach(comment -> {commentDTOS.add(commentMappingUtils.mapToPostDto(comment));});
+        List<String> tags = new ArrayList<>();
+        post.getTags().forEach(tag -> {tags.add(tag.getName());});
+        PostByIdResponse postByIdResponse = new PostByIdResponse(post.getId(),post.getTime().getTime(),post.getIsActive() == 1 ? true : false,userDTO,post.getTitle(),post.getText(),postDTO.getLikeCount(),postDTO.getDislikeCount(),post.getViewCount(),commentDTOS,tags);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated()) {
             UserDTO user = userService.findByEmail(auth.getName());
@@ -275,7 +272,7 @@ public class PostService {
         if (postRepository.findByDateTitle(newDate,postRequest.getTitle()) != null) {
             if (postRequest.getTitle().length() > 3) {
                 if (postRequest.getText().length() > 50) {
-                    post.setId(postRepository.findAll().iterator().next().getId() + 1);
+                    post.setId(postRepository.findByDateTitle(new Date(postRequest.getTimestamp()),postRequest.getTitle()).getId());
                     post.setTime(newDate);
                     post.setTitle(postRequest.getTitle());
                     post.setText(postRequest.getText());
@@ -315,13 +312,15 @@ public class PostService {
         Posts post = new Posts();
         List<String> errors = new ArrayList();
         ArrayList response = new ArrayList();
-        Date newDate = new Date();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        newDate.setTime(postRequest.getTimestamp());
         if (postRequest.getTitle().length()>3) {
             if (postRequest.getText().length() > 50) {
-                post.setId(postRepository.findAll().iterator().next().getId()+1);
-                post.setTime(newDate);
+                int id = 0;
+                if (!postRepository.findAll().isEmpty()) {
+                    id = postRepository.findAll().iterator().next().getId()+1;
+                }
+                post.setId(id);
+                post.setTime(Date.from(Instant.now()));
                 post.setTitle(postRequest.getTitle());
                 post.setText(postRequest.getText());
                 post.setModerationStatus("NEW");

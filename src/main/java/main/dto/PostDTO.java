@@ -1,5 +1,6 @@
 package main.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import main.entities.Users;
 
@@ -9,7 +10,8 @@ import java.util.Date;
 public class PostDTO {
     int id;
     Date timestamp;
-    Users users;
+    @JsonIgnoreProperties({"email", "photo", "moderation", "moderationCount", "settings"})
+    UserDTO user;
     String title;
     String announce;
     int likeCount;

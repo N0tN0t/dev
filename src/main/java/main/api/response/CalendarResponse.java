@@ -11,6 +11,6 @@ import java.util.Map;
 @Setter
 @AllArgsConstructor
 public class CalendarResponse {
-    private String[] years;
+    private Integer[] years;
     private Map<String, Integer> posts;
 }

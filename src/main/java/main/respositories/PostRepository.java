@@ -83,7 +83,7 @@ public interface PostRepository extends JpaRepository<Posts,Integer> {
 
     @Query(value = "SELECT * FROM posts WHERE is_active = 1 " +
             "AND moderation_status = 'ACCEPTED' AND time <= NOW() " +
-            "AND DATE_FORMAT(posts.time, '%Y-%m-%d') = :date " +
+            "AND to_date(cast(posts.time as TEXT),'YYYY-MM-DD') = :date " +
             "ORDER BY posts.time DESC",
             nativeQuery = true)
     Page<Posts> findByDate(Pageable pageable, @Param("date") Date date);

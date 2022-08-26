@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -40,7 +41,7 @@ public class ApiPostController {
     public ResponseEntity<PostListResponse> postsByDate(
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "10") int limit,
-            @RequestParam Date date) {
+            @RequestParam String date) throws ParseException {
         return ResponseEntity.ok(postService.findPostsByDate(offset, limit, date));
     }
 

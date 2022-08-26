@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class PostMappingUtils {
     UserRepository userRepository;
+    UserMappingUtils userMappingUtils;
 
-    public PostMappingUtils(UserRepository userRepository) {
+    public PostMappingUtils(UserRepository userRepository,UserMappingUtils userMappingUtils) {
         this.userRepository = userRepository;
+        this.userMappingUtils = userMappingUtils;
     }
 
     public PostDTO mapToPostDto(Posts entity){
@@ -19,8 +21,9 @@ public class PostMappingUtils {
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
         dto.setTimestamp(entity.getTime());
-        dto.setUsers(userRepository.findById(entity.getUsers().getId()).orElse(new Users()));
+        dto.setUser(userMappingUtils.mapToPostDto(userRepository.findById(entity.getUsers().getId()).orElse(new Users())));
         dto.setAnnounce(entity.getTitle());
+        dto.setViewCount(entity.getViewCount());
         return dto;
     }
     public Posts mapToPostEntity(PostDTO dto){
@@ -28,8 +31,9 @@ public class PostMappingUtils {
         entity.setId(dto.getId());
         entity.setTitle(dto.getTitle());
         entity.setText(dto.getAnnounce());
-        entity.setUsers(dto.getUsers());
+        entity.setUsers(userMappingUtils.mapToPostEntity(dto.getUser()));
         entity.setTime(dto.getTimestamp());
+        entity.setViewCount(dto.getViewCount());
         return entity;
     }
 }

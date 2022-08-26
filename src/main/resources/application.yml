@@ -1,10 +1,11 @@
 db:
+  dataBase: my_blog
   user: postgres
   password: testtest
-  schema: my_blog
+  schema: public
 
 spring.datasource:
-  url: jdbc:postgresql://localhost:5432/${db.schema}?currentSchema=${db.schema}
+  url: jdbc:postgresql://localhost:5432/${db.dataBase}?currentSchema=${db.schema}
   username: ${db.user}
   password: ${db.password}
   driver-class-name: org.postgresql.Driver
