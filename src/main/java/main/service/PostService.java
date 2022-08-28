@@ -245,7 +245,7 @@ public class PostService {
         post.getPostComments().forEach(comment -> {commentDTOS.add(commentMappingUtils.mapToPostDto(comment));});
         List<String> tags = new ArrayList<>();
         post.getTags().forEach(tag -> {tags.add(tag.getName());});
-        PostByIdResponse postByIdResponse = new PostByIdResponse(post.getId(),post.getTime().getTime(),post.getIsActive() == 1 ? true : false,userDTO,post.getTitle(),post.getText(),postDTO.getLikeCount(),postDTO.getDislikeCount(),post.getViewCount(),commentDTOS,tags);
+        PostByIdResponse postByIdResponse = new PostByIdResponse(post.getId(),postDTO.getTimestamp(),post.getIsActive() == 1 ? true : false,userDTO,post.getTitle(),post.getText(),postDTO.getLikeCount(),postDTO.getDislikeCount(),post.getViewCount(),commentDTOS,tags);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated()) {
             UserDTO user = userService.findByEmail(auth.getName());

@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 public class PostDTO {
     int id;
-    Date timestamp;
+    long timestamp;
     @JsonIgnoreProperties({"email", "photo", "moderation", "moderationCount", "settings"})
     UserDTO user;
     String title;

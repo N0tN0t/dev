@@ -6,6 +6,8 @@ import main.entities.Users;
 import main.respositories.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class PostMappingUtils {
     UserRepository userRepository;
@@ -20,7 +22,7 @@ public class PostMappingUtils {
         PostDTO dto = new PostDTO();
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
-        dto.setTimestamp(entity.getTime());
+        dto.setTimestamp(entity.getTime().getTime()/1000);
         dto.setUser(userMappingUtils.mapToPostDto(userRepository.findById(entity.getUsers().getId()).orElse(new Users())));
         dto.setAnnounce(entity.getTitle());
         dto.setViewCount(entity.getViewCount());
@@ -32,7 +34,7 @@ public class PostMappingUtils {
         entity.setTitle(dto.getTitle());
         entity.setText(dto.getAnnounce());
         entity.setUsers(userMappingUtils.mapToPostEntity(dto.getUser()));
-        entity.setTime(dto.getTimestamp());
+        entity.setTime(new Date(dto.getTimestamp()));
         entity.setViewCount(dto.getViewCount());
         return entity;
     }
