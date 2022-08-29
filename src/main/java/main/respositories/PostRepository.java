@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -102,4 +103,7 @@ public interface PostRepository extends JpaRepository<Posts,Integer> {
 
     @Query(value = "SELECT * FROM posts WHERE posts.time <= NOW() AND AND moderation_status = 'ACCEPTED' AND DATE_FORMAT(posts.time, '%Y-%m-%d') = :date AND posts.title = :title",nativeQuery = true)
     Posts findByDateTitle(@Param("date") Date timestamp,@Param("title") String title);
+
+    @Query(value = "SELECT * FROM posts WHERE user_id = :user_id",nativeQuery = true)
+    List<Posts> findMyPosts(@Param("user_id") int id);
 }

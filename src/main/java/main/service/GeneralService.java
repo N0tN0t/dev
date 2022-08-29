@@ -1,7 +1,11 @@
 package main.service;
 
+import main.api.response.StatisticsResponse;
+import main.dto.PostDTO;
 import main.entities.PostComments;
+import main.entities.Posts;
 import main.entities.Users;
+import main.mappings.PostMappingUtils;
 import main.requests.CommentRequest;
 import main.requests.ProfileRequest;
 import main.respositories.PostCommentsRepository;
@@ -20,11 +24,13 @@ public class GeneralService {
     PostRepository postRepository;
     PostCommentsRepository commentsRepository;
     UserRepository userRepository;
+    PostMappingUtils postMappingUtils;
 
-    public GeneralService(PostRepository postRepository,PostCommentsRepository commentsRepository,UserRepository userRepository) {
+    public GeneralService(PostMappingUtils postMappingUtils,PostRepository postRepository,PostCommentsRepository commentsRepository,UserRepository userRepository) {
         this.postRepository = postRepository;
         this.commentsRepository = commentsRepository;
         this.userRepository = userRepository;
+        this.postMappingUtils = postMappingUtils;
     }
 
     public ArrayList postImage(File image) {
@@ -129,5 +135,65 @@ public class GeneralService {
             }
         }
         return result;
+    }
+
+    public StatisticsResponse myStatistics() {
+        StatisticsResponse statisticsResponse = new StatisticsResponse();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated()) {
+            List<Posts> myPosts = postRepository.findMyPosts(userRepository.findByEmail(auth.getName()).get().getId());
+            int postCount = 0;
+            int likesCount = 0;
+            int dislikesCount = 0;
+            int viewsCount = 0;
+            Date firstPublication = Date.from(Instant.now());
+            for (Posts post:myPosts) {
+                postCount += 1;
+                viewsCount += post.getViewCount();
+                PostDTO dto = postMappingUtils.mapToPostDto(post);
+                likesCount += dto.getLikeCount();
+                dislikesCount += dto.getDislikeCount();
+                if (post.getTime().getTime() < firstPublication.getTime()) {
+                    firstPublication = post.getTime();
+                }
+            }
+            statisticsResponse.setViewsCount(viewsCount);
+            statisticsResponse.setDislikesCount(dislikesCount);
+            statisticsResponse.setLikesCount(likesCount);
+            statisticsResponse.setPostCount(postCount);
+            statisticsResponse.setFirstPublication(firstPublication.getTime()/1000);
+        }
+        return statisticsResponse;
+    }
+
+    public StatisticsResponse allStatistics() {
+        StatisticsResponse statisticsResponse = new StatisticsResponse();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated()) {
+            Date firstPublication = Date.from(Instant.now());
+            int postCount = 0;
+            int likesCount = 0;
+            int dislikesCount = 0;
+            int viewsCount = 0;
+            for (Users user:userRepository.findAll()) {
+                List<Posts> myPosts = postRepository.findMyPosts(user.getId());
+                for (Posts post:myPosts) {
+                    postCount += 1;
+                    viewsCount += post.getViewCount();
+                    PostDTO dto = postMappingUtils.mapToPostDto(post);
+                    likesCount += dto.getLikeCount();
+                    dislikesCount += dto.getDislikeCount();
+                    if (post.getTime().getTime() < firstPublication.getTime()) {
+                        firstPublication = post.getTime();
+                    }
+                }
+            }
+            statisticsResponse.setViewsCount(viewsCount);
+            statisticsResponse.setDislikesCount(dislikesCount);
+            statisticsResponse.setLikesCount(likesCount);
+            statisticsResponse.setPostCount(postCount);
+            statisticsResponse.setFirstPublication(firstPublication.getTime()/1000);
+        }
+        return statisticsResponse;
     }
 }

@@ -3,6 +3,7 @@ package main.controllers;
 import main.api.response.PostByIdResponse;
 import main.api.response.PostListResponse;
 import main.requests.PostRequest;
+import main.requests.PostVoteRequest;
 import main.service.PostService;
 import main.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -80,5 +81,14 @@ public class ApiPostController {
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(defaultValue = "published") String status) {
         return ResponseEntity.ok(postService.getMyPosts(offset, limit, status));
+    }
+
+    @PostMapping("/post/like")
+    public ResponseEntity<ArrayList> like(@RequestBody PostVoteRequest postVoteRequest) {
+        return ResponseEntity.ok(postService.likePost(postVoteRequest));
+    }
+    @PostMapping("/post/dislike")
+    public ResponseEntity<ArrayList> dislike(@RequestBody PostVoteRequest postVoteRequest) {
+        return ResponseEntity.ok(postService.dislikePost(postVoteRequest));
     }
 }

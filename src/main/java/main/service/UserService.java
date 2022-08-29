@@ -2,14 +2,18 @@ package main.service;
 
 import main.api.response.CaptchaResponse;
 import main.dto.UserDTO;
+import main.entities.GlobalSettings;
 import main.entities.Users;
 import main.mappings.UserMappingUtils;
 import main.requests.RegRequest;
+import main.respositories.SettingsRepository;
 import main.respositories.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,13 +27,15 @@ public class UserService {
     private UserRepository userRepository;
     private UserMappingUtils mappingUtils;
     private CaptchaService captchaService;
+    private SettingsRepository settingsRepository;
     private Map<String,Integer> logedIn;
     public static final PasswordEncoder BCRYPT = new BCryptPasswordEncoder(12);
 
-    public UserService(UserRepository userRepository,UserMappingUtils mappingUtils,CaptchaService captchaService) {
+    public UserService(SettingsRepository settingsRepository,UserRepository userRepository,UserMappingUtils mappingUtils,CaptchaService captchaService) {
         this.userRepository = userRepository;
         this.mappingUtils = mappingUtils;
         this.captchaService =captchaService;
+        this.settingsRepository = settingsRepository;
     }
 
     public List<UserDTO> findAll() {
@@ -43,10 +49,14 @@ public class UserService {
     }
 
     public ArrayList register(RegRequest regRequest) throws IOException {
+        GlobalSettings multiuserMode = settingsRepository.findBySettingsCode("MULTIUSER_MODE");
         ArrayList list = new ArrayList();
         ArrayList errors = new ArrayList();
         Users users = new Users();
         CaptchaResponse captchaResponse = captchaService.getCaptcha();
+        if (Boolean.valueOf(multiuserMode.getValue()) == false) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Multiuser mode disabled");
+        }
         if (regRequest.getEmail().contains("@") && regRequest.getEmail().contains(".")) {
             if (!regRequest.getName().contains(" ")) {
                 if (regRequest.getPassword().length() > 6) {

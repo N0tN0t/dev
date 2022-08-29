@@ -4,6 +4,7 @@ import main.api.response.*;
 import main.entities.Users;
 import main.requests.LoginRequest;
 import main.dto.UserDTO;
+import main.requests.PasswordRequest;
 import main.requests.RegRequest;
 import main.service.AuthCheckService;
 import main.service.CaptchaService;
@@ -58,5 +59,9 @@ public class ApiAuthController {
     @GetMapping("/captcha")
     public ResponseEntity<CaptchaResponse> captcha() throws IOException {
         return ResponseEntity.ok(captchaService.getCaptcha());
+    }
+    @PostMapping("/password")
+    public ResponseEntity<ArrayList> changePassword(@RequestBody PasswordRequest passwordRequest) throws IOException {
+        return ResponseEntity.ok(captchaService.changePassword(passwordRequest));
     }
 }

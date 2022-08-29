@@ -6,19 +6,14 @@ import main.api.response.PostListResponse;
 import main.dto.CommentDTO;
 import main.dto.PostsResponseDTO;
 import main.dto.UserDTO;
-import main.entities.PostComments;
-import main.entities.Tags;
-import main.entities.Users;
+import main.entities.*;
 import main.mappings.CommentMappingUtils;
 import main.mappings.PostMappingUtils;
 import main.dto.PostDTO;
-import main.entities.Posts;
 import main.mappings.UserMappingUtils;
 import main.requests.PostRequest;
-import main.respositories.PostCommentsRepository;
-import main.respositories.PostRepository;
-import main.respositories.TagRepository;
-import main.respositories.UserRepository;
+import main.requests.PostVoteRequest;
+import main.respositories.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -45,8 +40,10 @@ public class PostService {
     private UserService userService;
     private AuthCheckService checkService;
     private UserRepository userRepository;
+    private PostVotesRepository postVotesRepository;
+    private SettingsRepository settingsRepository;
 
-    public PostService(UserRepository userRepository,CommentMappingUtils commentMappingUtils,UserMappingUtils userMappingUtils,AuthCheckService checkService,PostRepository postRepository,PostCommentsRepository postCommentsRepository,TagRepository tagRepository,PostMappingUtils mappingUtils,UserService userService) {
+    public PostService(SettingsRepository settingsRepository,PostVotesRepository postVotesRepository,UserRepository userRepository,CommentMappingUtils commentMappingUtils,UserMappingUtils userMappingUtils,AuthCheckService checkService,PostRepository postRepository,PostCommentsRepository postCommentsRepository,TagRepository tagRepository,PostMappingUtils mappingUtils,UserService userService) {
         this.postRepository = postRepository;
         this.postCommentsRepository = postCommentsRepository;
         this.tagRepository = tagRepository;
@@ -56,6 +53,8 @@ public class PostService {
         this.commentMappingUtils = commentMappingUtils;
         this.checkService = checkService;
         this.userRepository = userRepository;
+        this.postVotesRepository = postVotesRepository;
+        this.settingsRepository = settingsRepository;
     }
 
     public List<PostDTO> findAll() {
@@ -263,6 +262,7 @@ public class PostService {
     }
 
     public ArrayList editPost(PostRequest postRequest) {
+        GlobalSettings postPremoderation = settingsRepository.findBySettingsCode("POST_PREMODERATION");
         Posts post = new Posts();
         List<String> errors = new ArrayList();
         ArrayList response = new ArrayList();
@@ -284,7 +284,12 @@ public class PostService {
                     postRequest.getTags().forEach(i -> {tags.add(tagRepository.findTagByName(i));});
                     post.setTags(tags);
                     post.setIsActive(postRequest.isActive() ? 1 : 0);
-                    post.setModerationStatus("NEW");
+                    if (Boolean.valueOf(postPremoderation.getValue()) == true) {
+                        post.setModerationStatus("NEW");
+                    }
+                    else {
+                        post.setModerationStatus("ACCEPTED");
+                    }
                 }
             }
         }
@@ -309,6 +314,7 @@ public class PostService {
     }
 
     public ArrayList postPost(PostRequest postRequest) {
+        GlobalSettings postPremoderation = settingsRepository.findBySettingsCode("POST_PREMODERATION");
         Posts post = new Posts();
         List<String> errors = new ArrayList();
         ArrayList response = new ArrayList();
@@ -323,7 +329,12 @@ public class PostService {
                 post.setTime(Date.from(Instant.now()));
                 post.setTitle(postRequest.getTitle());
                 post.setText(postRequest.getText());
-                post.setModerationStatus("NEW");
+                if (Boolean.valueOf(postPremoderation.getValue()) == true) {
+                    post.setModerationStatus("NEW");
+                }
+                else {
+                    post.setModerationStatus("ACCEPTED");
+                }
                 String email = auth.getName();
                 Users user = userRepository.findByEmail(email)
                         .orElseThrow(() -> new NoSuchElementException("user " + email + " not found"));
@@ -349,5 +360,79 @@ public class PostService {
             response.add(errors);
         }
         return response;
+    }
+
+    public ArrayList likePost(PostVoteRequest postVoteRequest) {
+        ArrayList result = new ArrayList();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated()) {
+            if (postVotesRepository.findByPostIdAndUserId(postVoteRequest.getPostId(),userRepository.findByEmail(auth.getName()).get().getId()) != null) {
+                PostVotes vote = postVotesRepository.findByPostIdAndUserId(postVoteRequest.getPostId(),userRepository.findByEmail(auth.getName()).get().getId());
+                if (vote.getValue() == 0) {
+                    vote.setValue(1);
+                    result.add(true);
+                }
+                else {
+                    result.add(false);
+                }
+                postVotesRepository.save(vote);
+            }
+            else {
+                PostVotes newVote = new PostVotes();
+                newVote.setPost(postRepository.findPostById(postVoteRequest.getPostId()));
+                newVote.setTime(Date.from(Instant.now()));
+                newVote.setUsers(userRepository.findByEmail(auth.getName()).get());
+                if (postVotesRepository.findAll().iterator().hasNext()) {
+                    newVote.setId(postVotesRepository.findAll().iterator().next().getId()+1);
+                }
+                else {
+                    newVote.setId(0);
+                }
+                newVote.setValue(1);
+                postVotesRepository.save(newVote);
+                result.add(true);
+            }
+        }
+        else {
+            result.add(false);
+        }
+        return result;
+    }
+
+    public ArrayList dislikePost(PostVoteRequest postVoteRequest) {
+        ArrayList result = new ArrayList();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated()) {
+            if (postVotesRepository.findByPostIdAndUserId(postVoteRequest.getPostId(),userRepository.findByEmail(auth.getName()).get().getId()) != null) {
+                PostVotes vote = postVotesRepository.findByPostIdAndUserId(postVoteRequest.getPostId(),userRepository.findByEmail(auth.getName()).get().getId());
+                if (vote.getValue() == 1) {
+                    vote.setValue(0);
+                    result.add(true);
+                }
+                else {
+                    result.add(false);
+                }
+                postVotesRepository.save(vote);
+            }
+            else {
+                PostVotes newVote = new PostVotes();
+                newVote.setPost(postRepository.findPostById(postVoteRequest.getPostId()));
+                newVote.setTime(Date.from(Instant.now()));
+                newVote.setUsers(userRepository.findByEmail(auth.getName()).get());
+                if (postVotesRepository.findAll().iterator().hasNext()) {
+                    newVote.setId(postVotesRepository.findAll().iterator().next().getId()+1);
+                }
+                else {
+                    newVote.setId(0);
+                }
+                newVote.setValue(0);
+                postVotesRepository.save(newVote);
+                result.add(true);
+            }
+        }
+        else {
+            result.add(false);
+        }
+        return result;
     }
 }

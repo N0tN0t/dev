@@ -3,6 +3,7 @@ package main.controllers;
 import main.api.response.*;
 import main.requests.CommentRequest;
 import main.requests.ProfileRequest;
+import main.requests.SettingsRequest;
 import main.service.GeneralService;
 import main.service.PostService;
 import main.service.SettingsService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 @RestController
@@ -47,6 +49,10 @@ public class ApiGeneralController {
     public ResponseEntity<SettingsResponse> settings() {
         return ResponseEntity.ok(settingsService.getGlobalSettings());
     }
+    @PutMapping("/settings")
+    public ResponseEntity<SettingsResponse> putSettings(@RequestBody SettingsRequest settingsRequest) {
+        return ResponseEntity.ok(settingsService.putGlobalSettings(settingsRequest));
+    }
 
     @GetMapping("/tag")
     public ResponseEntity<TagListResponse> tags(@RequestParam(required = false) String query) {
@@ -66,5 +72,14 @@ public class ApiGeneralController {
     @PostMapping("/profile/my")
     public ResponseEntity<ArrayList> editMyProfile(@RequestBody ProfileRequest profileRequest) {
         return ResponseEntity.ok(generalService.editMyProfile(profileRequest));
+    }
+
+    @GetMapping("/statistics/my")
+    public ResponseEntity<StatisticsResponse> myStatistics() {
+        return ResponseEntity.ok(generalService.myStatistics());
+    }
+    @GetMapping("/statistics/all")
+    public ResponseEntity<StatisticsResponse> allStatistics() {
+        return ResponseEntity.ok(generalService.allStatistics());
     }
 }

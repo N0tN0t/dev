@@ -4,15 +4,13 @@ import com.github.cage.Cage;
 import com.github.cage.GCage;
 import main.api.response.CaptchaResponse;
 import main.entities.CaptchaCodes;
+import main.requests.PasswordRequest;
 import main.respositories.CaptchaRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class CaptchaService {
@@ -49,5 +47,32 @@ public class CaptchaService {
             }
         }
         return ifFinded;
+    }
+
+    public ArrayList changePassword(PasswordRequest passwordRequest) throws IOException {
+        ArrayList result = new ArrayList();
+        HashMap<String,String> errors = new HashMap<>();
+        if (findCaptcha(getCaptcha().getSecret()).getCode() != null) {
+            if (passwordRequest.getCaptcha() == findCaptcha(getCaptcha().getSecret()).getCode()) {
+                if (passwordRequest.getPassword().length() > 6) {
+                    result.add(true);
+                }
+                else {
+                    errors.put("password","Пароль короче 6-ти символов");
+                }
+            } else {
+                errors.put("code","Ссылка для восстановления пароля устарела.\n" +
+                        "<a href=\n" +
+                        "\\\"/auth/restore\\\">Запросить ссылку снова</a>");
+            }
+        }
+        else {
+            errors.put("captcha","Код с картинки введён неверно");
+        }
+        if (!errors.isEmpty()) {
+            result.add(false);
+            result.add(errors);
+        }
+        return result;
     }
 }

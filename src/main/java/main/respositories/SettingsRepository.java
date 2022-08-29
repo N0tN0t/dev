@@ -13,4 +13,7 @@ public interface SettingsRepository extends JpaRepository<GlobalSettings,Integer
     @Query(value = "SELECT value FROM global_settings WHERE code = :code",
             nativeQuery = true)
     String findSettingValue(@Param("code") String code);
+    @Query(value = "SELECT * FROM global_settings WHERE code = :code",
+            nativeQuery = true)
+    GlobalSettings findBySettingsCode(@Param("code") String code);
 }
