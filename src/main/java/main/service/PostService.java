@@ -242,7 +242,7 @@ public class PostService {
         PostDTO postDTO = mappingUtils.mapToPostDto(post);
         UserDTO userDTO = userMappingUtils.mapToPostDto(post.getUsers());
         List<CommentDTO> commentDTOS = new ArrayList<>();
-        post.getPostComments().forEach(comment -> {commentDTOS.add(commentMappingUtils.mapToPostDto(comment));});
+        post.getPostComments().forEach(comment -> commentDTOS.add(commentMappingUtils.mapToCommentDto(comment)));
         List<String> tags = new ArrayList<>();
         post.getTags().forEach(tag -> {tags.add(tag.getName());});
         PostByIdResponse postByIdResponse = new PostByIdResponse(post.getId(),postDTO.getTimestamp(),post.getIsActive() == 1 ? true : false,userDTO,post.getTitle(),post.getText(),postDTO.getLikeCount(),postDTO.getDislikeCount(),post.getViewCount(),commentDTOS,tags);

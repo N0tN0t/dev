@@ -2,6 +2,7 @@ package main.controllers;
 
 import main.api.response.*;
 import main.requests.CommentRequest;
+import main.requests.ProfileRequest;
 import main.service.GeneralService;
 import main.service.PostService;
 import main.service.SettingsService;
@@ -58,7 +59,12 @@ public class ApiGeneralController {
     }
 
     @PostMapping("/comment")
-    public ResponseEntity<ArrayList> comment(@RequestParam CommentRequest commentRequest) {
+    public ResponseEntity<ArrayList> comment(@RequestBody CommentRequest commentRequest) {
         return ResponseEntity.ok(generalService.postComment(commentRequest));
-    };
+    }
+
+    @PostMapping("/profile/my")
+    public ResponseEntity<ArrayList> editMyProfile(@RequestBody ProfileRequest profileRequest) {
+        return ResponseEntity.ok(generalService.editMyProfile(profileRequest));
+    }
 }

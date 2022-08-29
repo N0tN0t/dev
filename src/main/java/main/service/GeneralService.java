@@ -1,7 +1,9 @@
 package main.service;
 
 import main.entities.PostComments;
+import main.entities.Users;
 import main.requests.CommentRequest;
+import main.requests.ProfileRequest;
 import main.respositories.PostCommentsRepository;
 import main.respositories.PostRepository;
 import main.respositories.UserRepository;
@@ -46,36 +48,85 @@ public class GeneralService {
         ArrayList result = new ArrayList();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         HashMap<String,String> errors = new HashMap<>();
-        if (postRepository.findPostById(commentRequest.getPost_id()) != null && postRepository.findPostById(commentRequest.getParent_id()) != null || postRepository.findPostById(commentRequest.getPost_id()) != null && commentsRepository.findPostById(commentRequest.getPost_id()) != null) {
-            PostComments postComment = new PostComments();
-            postComment.setText(commentRequest.getText());
-            postComment.setTime(Date.from(Instant.now()));
-            if (commentsRepository.findAll().iterator().hasNext()) {
-                postComment.setId(commentsRepository.findAll().iterator().next().getId()+1);
-            }else {
-                postComment.setId(1);
-            }
-            postComment.setUsers(userRepository.findByEmail(auth.getName()).get());
-            postComment.setParent_id(commentRequest.getParent_id());
-            if (postRepository.findPostById(commentRequest.getParent_id()) != null) {
-                postComment.setPost(postRepository.findPostById(commentRequest.getParent_id()));
-            }
-            else {
-                postComment.setPost(commentsRepository.findCommentById(postComment.getParent_id()).getPost());
-            }
-            if (postComment.getText().isEmpty() || postComment.getText().length() < 50) {
+        if (auth.isAuthenticated()) {
+            if (commentRequest.getParentId() != null && postRepository.findPostById(commentRequest.getPostId()) != null && postRepository.findPostById(Integer.valueOf(commentRequest.getParentId())) != null || postRepository.findPostById(commentRequest.getPostId()) != null && commentsRepository.findPostById(commentRequest.getPostId()) != null) {
+                System.out.println(commentRequest.getParentId());
+                System.out.println(commentRequest.getPostId());
+                System.out.println(commentRequest.getText());
+                PostComments postComment = new PostComments();
+                postComment.setText(commentRequest.getText());
+                postComment.setTime(Date.from(Instant.now()));
+                if (commentsRepository.findAll().iterator().hasNext()) {
+                    postComment.setId(commentsRepository.findAll().iterator().next().getId() + 1);
+                } else {
+                    postComment.setId(1);
+                }
+                postComment.setUsers(userRepository.findByEmail(auth.getName()).get());
+                if (commentRequest.getParentId() != null) {
+                    postComment.setParent_id(Integer.valueOf(commentRequest.getParentId()));
+                }
+                postComment.setPost(postRepository.findPostById(commentRequest.getPostId()));
+                if (postComment.getText().isEmpty() || postComment.getText().length() < 50) {
+                    result.add(false);
+                    errors.put("text", "Текст комментария не задан или слишком короткий");
+                    result.add(errors);
+                } else {
+                    result.add(postComment.getId());
+                    commentsRepository.save(postComment);
+                }
+            } else {
                 result.add(false);
-                errors.put("text","Текст комментария не задан или слишком короткий");
                 result.add(errors);
-            }
-            else {
-                result.add(postComment.getId());
-                commentsRepository.save(postComment);
             }
         }
         else {
             result.add(false);
             result.add(errors);
+        }
+        return result;
+    }
+
+    public ArrayList editMyProfile(ProfileRequest profileRequest) {
+        ArrayList result = new ArrayList();
+        HashMap<String,String> errors = new HashMap<>();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated()) {
+            System.out.println(userRepository.findByEmail(auth.getName()));
+            Users user = userRepository.findByEmail(auth.getName()).get();
+            if (profileRequest.getName() != null) {
+                if (profileRequest.getName().length() > 0) {
+                    user.setName(profileRequest.getName());
+                } else {
+                    errors.put("name", "Имя указано неверно");
+                }
+            }
+            if (profileRequest.getPhoto() != null) {
+                if (userRepository.findByEmail(profileRequest.getEmail()) == null) {
+                    user.setEmail(profileRequest.getEmail());
+                } else {
+                    errors.put("email", "Этот e-mail уже зарегестрирован");
+                }
+            }
+            if (profileRequest.getPassword() != null) {
+                if (profileRequest.getPassword().length() > 6) {
+                    if (profileRequest.getPhoto() != null) {
+                        if (profileRequest.getPhoto().getTotalSpace() / (1024 * 1024) < 5) {
+                            user.setPhoto(profileRequest.getPhoto().toString());
+                        } else {
+                            errors.put("photo", "Фото слишком большое, нужно не более 5 Мб");
+                        }
+                    }
+                    user.setPassword(profileRequest.getPassword());
+                } else {
+                    errors.put("password", "Пароль короче 6-ти символов");
+                }
+            }
+            if (profileRequest.getRemovePhoto() == 0 && profileRequest.getPhoto() != null) {
+                user.setPhoto(profileRequest.getPhoto().toString());
+            }
+            else {
+                user.setPhoto("");
+            }
         }
         return result;
     }

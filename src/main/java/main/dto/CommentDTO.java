@@ -7,7 +7,7 @@ import java.util.Date;
 @Data
 public class CommentDTO {
     int id;
-    Date timestamp;
+    long timestamp;
     String text;
     UserDTO user;
 }
