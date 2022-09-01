@@ -8,11 +8,16 @@ import main.service.GeneralService;
 import main.service.PostService;
 import main.service.SettingsService;
 import main.service.TagService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -35,8 +40,7 @@ public class ApiGeneralController {
     }
 
     @GetMapping("/calendar")
-    public ResponseEntity<CalendarResponse> calendar(
-            @RequestParam(defaultValue = "false") boolean required) {
+    public ResponseEntity<CalendarResponse> calendar() {
         return ResponseEntity.ok(postService.calendar());
     }
 
@@ -47,7 +51,7 @@ public class ApiGeneralController {
 
     @GetMapping("/settings")
     public ResponseEntity<SettingsResponse> settings() {
-        return ResponseEntity.ok(settingsService.getGlobalSettings());
+        return ResponseEntity.ok().body(null);
     }
     @PutMapping("/settings")
     public ResponseEntity<SettingsResponse> putSettings(@RequestBody SettingsRequest settingsRequest) {
@@ -60,17 +64,29 @@ public class ApiGeneralController {
     }
 
     @PostMapping("/image")
-    public ResponseEntity<ArrayList> image(File image) {
+    public ResponseEntity<?> image(MultipartFile image) {
         return ResponseEntity.ok(generalService.postImage(image));
     }
 
     @PostMapping("/comment")
-    public ResponseEntity<ArrayList> comment(@RequestBody CommentRequest commentRequest) {
+    public ResponseEntity<?> comment(@RequestBody CommentRequest commentRequest) {
         return ResponseEntity.ok(generalService.postComment(commentRequest));
     }
 
+    @PreAuthorize("hasAuthority('user:write')")
+    @PostMapping(value = "/profile/my", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> editProfile(
+            @RequestParam(value = "photo") MultipartFile photo,
+            @RequestParam(value = "name") String name,
+            @RequestParam(value = "email") String email,
+            @RequestParam(value = "password", required = false) String password) throws IOException {
+        return ResponseEntity
+                .ok(generalService.editMyProfilePhoto(photo, name, email, password));
+    }
+
+    @PreAuthorize("hasAuthority('user:write')")
     @PostMapping("/profile/my")
-    public ResponseEntity<ArrayList> editMyProfile(@RequestBody ProfileRequest profileRequest) {
+    public ResponseEntity<ArrayList> editProfile(@RequestBody ProfileRequest profileRequest) {
         return ResponseEntity.ok(generalService.editMyProfile(profileRequest));
     }
 

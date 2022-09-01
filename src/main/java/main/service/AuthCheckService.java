@@ -6,13 +6,19 @@ import main.api.response.ResultResponse;
 import main.api.response.UserLoginResponse;
 import main.dto.UserDTO;
 import main.mappings.UserMappingUtils;
+import main.requests.EmailRequest;
 import main.requests.LoginRequest;
 import main.respositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.Random;
 
 @AllArgsConstructor
 @Service
@@ -21,6 +27,8 @@ public class AuthCheckService {
     public UserService userService;
     public UserRepository userRepository;
     public UserMappingUtils mappingService;
+    @Autowired
+    private JavaMailSender mailSender;
     public ResultResponse getLogoutResponse() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         auth.setAuthenticated(false);
@@ -45,5 +53,21 @@ public class AuthCheckService {
         loginResponse.setResult(true);
         loginResponse.setUserLoginResponse(userResponse);
         return loginResponse;
+    }
+
+    public Boolean restore(EmailRequest emailRequest) {
+        boolean result = false;
+        if (userRepository.findByEmail(emailRequest.getEmail()) != null) {
+            int code = new Random().nextInt();
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("devVlogTest@gmail.com");
+            message.setTo("ssundertaless@gmail.com");
+            message.setSubject("Restore Password");
+            message.setText(emailRequest.getEmail()+"/change-password/"+code);
+            userRepository.findByEmail(emailRequest.getEmail()).get().setCode(String.valueOf(code));
+            mailSender.send(message);
+            result = true;
+        }
+        return result;
     }
 }

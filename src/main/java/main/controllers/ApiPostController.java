@@ -17,10 +17,8 @@ import java.util.Date;
 @RestController
 @RequestMapping("/api")
 public class ApiPostController {
-    private UserService userService;
     private PostService postService;
-    public ApiPostController(UserService userService,PostService postService) {
-        this.userService = userService;
+    public ApiPostController(PostService postService) {
         this.postService = postService;
     }
     @GetMapping("/post")

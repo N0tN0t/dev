@@ -2,6 +2,7 @@ package main.controllers;
 
 import main.api.response.*;
 import main.entities.Users;
+import main.requests.EmailRequest;
 import main.requests.LoginRequest;
 import main.dto.UserDTO;
 import main.requests.PasswordRequest;
@@ -61,7 +62,12 @@ public class ApiAuthController {
         return ResponseEntity.ok(captchaService.getCaptcha());
     }
     @PostMapping("/password")
-    public ResponseEntity<ArrayList> changePassword(@RequestBody PasswordRequest passwordRequest) throws IOException {
+    public ResponseEntity<?> changePassword(@RequestBody PasswordRequest passwordRequest) throws IOException {
         return ResponseEntity.ok(captchaService.changePassword(passwordRequest));
+    }
+
+    @PostMapping("/restore")
+    public ResponseEntity<Boolean> restore(@RequestBody EmailRequest emailRequest) {
+        return ResponseEntity.ok(authCheckService.restore(emailRequest));
     }
 }

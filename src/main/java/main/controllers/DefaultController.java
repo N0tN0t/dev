@@ -17,15 +17,7 @@ public class DefaultController {
     }
 
     @RequestMapping("/")
-    public String index(Model model) {
-/*        Iterable<Posts> postIterable = taskRepository.findAll();
-        ArrayList<Posts> posts = new ArrayList<>();
-        for(Posts post : postIterable) {
-            posts.add(post);
-        }
-        model.addAttribute("posts",posts);
-        model.addAttribute("postsCount",posts.size());
-                model.addAttribute("someParameter",someParameter);*/
+    public String index() {
         return "index";
     }
     @RequestMapping(method = {RequestMethod.OPTIONS, RequestMethod.GET}, value = "/**/{path:[^\\.]*}")

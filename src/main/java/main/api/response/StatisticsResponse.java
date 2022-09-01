@@ -9,7 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class StatisticsResponse {
-    private int postCount = 0;
+    private int postsCount = 0;
     private int likesCount = 0;
     private int dislikesCount = 0;
     private int viewsCount = 0;

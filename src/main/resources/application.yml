@@ -11,6 +11,17 @@ spring.datasource:
   driver-class-name: org.postgresql.Driver
 
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: devvlogtest@gmail.com
+    password: devVlogTestTest
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
   jpa:
     database: POSTGRESQL
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect

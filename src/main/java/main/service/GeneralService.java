@@ -14,6 +14,7 @@ import main.respositories.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.time.Instant;
@@ -33,11 +34,11 @@ public class GeneralService {
         this.postMappingUtils = postMappingUtils;
     }
 
-    public ArrayList postImage(File image) {
+    public ArrayList postImage(MultipartFile image) {
         ArrayList result = new ArrayList();
         int randomHash = new Random().toString().hashCode();
         File dir = new File("/upload"+"/"+String.valueOf(randomHash).substring(0,String.valueOf(randomHash).length()/3)+"/"+String.valueOf(randomHash).substring(String.valueOf(randomHash).length()/3,String.valueOf(randomHash).length()/3*2)+"/"+String.valueOf(randomHash).substring(String.valueOf(randomHash).length()/3*2));
-        if (image.getTotalSpace()>1000) {
+        if (image.getSize()/1000000<8) {
             new File(dir,image.toString());
             result.add(dir.toString());
         }
@@ -97,7 +98,6 @@ public class GeneralService {
         HashMap<String,String> errors = new HashMap<>();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated()) {
-            System.out.println(userRepository.findByEmail(auth.getName()));
             Users user = userRepository.findByEmail(auth.getName()).get();
             if (profileRequest.getName() != null) {
                 if (profileRequest.getName().length() > 0) {
@@ -160,7 +160,7 @@ public class GeneralService {
             statisticsResponse.setViewsCount(viewsCount);
             statisticsResponse.setDislikesCount(dislikesCount);
             statisticsResponse.setLikesCount(likesCount);
-            statisticsResponse.setPostCount(postCount);
+            statisticsResponse.setPostsCount(postCount);
             statisticsResponse.setFirstPublication(firstPublication.getTime()/1000);
         }
         return statisticsResponse;
@@ -191,9 +191,54 @@ public class GeneralService {
             statisticsResponse.setViewsCount(viewsCount);
             statisticsResponse.setDislikesCount(dislikesCount);
             statisticsResponse.setLikesCount(likesCount);
-            statisticsResponse.setPostCount(postCount);
+            statisticsResponse.setPostsCount(postCount);
             statisticsResponse.setFirstPublication(firstPublication.getTime()/1000);
         }
         return statisticsResponse;
+    }
+
+    public ArrayList editMyProfilePhoto(MultipartFile photo, String name, String email, String password) {
+        ArrayList result = new ArrayList();
+        HashMap<String,String> errors = new HashMap<>();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.isAuthenticated()) {
+            Users user = userRepository.findByEmail(auth.getName()).get();
+            if (name != null) {
+                if (name.length() > 0) {
+                    user.setName(name);
+                } else {
+                    errors.put("name", "Имя указано неверно");
+                }
+            }
+            if (email != null) {
+                if (userRepository.findByEmail(email) == null) {
+                    user.setEmail(email);
+                } else {
+                    errors.put("email", "Этот e-mail уже зарегестрирован");
+                }
+            }
+            if (password != null) {
+                if (password.length() > 6) {
+                    if (photo != null) {
+                        if (photo.getSize() / 1000000 < 5) {
+                            user.setPhoto(photo.toString());
+                        } else {
+                            errors.put("photo", "Фото слишком большое, нужно не более 5 Мб");
+                        }
+                    }
+                    user.setPassword(password);
+                } else {
+                    errors.put("password", "Пароль короче 6-ти символов");
+                }
+            }
+            if (photo != null) {
+                if (photo.getSize() * 1000000 < 5) {
+                    user.setPhoto(photo.toString());
+                } else {
+                    errors.put("photo", "Фото слишком большое, нужно не более 5 Мб");
+                }
+            }
+        }
+        return result;
     }
 }
