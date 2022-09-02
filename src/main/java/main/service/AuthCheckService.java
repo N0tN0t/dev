@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Service
@@ -58,13 +59,13 @@ public class AuthCheckService {
     public Boolean restore(EmailRequest emailRequest) {
         boolean result = false;
         if (userRepository.findByEmail(emailRequest.getEmail()) != null) {
-            int code = new Random().nextInt();
             SimpleMailMessage message = new SimpleMailMessage();
+            String hash = UUID.randomUUID().toString().replaceAll("-","");
             message.setFrom("devVlogTest@gmail.com");
             message.setTo("ssundertaless@gmail.com");
             message.setSubject("Restore Password");
-            message.setText(emailRequest.getEmail()+"/change-password/"+code);
-            userRepository.findByEmail(emailRequest.getEmail()).get().setCode(String.valueOf(code));
+            message.setText(emailRequest.getEmail()+"/change-password/"+hash);
+            userRepository.findByEmail(emailRequest.getEmail()).get().setCode(hash);
             mailSender.send(message);
             result = true;
         }
