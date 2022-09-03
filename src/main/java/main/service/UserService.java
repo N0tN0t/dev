@@ -54,7 +54,7 @@ public class UserService {
         ArrayList errors = new ArrayList();
         Users users = new Users();
         CaptchaResponse captchaResponse = captchaService.getCaptcha();
-        if (Boolean.valueOf(multiuserMode.getValue()) == false) {
+        if (multiuserMode.getValue() == "NO") {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Multiuser mode disabled");
         }
         if (regRequest.getEmail().contains("@") && regRequest.getEmail().contains(".")) {

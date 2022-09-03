@@ -329,7 +329,7 @@ public class PostService {
                 post.setTime(Date.from(Instant.now()));
                 post.setTitle(postRequest.getTitle());
                 post.setText(postRequest.getText());
-                if (Boolean.valueOf(postPremoderation.getValue()) == true) {
+                if (postPremoderation.getValue() == "YES") {
                     post.setModerationStatus("NEW");
                 }
                 else {
