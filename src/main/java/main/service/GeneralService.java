@@ -2,6 +2,7 @@ package main.service;
 
 import main.api.response.StatisticsResponse;
 import main.dto.PostDTO;
+import main.entities.GlobalSettings;
 import main.entities.PostComments;
 import main.entities.Posts;
 import main.entities.Users;
@@ -10,7 +11,9 @@ import main.requests.CommentRequest;
 import main.requests.ProfileRequest;
 import main.respositories.PostCommentsRepository;
 import main.respositories.PostRepository;
+import main.respositories.SettingsRepository;
 import main.respositories.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -26,12 +29,14 @@ public class GeneralService {
     PostCommentsRepository commentsRepository;
     UserRepository userRepository;
     PostMappingUtils postMappingUtils;
+    SettingsRepository settingsRepository;
 
-    public GeneralService(PostMappingUtils postMappingUtils,PostRepository postRepository,PostCommentsRepository commentsRepository,UserRepository userRepository) {
+    public GeneralService(SettingsRepository settingsRepository,PostMappingUtils postMappingUtils,PostRepository postRepository,PostCommentsRepository commentsRepository,UserRepository userRepository) {
         this.postRepository = postRepository;
         this.commentsRepository = commentsRepository;
         this.userRepository = userRepository;
         this.postMappingUtils = postMappingUtils;
+        this.settingsRepository = settingsRepository;
     }
 
     public ArrayList postImage(MultipartFile image) {
@@ -166,18 +171,24 @@ public class GeneralService {
         return statisticsResponse;
     }
 
-    public StatisticsResponse allStatistics() {
+    public Object allStatistics() {
+        GlobalSettings settings = settingsRepository.findBySettingsCode("STATISTICS_IS_PUBLIC");
         StatisticsResponse statisticsResponse = new StatisticsResponse();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated()) {
+            if (settings.getValue() == "true"){
+                if (userRepository.findByEmail(auth.getName()).get().getIsModerator() == 0) {
+                    return HttpStatus.UNAUTHORIZED;
+                }
+            }
             Date firstPublication = Date.from(Instant.now());
             int postCount = 0;
             int likesCount = 0;
             int dislikesCount = 0;
             int viewsCount = 0;
-            for (Users user:userRepository.findAll()) {
+            for (Users user : userRepository.findAll()) {
                 List<Posts> myPosts = postRepository.findMyPosts(user.getId());
-                for (Posts post:myPosts) {
+                for (Posts post : myPosts) {
                     postCount += 1;
                     viewsCount += post.getViewCount();
                     PostDTO dto = postMappingUtils.mapToPostDto(post);
@@ -192,7 +203,7 @@ public class GeneralService {
             statisticsResponse.setDislikesCount(dislikesCount);
             statisticsResponse.setLikesCount(likesCount);
             statisticsResponse.setPostsCount(postCount);
-            statisticsResponse.setFirstPublication(firstPublication.getTime()/1000);
+            statisticsResponse.setFirstPublication(firstPublication.getTime() / 1000);
         }
         return statisticsResponse;
     }

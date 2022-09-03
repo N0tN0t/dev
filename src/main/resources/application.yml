@@ -12,10 +12,10 @@ spring.datasource:
 
 spring:
   mail:
-    host: smtp.gmail.com
+    host: smtp.mail.ru
     port: 587
-    username: devvlogtest@gmail.com
-    password: devVlogTestTest
+    username: sansundertalesans@mail.ru
+    password: qWtzktmX9A6RbuzxgFkf
     properties:
       mail:
         smtp:

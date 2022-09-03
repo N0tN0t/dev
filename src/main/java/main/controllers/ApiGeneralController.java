@@ -14,12 +14,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 @RestController
@@ -95,7 +91,7 @@ public class ApiGeneralController {
         return ResponseEntity.ok(generalService.myStatistics());
     }
     @GetMapping("/statistics/all")
-    public ResponseEntity<StatisticsResponse> allStatistics() {
+    public ResponseEntity<Object> allStatistics() {
         return ResponseEntity.ok(generalService.allStatistics());
     }
 }
