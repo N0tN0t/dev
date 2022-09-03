@@ -176,7 +176,7 @@ public class GeneralService {
         StatisticsResponse statisticsResponse = new StatisticsResponse();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated()) {
-            if (settings.getValue() == "true"){
+            if (Boolean.valueOf(settings.getValue()) == false){
                 if (userRepository.findByEmail(auth.getName()).get().getIsModerator() == 0) {
                     return HttpStatus.UNAUTHORIZED;
                 }
