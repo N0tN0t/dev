@@ -47,7 +47,7 @@ public class ApiGeneralController {
 
     @GetMapping("/settings")
     public ResponseEntity<SettingsResponse> settings() {
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body(settingsService.getGlobalSettings());
     }
     @PutMapping("/settings")
     public ResponseEntity<SettingsResponse> putSettings(@RequestBody SettingsRequest settingsRequest) {
