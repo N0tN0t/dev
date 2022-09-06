@@ -4,9 +4,14 @@ import com.github.cage.Cage;
 import com.github.cage.GCage;
 import main.api.response.CaptchaResponse;
 import main.entities.CaptchaCodes;
+import main.entities.Users;
 import main.requests.PasswordRequest;
 import main.respositories.CaptchaRepository;
+import main.respositories.UserRepository;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,8 +20,11 @@ import java.util.*;
 @Service
 public class CaptchaService {
     private CaptchaRepository captchaRepository;
-    public CaptchaService(CaptchaRepository captchaRepository) {
+    private UserRepository userRepository;
+    public static final PasswordEncoder BCRYPT = new BCryptPasswordEncoder(12);
+    public CaptchaService(UserRepository userRepository,CaptchaRepository captchaRepository) {
         this.captchaRepository = captchaRepository;
+        this.userRepository = userRepository;
     }
     @Scheduled(fixedRate = 10000)
     public CaptchaResponse getCaptcha() throws IOException {
@@ -49,7 +57,7 @@ public class CaptchaService {
         return ifFinded;
     }
 
-    public ArrayList changePassword(PasswordRequest passwordRequest) throws IOException {
+    public ArrayList changePassword(PasswordRequest passwordRequest) {
         ArrayList result = new ArrayList();
         HashMap<String,String> errors = new HashMap<>();
         if (findCaptcha(passwordRequest.getCaptchaSecret()).getCode() != null) {
@@ -61,6 +69,9 @@ public class CaptchaService {
             }
             if (oldCaptcha == false) {
                 if (passwordRequest.getPassword().length() > 6) {
+                    Users user = userRepository.findByCode(passwordRequest.getCode());
+                    user.setPassword(BCRYPT.encode(passwordRequest.getPassword()));
+                    userRepository.save(user);
                     result.add(true);
                 }
                 else {

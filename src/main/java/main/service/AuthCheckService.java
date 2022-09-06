@@ -65,7 +65,7 @@ public class AuthCheckService {
             SimpleMailMessage message = new SimpleMailMessage();
             String hash = UUID.randomUUID().toString().replaceAll("-","");
             message.setFrom("sansundertalesans@mail.ru");
-            message.setTo("ssundertaless@gmail.com");
+            message.setTo(emailRequest.getEmail());
             message.setSubject("Restore Password");
             message.setText(emailRequest.getEmail()+"/change-password/"+hash);
             Users user = userRepository.findByEmail(emailRequest.getEmail()).get();
