@@ -14,4 +14,6 @@ public interface CaptchaRepository  extends JpaRepository<CaptchaCodes,Integer> 
 
     @Query(value = "SELECT * FROM captcha_code",nativeQuery = true)
     List<CaptchaCodes> findAllCaptcha();
+
+
 }

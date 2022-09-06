@@ -52,8 +52,14 @@ public class CaptchaService {
     public ArrayList changePassword(PasswordRequest passwordRequest) throws IOException {
         ArrayList result = new ArrayList();
         HashMap<String,String> errors = new HashMap<>();
-        if (findCaptcha(getCaptcha().getSecret()).getCode() != null) {
-            if (passwordRequest.getCaptcha() == findCaptcha(getCaptcha().getSecret()).getCode()) {
+        if (findCaptcha(passwordRequest.getCaptchaSecret()).getCode() != null) {
+            boolean oldCaptcha = false;
+            for (CaptchaCodes captchaCodes:captchaRepository.findOldCaptcha()) {
+                if (passwordRequest.getCaptcha() == captchaCodes.getCode()) {
+                    oldCaptcha = true;
+                }
+            }
+            if (oldCaptcha == false) {
                 if (passwordRequest.getPassword().length() > 6) {
                     result.add(true);
                 }
@@ -63,7 +69,7 @@ public class CaptchaService {
             } else {
                 errors.put("code","Ссылка для восстановления пароля устарела.\n" +
                         "<a href=\n" +
-                        "\\\"/auth/restore\\\">Запросить ссылку снова</a>");
+                        "\"/auth/restore\">Запросить ссылку снова</a>");
             }
         }
         else {

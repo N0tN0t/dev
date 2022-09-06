@@ -5,6 +5,7 @@ import main.api.response.LoginResponse;
 import main.api.response.ResultResponse;
 import main.api.response.UserLoginResponse;
 import main.dto.UserDTO;
+import main.entities.Users;
 import main.mappings.UserMappingUtils;
 import main.requests.EmailRequest;
 import main.requests.LoginRequest;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Random;
 import java.util.UUID;
 
@@ -28,6 +30,7 @@ public class AuthCheckService {
     public UserService userService;
     public UserRepository userRepository;
     public UserMappingUtils mappingService;
+    public CaptchaService captchaService;
     @Autowired
     private JavaMailSender mailSender;
     public ResultResponse getLogoutResponse() {
@@ -65,7 +68,14 @@ public class AuthCheckService {
             message.setTo("ssundertaless@gmail.com");
             message.setSubject("Restore Password");
             message.setText(emailRequest.getEmail()+"/change-password/"+hash);
-            userRepository.findByEmail(emailRequest.getEmail()).get().setCode(hash);
+            Users user = userRepository.findByEmail(emailRequest.getEmail()).get();
+            user.setCode(hash);
+            userRepository.save(user);
+            try {
+                captchaService.getCaptcha(); // generate new captcha
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             mailSender.send(message);
             result = true;
         }
