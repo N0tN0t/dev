@@ -18,7 +18,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.constraints.Email;
 import java.io.IOException;
 import java.util.Random;
 import java.util.UUID;
@@ -31,8 +33,8 @@ public class AuthCheckService {
     public UserRepository userRepository;
     public UserMappingUtils mappingService;
     public CaptchaService captchaService;
-    @Autowired
-    private JavaMailSender mailSender;
+    public EmailServiceImpl emailService;
+
     public ResultResponse getLogoutResponse() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         auth.setAuthenticated(false);
@@ -62,12 +64,9 @@ public class AuthCheckService {
     public Boolean restore(EmailRequest emailRequest) {
         boolean result = false;
         if (userRepository.findByEmail(emailRequest.getEmail()) != null) {
-            SimpleMailMessage message = new SimpleMailMessage();
             String hash = UUID.randomUUID().toString().replaceAll("-","");
-            message.setFrom("sansundertalesans@mail.ru");
-            message.setTo(emailRequest.getEmail());
-            message.setSubject("Restore Password");
-            message.setText(emailRequest.getEmail()+"/change-password/"+hash);
+            String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+            emailService.sendSimpleMessage(emailRequest.getEmail(),"Restore Password","Ссылка для смены пароля\n"+baseUrl+"/login/change-password/"+hash);
             Users user = userRepository.findByEmail(emailRequest.getEmail()).get();
             user.setCode(hash);
             userRepository.save(user);
@@ -76,7 +75,6 @@ public class AuthCheckService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            mailSender.send(message);
             result = true;
         }
         return result;
