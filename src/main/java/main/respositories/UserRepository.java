@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<Users,Integer> {
+public interface UserRepository extends JpaRepository<Users, Integer> {
     Optional<Users> findByEmail(String email);
 
-    @Query(value = "SELECT * FROM users WHERE code = :code",nativeQuery = true)
+    @Query(value = "SELECT * FROM users WHERE code = :code", nativeQuery = true)
     Users findByCode(@Param("code") String code);
 }

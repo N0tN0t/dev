@@ -1,27 +1,16 @@
 package main.controllers;
 
 import main.api.response.*;
-import main.entities.Users;
-import main.requests.EmailRequest;
-import main.requests.LoginRequest;
-import main.dto.UserDTO;
-import main.requests.PasswordRequest;
-import main.requests.RegRequest;
+import main.requests.*;
 import main.service.AuthCheckService;
 import main.service.CaptchaService;
 import main.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -36,7 +25,7 @@ public class ApiAuthController {
         this.userService = userService;
     }
     @GetMapping("/check")
-    private ResponseEntity<LoginResponse> check(Principal principal) {
+    public ResponseEntity<LoginResponse> check(Principal principal) {
         if (principal == null) {
             return ResponseEntity.ok(new LoginResponse());
         }
@@ -44,8 +33,8 @@ public class ApiAuthController {
     }
 
     @PostMapping("/register")
-    public ArrayList register(@RequestBody RegRequest regRequest) throws IOException {
-        return userService.register(regRequest);
+    public ResponseEntity<RegResponse> register(@RequestBody RegRequest regRequest) throws IOException {
+        return ResponseEntity.ok(userService.register(regRequest));
     }
 
     @PostMapping("/login")
@@ -62,12 +51,12 @@ public class ApiAuthController {
         return ResponseEntity.ok(captchaService.getCaptcha());
     }
     @PostMapping("/password")
-    public ResponseEntity<?> changePassword(@RequestBody PasswordRequest passwordRequest) throws IOException {
+    public ResponseEntity<ResultsResponse> changePassword(@RequestBody PasswordRequest passwordRequest) throws IOException {
         return ResponseEntity.ok(captchaService.changePassword(passwordRequest));
     }
 
     @PostMapping("/restore")
-    public ResponseEntity<Boolean> restore(@RequestBody EmailRequest emailRequest) {
+    public ResponseEntity<ResultsResponse> restore(@RequestBody EmailRequest emailRequest) {
         return ResponseEntity.ok(authCheckService.restore(emailRequest));
     }
 }

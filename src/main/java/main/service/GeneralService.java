@@ -1,5 +1,7 @@
 package main.service;
 
+import main.api.response.RegResponse;
+import main.api.response.ResultsResponse;
 import main.api.response.StatisticsResponse;
 import main.dto.PostDTO;
 import main.entities.GlobalSettings;
@@ -8,6 +10,7 @@ import main.entities.Posts;
 import main.entities.Users;
 import main.mappings.PostMappingUtils;
 import main.requests.CommentRequest;
+import main.requests.ModerationRequest;
 import main.requests.ProfileRequest;
 import main.respositories.PostCommentsRepository;
 import main.respositories.PostRepository;
@@ -31,7 +34,7 @@ public class GeneralService {
     PostMappingUtils postMappingUtils;
     SettingsRepository settingsRepository;
 
-    public GeneralService(SettingsRepository settingsRepository,PostMappingUtils postMappingUtils,PostRepository postRepository,PostCommentsRepository commentsRepository,UserRepository userRepository) {
+    public GeneralService(SettingsRepository settingsRepository, PostMappingUtils postMappingUtils, PostRepository postRepository, PostCommentsRepository commentsRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
         this.commentsRepository = commentsRepository;
         this.userRepository = userRepository;
@@ -39,32 +42,28 @@ public class GeneralService {
         this.settingsRepository = settingsRepository;
     }
 
-    public ArrayList postImage(MultipartFile image) {
-        ArrayList result = new ArrayList();
+    public ResultsResponse postImage(MultipartFile image) {
+        ResultsResponse response = new ResultsResponse();
         int randomHash = new Random().toString().hashCode();
-        File dir = new File("/upload"+"/"+String.valueOf(randomHash).substring(0,String.valueOf(randomHash).length()/3)+"/"+String.valueOf(randomHash).substring(String.valueOf(randomHash).length()/3,String.valueOf(randomHash).length()/3*2)+"/"+String.valueOf(randomHash).substring(String.valueOf(randomHash).length()/3*2));
-        if (image.getSize()/1000000<8) {
-            new File(dir,image.toString());
-            result.add(dir.toString());
+        File dir = new File("/upload" + "/" + String.valueOf(randomHash).substring(0, String.valueOf(randomHash).length() / 3) + "/" + String.valueOf(randomHash).substring(String.valueOf(randomHash).length() / 3, String.valueOf(randomHash).length() / 3 * 2) + "/" + String.valueOf(randomHash).substring(String.valueOf(randomHash).length() / 3 * 2));
+        if (image.getSize() / 1000000 < 8) {
+            new File(dir, image.toString());
+            response.setStringResult(dir.toString());
+        } else {
+            response.setResult(false);
+            HashMap<String, String> errors = new HashMap<>();
+            errors.put("image", "Размер файла превышает допустимый размер");
+            response.setErrors(errors);
         }
-        else {
-            result.add(false);
-            HashMap<String,String> errors = new HashMap<>();
-            errors.put("image","Размер файла превышает допустимый размер");
-            result.add(errors);
-        }
-        return result;
+        return response;
     }
 
-    public ArrayList postComment(CommentRequest commentRequest) {
-        ArrayList result = new ArrayList();
+    public ResultsResponse postComment(CommentRequest commentRequest) {
+        ResultsResponse result = new ResultsResponse();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        HashMap<String,String> errors = new HashMap<>();
+        HashMap<String, String> errors = new HashMap<>();
         if (auth.isAuthenticated()) {
             if (commentRequest.getParentId() != null && postRepository.findPostById(commentRequest.getPostId()) != null && postRepository.findPostById(Integer.valueOf(commentRequest.getParentId())) != null || postRepository.findPostById(commentRequest.getPostId()) != null && commentsRepository.findPostById(commentRequest.getPostId()) != null) {
-                System.out.println(commentRequest.getParentId());
-                System.out.println(commentRequest.getPostId());
-                System.out.println(commentRequest.getText());
                 PostComments postComment = new PostComments();
                 postComment.setText(commentRequest.getText());
                 postComment.setTime(Date.from(Instant.now()));
@@ -79,43 +78,46 @@ public class GeneralService {
                 }
                 postComment.setPost(postRepository.findPostById(commentRequest.getPostId()));
                 if (postComment.getText().isEmpty() || postComment.getText().length() < 50) {
-                    result.add(false);
+                    result.setResult(false);
                     errors.put("text", "Текст комментария не задан или слишком короткий");
-                    result.add(errors);
+                    result.setErrors(errors);
                 } else {
-                    result.add(postComment.getId());
+                    result.setIntResult(postComment.getId());
                     commentsRepository.save(postComment);
                 }
             } else {
-                result.add(false);
-                result.add(errors);
+                result.setResult(false);
+                result.setErrors(errors);
             }
-        }
-        else {
-            result.add(false);
-            result.add(errors);
+        } else {
+            result.setResult(false);
+            result.setErrors(errors);
         }
         return result;
     }
 
-    public ArrayList editMyProfile(ProfileRequest profileRequest) {
-        ArrayList result = new ArrayList();
-        HashMap<String,String> errors = new HashMap<>();
+    public ResultsResponse editMyProfile(ProfileRequest profileRequest) {
+        ResultsResponse response = new ResultsResponse();
+        HashMap<String, String> errors = new HashMap<>();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated()) {
             Users user = userRepository.findByEmail(auth.getName()).get();
             if (profileRequest.getName() != null) {
                 if (profileRequest.getName().length() > 0) {
                     user.setName(profileRequest.getName());
+                    response.setResult(true);
                 } else {
                     errors.put("name", "Имя указано неверно");
+                    response.setResult(false);
                 }
             }
             if (profileRequest.getPhoto() != null) {
                 if (userRepository.findByEmail(profileRequest.getEmail()) == null) {
                     user.setEmail(profileRequest.getEmail());
+                    response.setResult(true);
                 } else {
                     errors.put("email", "Этот e-mail уже зарегестрирован");
+                    response.setResult(false);
                 }
             }
             if (profileRequest.getPassword() != null) {
@@ -123,23 +125,27 @@ public class GeneralService {
                     if (profileRequest.getPhoto() != null) {
                         if (profileRequest.getPhoto().getTotalSpace() / (1024 * 1024) < 5) {
                             user.setPhoto(profileRequest.getPhoto().toString());
+                            response.setResult(true);
                         } else {
                             errors.put("photo", "Фото слишком большое, нужно не более 5 Мб");
+                            response.setResult(false);
                         }
                     }
                     user.setPassword(profileRequest.getPassword());
+                    response.setResult(true);
                 } else {
                     errors.put("password", "Пароль короче 6-ти символов");
+                    response.setResult(false);
                 }
             }
             if (profileRequest.getRemovePhoto() == 0 && profileRequest.getPhoto() != null) {
                 user.setPhoto(profileRequest.getPhoto().toString());
-            }
-            else {
+            } else {
                 user.setPhoto("");
             }
+            response.setErrors(errors);
         }
-        return result;
+        return response;
     }
 
     public StatisticsResponse myStatistics() {
@@ -152,7 +158,7 @@ public class GeneralService {
             int dislikesCount = 0;
             int viewsCount = 0;
             Date firstPublication = Date.from(Instant.now());
-            for (Posts post:myPosts) {
+            for (Posts post : myPosts) {
                 postCount += 1;
                 viewsCount += post.getViewCount();
                 PostDTO dto = postMappingUtils.mapToPostDto(post);
@@ -166,17 +172,17 @@ public class GeneralService {
             statisticsResponse.setDislikesCount(dislikesCount);
             statisticsResponse.setLikesCount(likesCount);
             statisticsResponse.setPostsCount(postCount);
-            statisticsResponse.setFirstPublication(firstPublication.getTime()/1000);
+            statisticsResponse.setFirstPublication(firstPublication.getTime() / 1000);
         }
         return statisticsResponse;
     }
 
-    public Object allStatistics() {
+    public StatisticsResponse allStatistics() {
         GlobalSettings settings = settingsRepository.findBySettingsCode("STATISTICS_IS_PUBLIC");
         StatisticsResponse statisticsResponse = new StatisticsResponse();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated()) {
-            if (settings.getValue() == "NO"){
+            if (settings.getValue() == "NO") {
                 if (userRepository.findByEmail(auth.getName()).get().getIsModerator() == 0) {
                     return HttpStatus.UNAUTHORIZED;
                 }
@@ -208,24 +214,28 @@ public class GeneralService {
         return statisticsResponse;
     }
 
-    public ArrayList editMyProfilePhoto(MultipartFile photo, String name, String email, String password) {
-        ArrayList result = new ArrayList();
-        HashMap<String,String> errors = new HashMap<>();
+    public RegResponse editMyProfilePhoto(MultipartFile photo, String name, String email, String password) {
+        RegResponse response = new RegResponse();
+        HashMap<String, String> errors = new HashMap<>();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated()) {
             Users user = userRepository.findByEmail(auth.getName()).get();
             if (name != null) {
                 if (name.length() > 0) {
                     user.setName(name);
+                    response.setResult(true);
                 } else {
                     errors.put("name", "Имя указано неверно");
+                    response.setResult(false);
                 }
             }
             if (email != null) {
                 if (userRepository.findByEmail(email) == null) {
                     user.setEmail(email);
+                    response.setResult(true);
                 } else {
                     errors.put("email", "Этот e-mail уже зарегестрирован");
+                    response.setResult(false);
                 }
             }
             if (password != null) {
@@ -233,23 +243,46 @@ public class GeneralService {
                     if (photo != null) {
                         if (photo.getSize() / 1000000 < 5) {
                             user.setPhoto(photo.toString());
+                            response.setResult(true);
                         } else {
                             errors.put("photo", "Фото слишком большое, нужно не более 5 Мб");
+                            response.setResult(false);
                         }
                     }
                     user.setPassword(password);
                 } else {
                     errors.put("password", "Пароль короче 6-ти символов");
+                    response.setResult(false);
                 }
             }
             if (photo != null) {
                 if (photo.getSize() * 1000000 < 5) {
                     user.setPhoto(photo.toString());
+                    response.setResult(true);
                 } else {
                     errors.put("photo", "Фото слишком большое, нужно не более 5 Мб");
+                    response.setResult(false);
                 }
             }
+            response.setErrors(errors);
         }
-        return result;
+        return response;
+    }
+
+    public ResultsResponse moderation(ModerationRequest moderationRequest) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        ResultsResponse response = new ResultsResponse();
+        if (auth.isAuthenticated()) {
+            if (userRepository.findByEmail(auth.getName()).get().getIsModerator() == 1) {
+                Posts post = postRepository.findPostById(moderationRequest.getPostId());
+                post.setModerationStatus(moderationRequest.getDecision());
+                response.setResult(true);
+            } else {
+                response.setResult(false);
+            }
+        } else {
+            response.setResult(false);
+        }
+        return response;
     }
 }

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserMappingUtils {
-    public UserDTO mapToPostDto(Users entity){
+    public UserDTO mapToPostDto(Users entity) {
         UserDTO dto = new UserDTO();
         dto.setId(entity.getId());
         dto.setEmail(entity.getEmail());
@@ -15,7 +15,8 @@ public class UserMappingUtils {
         dto.setModeration(entity.getIsModerator());
         return dto;
     }
-    public Users mapToPostEntity(UserDTO dto){
+
+    public Users mapToPostEntity(UserDTO dto) {
         Users users = new Users();
         users.setEmail(dto.getEmail());
         users.setId(dto.getId());

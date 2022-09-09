@@ -13,15 +13,17 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class TagService {
     private TagRepository tagRepository;
     private PostRepository postRepository;
+
     public TagListResponse getTags(String query) {
         List<TagResponse> tagResponses = null;
         TagListResponse tagListResponse = new TagListResponse();
-        if (postRepository.count()>0) {
+        if (postRepository.count() > 0) {
             int count = postRepository.countAllActiveAndAccepted().orElse(0);
             Map<String, Double> tagWeightsNoNormalize = null;
             for (int i = 0; i < postRepository.count(); i++) {

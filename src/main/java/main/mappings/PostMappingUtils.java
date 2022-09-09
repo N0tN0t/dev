@@ -16,27 +16,26 @@ public class PostMappingUtils {
     UserMappingUtils userMappingUtils;
     PostVotesRepository postVotesRepository;
 
-    public PostMappingUtils(PostVotesRepository postVotesRepository,UserRepository userRepository,UserMappingUtils userMappingUtils) {
+    public PostMappingUtils(PostVotesRepository postVotesRepository, UserRepository userRepository, UserMappingUtils userMappingUtils) {
         this.userRepository = userRepository;
         this.userMappingUtils = userMappingUtils;
         this.postVotesRepository = postVotesRepository;
     }
 
-    public PostDTO mapToPostDto(Posts entity){
+    public PostDTO mapToPostDto(Posts entity) {
         PostDTO dto = new PostDTO();
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
-        dto.setTimestamp(entity.getTime().getTime()/1000);
+        dto.setTimestamp(entity.getTime().getTime() / 1000);
         dto.setUser(userMappingUtils.mapToPostDto(userRepository.findById(entity.getUsers().getId()).orElse(new Users())));
         dto.setAnnounce(entity.getTitle());
         dto.setViewCount(entity.getViewCount());
         int likes = 0;
         int dislikes = 0;
-        for (PostVotes postVote:postVotesRepository.findAll()) {
+        for (PostVotes postVote : postVotesRepository.findAll()) {
             if (postVote.getValue() == 1) {
                 likes += 1;
-            }
-            else {
+            } else {
                 dislikes += 1;
             }
         }
@@ -44,7 +43,8 @@ public class PostMappingUtils {
         dto.setDislikeCount(dislikes);
         return dto;
     }
-    public Posts mapToPostEntity(PostDTO dto){
+
+    public Posts mapToPostEntity(PostDTO dto) {
         Posts entity = new Posts();
         entity.setId(dto.getId());
         entity.setTitle(dto.getTitle());

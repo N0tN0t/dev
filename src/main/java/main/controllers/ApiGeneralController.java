@@ -2,6 +2,7 @@ package main.controllers;
 
 import main.api.response.*;
 import main.requests.CommentRequest;
+import main.requests.ModerationRequest;
 import main.requests.ProfileRequest;
 import main.requests.SettingsRequest;
 import main.service.GeneralService;
@@ -41,14 +42,15 @@ public class ApiGeneralController {
     }
 
     @GetMapping("/init")
-    private InitResponse init() {
+    public InitResponse init() {
         return initResponse;
     }
-
+    @PreAuthorize("hasAuthority('user:read')")
     @GetMapping("/settings")
     public ResponseEntity<SettingsResponse> settings() {
         return ResponseEntity.ok().body(settingsService.getGlobalSettings());
     }
+    @PreAuthorize("hasAuthority('user:write')")
     @PutMapping("/settings")
     public ResponseEntity<SettingsResponse> putSettings(@RequestBody SettingsRequest settingsRequest) {
         return ResponseEntity.ok(settingsService.putGlobalSettings(settingsRequest));
@@ -58,12 +60,12 @@ public class ApiGeneralController {
     public ResponseEntity<TagListResponse> tags(@RequestParam(required = false) String query) {
         return ResponseEntity.ok(tagService.getTags(query));
     }
-
+    @PreAuthorize("hasAuthority('user:write')")
     @PostMapping("/image")
     public ResponseEntity<?> image(MultipartFile image) {
         return ResponseEntity.ok(generalService.postImage(image));
     }
-
+    @PreAuthorize("hasAuthority('user:write')")
     @PostMapping("/comment")
     public ResponseEntity<?> comment(@RequestBody CommentRequest commentRequest) {
         return ResponseEntity.ok(generalService.postComment(commentRequest));
@@ -71,7 +73,7 @@ public class ApiGeneralController {
 
     @PreAuthorize("hasAuthority('user:write')")
     @PostMapping(value = "/profile/my", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> editProfile(
+    public ResponseEntity<RegResponse> editProfile(
             @RequestParam(value = "photo") MultipartFile photo,
             @RequestParam(value = "name") String name,
             @RequestParam(value = "email") String email,
@@ -82,16 +84,22 @@ public class ApiGeneralController {
 
     @PreAuthorize("hasAuthority('user:write')")
     @PostMapping("/profile/my")
-    public ResponseEntity<ArrayList> editProfile(@RequestBody ProfileRequest profileRequest) {
+    public ResponseEntity<ResultsResponse> editProfile(@RequestBody ProfileRequest profileRequest) {
         return ResponseEntity.ok(generalService.editMyProfile(profileRequest));
     }
-
+    @PreAuthorize("hasAuthority('user:read')")
     @GetMapping("/statistics/my")
     public ResponseEntity<StatisticsResponse> myStatistics() {
         return ResponseEntity.ok(generalService.myStatistics());
     }
     @GetMapping("/statistics/all")
-    public ResponseEntity<Object> allStatistics() {
+    public ResponseEntity<StatisticsResponse> allStatistics() {
         return ResponseEntity.ok(generalService.allStatistics());
     }
+
+    @PostMapping("/moderation")
+    public ResponseEntity<ResultsResponse> moderation(@RequestBody ModerationRequest moderationRequest) {
+        return ResponseEntity.ok(generalService.moderation(moderationRequest));
+    }
+
 }

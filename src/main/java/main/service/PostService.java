@@ -3,6 +3,7 @@ package main.service;
 import main.api.response.CalendarResponse;
 import main.api.response.PostByIdResponse;
 import main.api.response.PostListResponse;
+import main.api.response.ResultsResponse;
 import main.dto.CommentDTO;
 import main.dto.PostsResponseDTO;
 import main.dto.UserDTO;
@@ -43,7 +44,7 @@ public class PostService {
     private PostVotesRepository postVotesRepository;
     private SettingsRepository settingsRepository;
 
-    public PostService(SettingsRepository settingsRepository,PostVotesRepository postVotesRepository,UserRepository userRepository,CommentMappingUtils commentMappingUtils,UserMappingUtils userMappingUtils,AuthCheckService checkService,PostRepository postRepository,PostCommentsRepository postCommentsRepository,TagRepository tagRepository,PostMappingUtils mappingUtils,UserService userService) {
+    public PostService(SettingsRepository settingsRepository, PostVotesRepository postVotesRepository, UserRepository userRepository, CommentMappingUtils commentMappingUtils, UserMappingUtils userMappingUtils, AuthCheckService checkService, PostRepository postRepository, PostCommentsRepository postCommentsRepository, TagRepository tagRepository, PostMappingUtils mappingUtils, UserService userService) {
         this.postRepository = postRepository;
         this.postCommentsRepository = postCommentsRepository;
         this.tagRepository = tagRepository;
@@ -60,9 +61,11 @@ public class PostService {
     public List<PostDTO> findAll() {
         return postRepository.findAll().stream().map(mappingUtils::mapToPostDto).collect(Collectors.toList());
     }
-    public PostDTO findById(Integer id){
+
+    public PostDTO findById(Integer id) {
         return mappingUtils.mapToPostDto(postRepository.findById(id).orElse(new Posts()));
     }
+
     public PostListResponse getPosts(Integer offset, Integer limit, String mode) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Page<Posts> page;
@@ -164,7 +167,7 @@ public class PostService {
 
     public PostListResponse findPostsByQuery(int offset, int limit, String query) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
-        Page<Posts> page = postRepository.findByQueryPosts(pageable,query);
+        Page<Posts> page = postRepository.findByQueryPosts(pageable, query);
         PostListResponse listResponse = new PostListResponse();
         List<Posts> posts = new ArrayList<>();
         posts.addAll(page.getContent());
@@ -178,7 +181,7 @@ public class PostService {
     public PostListResponse findPostsByDate(int offset, int limit, String strdate) throws ParseException {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Date date = new SimpleDateFormat("yyyy-MM-dd").parse(strdate);
-        Page<Posts> page = postRepository.findByDate(pageable,date);
+        Page<Posts> page = postRepository.findByDate(pageable, date);
         PostListResponse listResponse = new PostListResponse();
         List<Posts> posts = new ArrayList<>();
         posts.addAll(page.getContent());
@@ -192,7 +195,7 @@ public class PostService {
     public PostListResponse findPostsByTag(int offset, int limit, String tag) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
         Tags Tag = tagRepository.findTagByName(tag);
-        Page<Posts> page = postRepository.findByTag(pageable,Tag.getId());
+        Page<Posts> page = postRepository.findByTag(pageable, Tag.getId());
         PostListResponse listResponse = new PostListResponse();
         List<Posts> posts = new ArrayList<>();
         posts.addAll(page.getContent());
@@ -205,25 +208,24 @@ public class PostService {
 
     public CalendarResponse calendar() {
         List<Integer> years = new ArrayList<>();
-        Map<String,Integer> posts = new HashMap<>();
+        Map<String, Integer> posts = new HashMap<>();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        for (Posts post:postRepository.findAll()) {
+        for (Posts post : postRepository.findAll()) {
             boolean db = false;
-            for (Integer year1: years) {
+            for (Integer year1 : years) {
                 if (db == false) {
-                    if (year1 == post.getTime().getYear()+1900) {
+                    if (year1 == post.getTime().getYear() + 1900) {
                         db = true;
                         break;
                     }
                 }
             }
             if (db == false) {
-                if (!years.contains(String.valueOf(post.getTime().getYear()+1900))) {
-                    years.add(post.getTime().getYear()+1900);
+                if (!years.contains(String.valueOf(post.getTime().getYear() + 1900))) {
+                    years.add(post.getTime().getYear() + 1900);
                     if (posts.containsKey(dateFormat.format(post.getTime()))) {
-                        posts.put(dateFormat.format(post.getTime()), posts.get(dateFormat.format(post.getTime()))+1);
-                    }
-                    else {
+                        posts.put(dateFormat.format(post.getTime()), posts.get(dateFormat.format(post.getTime())) + 1);
+                    } else {
                         posts.put(dateFormat.format(post.getTime()), 1);
                     }
                 }
@@ -232,7 +234,7 @@ public class PostService {
                 posts.put(dateFormat.format(post.getTime()), 0);
             }
         }
-        CalendarResponse calendarResponse = new CalendarResponse(years.toArray(new Integer[years.size()]),posts);
+        CalendarResponse calendarResponse = new CalendarResponse(years.toArray(new Integer[years.size()]), posts);
         return calendarResponse;
     }
 
@@ -243,36 +245,38 @@ public class PostService {
         List<CommentDTO> commentDTOS = new ArrayList<>();
         post.getPostComments().forEach(comment -> commentDTOS.add(commentMappingUtils.mapToCommentDto(comment)));
         List<String> tags = new ArrayList<>();
-        post.getTags().forEach(tag -> {tags.add(tag.getName());});
-        PostByIdResponse postByIdResponse = new PostByIdResponse(post.getId(),postDTO.getTimestamp(),post.getIsActive() == 1 ? true : false,userDTO,post.getTitle(),post.getText(),postDTO.getLikeCount(),postDTO.getDislikeCount(),post.getViewCount(),commentDTOS,tags);
+        post.getTags().forEach(tag -> {
+            tags.add(tag.getName());
+        });
+        PostByIdResponse postByIdResponse = new PostByIdResponse(post.getId(), postDTO.getTimestamp(), post.getIsActive() == 1 ? true : false, userDTO, post.getTitle(), post.getText(), postDTO.getLikeCount(), postDTO.getDislikeCount(), post.getViewCount(), commentDTOS, tags);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated()) {
             UserDTO user = userService.findByEmail(auth.getName());
             if (user != null) {
                 if (user.getModeration() != 1 && user.getId() != post.getUsers().getId()) {
-                    post.setViewCount(post.getViewCount()+1);
+                    post.setViewCount(post.getViewCount() + 1);
                     postRepository.save(post);
                 }
-            }else {
-                post.setViewCount(post.getViewCount()+1);
+            } else {
+                post.setViewCount(post.getViewCount() + 1);
                 postRepository.save(post);
             }
         }
         return postByIdResponse;
     }
 
-    public ArrayList editPost(PostRequest postRequest) {
+    public ResultsResponse editPost(PostRequest postRequest) {
         GlobalSettings postPremoderation = settingsRepository.findBySettingsCode("POST_PREMODERATION");
         Posts post = new Posts();
-        List<String> errors = new ArrayList();
-        ArrayList response = new ArrayList();
+        Map<String, String> errors = new HashMap<>();
+        ResultsResponse response = new ResultsResponse();
         Date newDate = new Date();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         newDate.setTime(postRequest.getTimestamp());
-        if (postRepository.findByDateTitle(newDate,postRequest.getTitle()) != null) {
+        if (postRepository.findByDateTitle(newDate, postRequest.getTitle()) != null) {
             if (postRequest.getTitle().length() > 3) {
                 if (postRequest.getText().length() > 50) {
-                    post.setId(postRepository.findByDateTitle(new Date(postRequest.getTimestamp()),postRequest.getTitle()).getId());
+                    post.setId(postRepository.findByDateTitle(new Date(postRequest.getTimestamp()), postRequest.getTitle()).getId());
                     post.setTime(newDate);
                     post.setTitle(postRequest.getTitle());
                     post.setText(postRequest.getText());
@@ -281,49 +285,49 @@ public class PostService {
                             .orElseThrow(() -> new NoSuchElementException("user " + email + " not found"));
                     post.setUsers(user);
                     List<Tags> tags = new ArrayList<>();
-                    postRequest.getTags().forEach(i -> {tags.add(tagRepository.findTagByName(i));});
+                    postRequest.getTags().forEach(i -> {
+                        tags.add(tagRepository.findTagByName(i));
+                    });
                     post.setTags(tags);
                     post.setIsActive(postRequest.isActive() ? 1 : 0);
                     if (Boolean.valueOf(postPremoderation.getValue()) == true) {
                         post.setModerationStatus("NEW");
-                    }
-                    else {
+                    } else {
                         post.setModerationStatus("ACCEPTED");
                     }
                 }
             }
         }
-        if (postRepository.findByDateTitle(newDate,postRequest.getTitle()) == null) {
-            errors.add("Пост не найден");
+        if (postRepository.findByDateTitle(newDate, postRequest.getTitle()) == null) {
+            errors.put("post", "Пост не найден");
         }
-        if (postRequest.getTitle().length()<=3) {
-            errors.add("Заголовок не установлен");
+        if (postRequest.getTitle().length() <= 3) {
+            errors.put("title", "Заголовок не установлен");
         }
         if (postRequest.getText().length() <= 50) {
-            errors.add("Текст публикации слишком короткий");
+            errors.put("text", "Текст публикации слишком короткий");
         }
         if (errors.isEmpty()) {
             postRepository.save(post);
-            response.add(true);
-        }
-        else {
-            response.add(false);
-            response.add(errors);
+            response.setResult(true);
+        } else {
+            response.setResult(false);
+            response.setErrors(errors);
         }
         return response;
     }
 
-    public ArrayList postPost(PostRequest postRequest) {
+    public ResultsResponse postPost(PostRequest postRequest) {
         GlobalSettings postPremoderation = settingsRepository.findBySettingsCode("POST_PREMODERATION");
         Posts post = new Posts();
-        List<String> errors = new ArrayList();
-        ArrayList response = new ArrayList();
+        Map<String, String> errors = new HashMap<>();
+        ResultsResponse response = new ResultsResponse();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (postRequest.getTitle().length()>3) {
+        if (postRequest.getTitle().length() > 3) {
             if (postRequest.getText().length() > 50) {
                 int id = 0;
                 if (!postRepository.findAll().isEmpty()) {
-                    id = postRepository.findAll().iterator().next().getId()+1;
+                    id = postRepository.findAll().iterator().next().getId() + 1;
                 }
                 post.setId(id);
                 post.setTime(Date.from(Instant.now()));
@@ -331,8 +335,7 @@ public class PostService {
                 post.setText(postRequest.getText());
                 if (postPremoderation.getValue() == "YES") {
                     post.setModerationStatus("NEW");
-                }
-                else {
+                } else {
                     post.setModerationStatus("ACCEPTED");
                 }
                 String email = auth.getName();
@@ -340,98 +343,91 @@ public class PostService {
                         .orElseThrow(() -> new NoSuchElementException("user " + email + " not found"));
                 post.setUsers(user);
                 List<Tags> tags = new ArrayList<>();
-                postRequest.getTags().forEach(i -> {tags.add(tagRepository.findTagByName(i));});
+                postRequest.getTags().forEach(i -> {
+                    tags.add(tagRepository.findTagByName(i));
+                });
                 post.setTags(tags);
                 post.setIsActive(postRequest.isActive() ? 1 : 0);
             }
         }
-        if (postRequest.getTitle().length()<=3) {
-            errors.add("Заголовок не установлен");
+        if (postRequest.getTitle().length() <= 3) {
+            errors.put("title", "Заголовок не установлен");
         }
         if (postRequest.getText().length() <= 50) {
-            errors.add("Текст публикации слишком короткий");
+            errors.put("text", "Текст публикации слишком короткий");
         }
         if (errors.isEmpty()) {
             postRepository.save(post);
-            response.add(true);
-        }
-        else {
-            response.add(false);
-            response.add(errors);
+            response.setResult(true);
+        } else {
+            response.setResult(false);
+            response.setErrors(errors);
         }
         return response;
     }
 
-    public ArrayList likePost(PostVoteRequest postVoteRequest) {
-        ArrayList result = new ArrayList();
+    public ResultsResponse likePost(PostVoteRequest postVoteRequest) {
+        ResultsResponse result = new ResultsResponse();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated()) {
-            if (postVotesRepository.findByPostIdAndUserId(postVoteRequest.getPostId(),userRepository.findByEmail(auth.getName()).get().getId()) != null) {
-                PostVotes vote = postVotesRepository.findByPostIdAndUserId(postVoteRequest.getPostId(),userRepository.findByEmail(auth.getName()).get().getId());
+            if (postVotesRepository.findByPostIdAndUserId(postVoteRequest.getPostId(), userRepository.findByEmail(auth.getName()).get().getId()) != null) {
+                PostVotes vote = postVotesRepository.findByPostIdAndUserId(postVoteRequest.getPostId(), userRepository.findByEmail(auth.getName()).get().getId());
                 if (vote.getValue() == 0) {
                     vote.setValue(1);
-                    result.add(true);
-                }
-                else {
-                    result.add(false);
+                    result.setResult(true);
+                } else {
+                    result.setResult(false);
                 }
                 postVotesRepository.save(vote);
-            }
-            else {
+            } else {
                 PostVotes newVote = new PostVotes();
                 newVote.setPost(postRepository.findPostById(postVoteRequest.getPostId()));
                 newVote.setTime(Date.from(Instant.now()));
                 newVote.setUsers(userRepository.findByEmail(auth.getName()).get());
                 if (postVotesRepository.findAll().iterator().hasNext()) {
-                    newVote.setId(postVotesRepository.findAll().iterator().next().getId()+1);
-                }
-                else {
+                    newVote.setId(postVotesRepository.findAll().iterator().next().getId() + 1);
+                } else {
                     newVote.setId(0);
                 }
                 newVote.setValue(1);
                 postVotesRepository.save(newVote);
-                result.add(true);
+                result.setResult(true);
             }
-        }
-        else {
-            result.add(false);
+        } else {
+            result.setResult(false);
         }
         return result;
     }
 
-    public ArrayList dislikePost(PostVoteRequest postVoteRequest) {
-        ArrayList result = new ArrayList();
+    public ResultsResponse dislikePost(PostVoteRequest postVoteRequest) {
+        ResultsResponse result = new ResultsResponse();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated()) {
-            if (postVotesRepository.findByPostIdAndUserId(postVoteRequest.getPostId(),userRepository.findByEmail(auth.getName()).get().getId()) != null) {
-                PostVotes vote = postVotesRepository.findByPostIdAndUserId(postVoteRequest.getPostId(),userRepository.findByEmail(auth.getName()).get().getId());
+            if (postVotesRepository.findByPostIdAndUserId(postVoteRequest.getPostId(), userRepository.findByEmail(auth.getName()).get().getId()) != null) {
+                PostVotes vote = postVotesRepository.findByPostIdAndUserId(postVoteRequest.getPostId(), userRepository.findByEmail(auth.getName()).get().getId());
                 if (vote.getValue() == 1) {
                     vote.setValue(0);
-                    result.add(true);
-                }
-                else {
-                    result.add(false);
+                    result.setResult(true);
+                } else {
+                    result.setResult(false);
                 }
                 postVotesRepository.save(vote);
-            }
-            else {
+            } else {
                 PostVotes newVote = new PostVotes();
                 newVote.setPost(postRepository.findPostById(postVoteRequest.getPostId()));
                 newVote.setTime(Date.from(Instant.now()));
                 newVote.setUsers(userRepository.findByEmail(auth.getName()).get());
                 if (postVotesRepository.findAll().iterator().hasNext()) {
-                    newVote.setId(postVotesRepository.findAll().iterator().next().getId()+1);
-                }
-                else {
+                    newVote.setId(postVotesRepository.findAll().iterator().next().getId() + 1);
+                } else {
                     newVote.setId(0);
                 }
                 newVote.setValue(0);
                 postVotesRepository.save(newVote);
-                result.add(true);
+                result.setResult(true);
             }
-        }
-        else {
-            result.add(false);
+        } else {
+            result.setResult(false);
         }
         return result;
     }

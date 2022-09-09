@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PostCommentsRepository extends CrudRepository<PostComments,Integer> {
+public interface PostCommentsRepository extends CrudRepository<PostComments, Integer> {
     @Query(value = "SELECT * FROM post_comments WHERE post_id = :id",
             nativeQuery = true)
     List<PostComments> findPostById(@Param("id") int id);
 
-    @Query(value = "SELECT * FROM post_comments WHERE id = :id",nativeQuery = true)
+    @Query(value = "SELECT * FROM post_comments WHERE id = :id", nativeQuery = true)
     PostComments findCommentById(@Param("id") int id);
 }

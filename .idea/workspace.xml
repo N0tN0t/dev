@@ -72,10 +72,10 @@
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
-      <recent name="main.api.response" />
       <recent name="main.requests" />
-      <recent name="main.service" />
       <recent name="main.controllers" />
+      <recent name="main.api.response" />
+      <recent name="main.service" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />

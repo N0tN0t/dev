@@ -3,12 +3,16 @@ package main.service;
 import lombok.AllArgsConstructor;
 import main.api.response.LoginResponse;
 import main.api.response.ResultResponse;
+import main.api.response.ResultsResponse;
 import main.api.response.UserLoginResponse;
 import main.dto.UserDTO;
+import main.entities.Posts;
 import main.entities.Users;
 import main.mappings.UserMappingUtils;
 import main.requests.EmailRequest;
 import main.requests.LoginRequest;
+import main.requests.ModerationRequest;
+import main.respositories.PostRepository;
 import main.respositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -34,6 +38,7 @@ public class AuthCheckService {
     public UserMappingUtils mappingService;
     public CaptchaService captchaService;
     public EmailServiceImpl emailService;
+    public PostRepository postRepository;
 
     public ResultResponse getLogoutResponse() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -42,8 +47,9 @@ public class AuthCheckService {
         response.setAuthenticated(auth.isAuthenticated());
         return response;
     }
+
     public LoginResponse getLogin(LoginRequest loginRequest) {
-        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword()));
+        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(auth);
         return getLoginResponse(auth.getName());
     }
@@ -61,12 +67,13 @@ public class AuthCheckService {
         return loginResponse;
     }
 
-    public Boolean restore(EmailRequest emailRequest) {
-        boolean result = false;
+    public ResultsResponse restore(EmailRequest emailRequest) {
+        ResultsResponse response = new ResultsResponse();
+        response.setResult(false);
         if (userRepository.findByEmail(emailRequest.getEmail()) != null) {
-            String hash = UUID.randomUUID().toString().replaceAll("-","");
+            String hash = UUID.randomUUID().toString().replaceAll("-", "");
             String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-            emailService.sendSimpleMessage(emailRequest.getEmail(),"Restore Password","Ссылка для смены пароля\n"+baseUrl+"/login/change-password/"+hash);
+            emailService.sendSimpleMessage(emailRequest.getEmail(), "Restore Password", "Ссылка для смены пароля\n" + baseUrl + "/login/change-password/" + hash);
             Users user = userRepository.findByEmail(emailRequest.getEmail()).get();
             user.setCode(hash);
             userRepository.save(user);
@@ -75,8 +82,9 @@ public class AuthCheckService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            result = true;
+            response.setResult(true);
         }
-        return result;
+        return response;
     }
+
 }

@@ -2,6 +2,7 @@ package main.controllers;
 
 import main.api.response.PostByIdResponse;
 import main.api.response.PostListResponse;
+import main.api.response.ResultsResponse;
 import main.requests.PostRequest;
 import main.requests.PostVoteRequest;
 import main.service.PostService;
@@ -55,16 +56,17 @@ public class ApiPostController {
     public ResponseEntity<PostByIdResponse> getById(@PathVariable int id) {
         return ResponseEntity.ok(postService.findPostsById(id));
     }
-
+    @PreAuthorize("hasAuthority('user:write')")
     @PostMapping("/post")
-    public ResponseEntity<ArrayList> postPost(@RequestBody PostRequest postRequest) {
+    public ResponseEntity<ResultsResponse> postPost(@RequestBody PostRequest postRequest) {
         return ResponseEntity.ok(postService.postPost(postRequest));
     }
+    @PreAuthorize("hasAuthority('user:write')")
     @PutMapping("/post/{ID}")
-    public ResponseEntity<ArrayList> editPost(@RequestBody PostRequest postRequest) {
+    public ResponseEntity<ResultsResponse> editPost(@RequestBody PostRequest postRequest) {
         return ResponseEntity.ok(postService.editPost(postRequest));
     }
-
+    @PreAuthorize("hasAuthority('user:read')")
     @GetMapping("/post/moderation")
     public ResponseEntity<PostListResponse> postsWithStatus(
             @RequestParam(defaultValue = "0") int offset,
@@ -72,7 +74,7 @@ public class ApiPostController {
             @RequestParam(defaultValue = "new") String status) {
         return ResponseEntity.ok(postService.getPostsWithStatus(offset, limit, status));
     }
-
+    @PreAuthorize("hasAuthority('user:read')")
     @GetMapping("/post/my")
     public ResponseEntity<PostListResponse> myPosts(
             @RequestParam(defaultValue = "0") int offset,
@@ -80,13 +82,14 @@ public class ApiPostController {
             @RequestParam(defaultValue = "published") String status) {
         return ResponseEntity.ok(postService.getMyPosts(offset, limit, status));
     }
-
+    @PreAuthorize("hasAuthority('user:write')")
     @PostMapping("/post/like")
-    public ResponseEntity<ArrayList> like(@RequestBody PostVoteRequest postVoteRequest) {
+    public ResponseEntity<ResultsResponse> like(@RequestBody PostVoteRequest postVoteRequest) {
         return ResponseEntity.ok(postService.likePost(postVoteRequest));
     }
+    @PreAuthorize("hasAuthority('user:write')")
     @PostMapping("/post/dislike")
-    public ResponseEntity<ArrayList> dislike(@RequestBody PostVoteRequest postVoteRequest) {
+    public ResponseEntity<ResultsResponse> dislike(@RequestBody PostVoteRequest postVoteRequest) {
         return ResponseEntity.ok(postService.dislikePost(postVoteRequest));
     }
 }

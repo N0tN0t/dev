@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PostRepository extends JpaRepository<Posts,Integer> {
+public interface PostRepository extends JpaRepository<Posts, Integer> {
     @Query(value = "SELECT COUNT(*) FROM Posts p " +
             "WHERE p.isActive = 1 " +
             "AND p.moderationStatus = 'ACCEPTED' " +
@@ -65,17 +65,17 @@ public interface PostRepository extends JpaRepository<Posts,Integer> {
 
     @Query(value = "SELECT * FROM posts WHERE is_active = 0 AND user_id = :id AND time <= NOW() ORDER BY posts.time DESC",
             nativeQuery = true)
-    Page<Posts> findMyInActivePosts(Pageable pageable,@Param("id") Integer id);
+    Page<Posts> findMyInActivePosts(Pageable pageable, @Param("id") Integer id);
 
     @Query(value = "SELECT * FROM posts WHERE is_active = 1 " +
             "AND moderation_status = 'NEW' AND user_id = :id AND time <= NOW() ORDER BY posts.time DESC",
             nativeQuery = true)
-    Page<Posts> findMyPendingPosts(Pageable pageable,@Param("id") Integer id);
+    Page<Posts> findMyPendingPosts(Pageable pageable, @Param("id") Integer id);
 
     @Query(value = "SELECT * FROM posts WHERE is_active = 1 " +
             "AND moderation_status = 'DECLINED' AND user_id = :id AND time <= NOW() ORDER BY posts.time DESC",
             nativeQuery = true)
-    Page<Posts> findMyDeclinedPosts(Pageable pageable,@Param("id") Integer id);
+    Page<Posts> findMyDeclinedPosts(Pageable pageable, @Param("id") Integer id);
 
     @Query(value = "SELECT * FROM posts WHERE is_active = 1 " +
             "AND moderation_status = 'ACCEPTED' AND user_id = :id AND time <= NOW() ORDER BY posts.time DESC",
@@ -101,9 +101,9 @@ public interface PostRepository extends JpaRepository<Posts,Integer> {
             nativeQuery = true)
     Posts findPostById(@Param("id") Integer id);
 
-    @Query(value = "SELECT * FROM posts WHERE posts.time <= NOW() AND AND moderation_status = 'ACCEPTED' AND DATE_FORMAT(posts.time, '%Y-%m-%d') = :date AND posts.title = :title",nativeQuery = true)
-    Posts findByDateTitle(@Param("date") Date timestamp,@Param("title") String title);
+    @Query(value = "SELECT * FROM posts WHERE posts.time <= NOW() AND AND moderation_status = 'ACCEPTED' AND DATE_FORMAT(posts.time, '%Y-%m-%d') = :date AND posts.title = :title", nativeQuery = true)
+    Posts findByDateTitle(@Param("date") Date timestamp, @Param("title") String title);
 
-    @Query(value = "SELECT * FROM posts WHERE user_id = :user_id",nativeQuery = true)
+    @Query(value = "SELECT * FROM posts WHERE user_id = :user_id", nativeQuery = true)
     List<Posts> findMyPosts(@Param("user_id") int id);
 }

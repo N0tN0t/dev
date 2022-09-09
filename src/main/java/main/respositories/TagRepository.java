@@ -10,8 +10,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TagRepository extends JpaRepository<Tags,Integer> {
+public interface TagRepository extends JpaRepository<Tags, Integer> {
     @Query(value = "SELECT * FROM tags WHERE tags.name = :tag ",
             nativeQuery = true)
-    Tags findTagByName( @Param("tag") String tag);
+    Tags findTagByName(@Param("tag") String tag);
 }
