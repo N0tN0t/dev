@@ -53,7 +53,6 @@ public class UserService {
     public RegResponse register(RegRequest regRequest) throws IOException {
         GlobalSettings multiuserMode = settingsRepository.findBySettingsCode("MULTIUSER_MODE");
         RegResponse response = new RegResponse();
-        ArrayList list = new ArrayList();
         Map<String, String> errors = null;
         Users users = new Users();
         CaptchaResponse captchaResponse = captchaService.getCaptcha();

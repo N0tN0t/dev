@@ -33,26 +33,22 @@ import java.util.stream.Collectors;
 @Service
 public class PostService {
     private PostRepository postRepository;
-    private PostCommentsRepository postCommentsRepository;
     private TagRepository tagRepository;
     private PostMappingUtils mappingUtils;
     private UserMappingUtils userMappingUtils;
     private CommentMappingUtils commentMappingUtils;
     private UserService userService;
-    private AuthCheckService checkService;
     private UserRepository userRepository;
     private PostVotesRepository postVotesRepository;
     private SettingsRepository settingsRepository;
 
-    public PostService(SettingsRepository settingsRepository, PostVotesRepository postVotesRepository, UserRepository userRepository, CommentMappingUtils commentMappingUtils, UserMappingUtils userMappingUtils, AuthCheckService checkService, PostRepository postRepository, PostCommentsRepository postCommentsRepository, TagRepository tagRepository, PostMappingUtils mappingUtils, UserService userService) {
+    public PostService(SettingsRepository settingsRepository, PostVotesRepository postVotesRepository, UserRepository userRepository, CommentMappingUtils commentMappingUtils, UserMappingUtils userMappingUtils, PostRepository postRepository, TagRepository tagRepository, PostMappingUtils mappingUtils, UserService userService) {
         this.postRepository = postRepository;
-        this.postCommentsRepository = postCommentsRepository;
         this.tagRepository = tagRepository;
         this.mappingUtils = mappingUtils;
         this.userService = userService;
         this.userMappingUtils = userMappingUtils;
         this.commentMappingUtils = commentMappingUtils;
-        this.checkService = checkService;
         this.userRepository = userRepository;
         this.postVotesRepository = postVotesRepository;
         this.settingsRepository = settingsRepository;

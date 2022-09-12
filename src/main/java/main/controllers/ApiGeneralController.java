@@ -9,13 +9,16 @@ import main.service.GeneralService;
 import main.service.PostService;
 import main.service.SettingsService;
 import main.service.TagService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 
 
@@ -93,8 +96,22 @@ public class ApiGeneralController {
         return ResponseEntity.ok(generalService.myStatistics());
     }
     @GetMapping("/statistics/all")
-    public ResponseEntity<StatisticsResponse> allStatistics() {
+    public ResponseEntity<StatisticsResponse> allStatistics(Principal principal) {
+        if (!isStatisticsShown(principal)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
         return ResponseEntity.ok(generalService.allStatistics());
+    }
+
+    public boolean isStatisticsShown(Principal principal) {
+        SettingsResponse settings = settingsService.getGlobalSettings();
+        if (!settings.isStatisticIsPublic()) {
+            if (principal != null) {
+                return generalService.getAuth().getIsModerator() == 1;
+            }
+            return false;
+        }
+        return true;
     }
 
     @PostMapping("/moderation")

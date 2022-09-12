@@ -42,6 +42,10 @@ public class GeneralService {
         this.settingsRepository = settingsRepository;
     }
 
+    public Users getAuth(){
+        return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get();
+    }
+
     public ResultsResponse postImage(MultipartFile image) {
         ResultsResponse response = new ResultsResponse();
         int randomHash = new Random().toString().hashCode();
@@ -178,15 +182,9 @@ public class GeneralService {
     }
 
     public StatisticsResponse allStatistics() {
-        GlobalSettings settings = settingsRepository.findBySettingsCode("STATISTICS_IS_PUBLIC");
         StatisticsResponse statisticsResponse = new StatisticsResponse();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.isAuthenticated()) {
-            if (settings.getValue() == "NO") {
-                if (userRepository.findByEmail(auth.getName()).get().getIsModerator() == 0) {
-                    return HttpStatus.UNAUTHORIZED;
-                }
-            }
             Date firstPublication = Date.from(Instant.now());
             int postCount = 0;
             int likesCount = 0;

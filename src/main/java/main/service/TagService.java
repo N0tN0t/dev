@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class TagService {
-    private TagRepository tagRepository;
     private PostRepository postRepository;
 
     public TagListResponse getTags(String query) {
