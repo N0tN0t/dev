@@ -274,6 +274,7 @@ public class GeneralService {
             if (userRepository.findByEmail(auth.getName()).get().getIsModerator() == 1) {
                 Posts post = postRepository.findPostById(moderationRequest.getPostId());
                 post.setModerationStatus(moderationRequest.getDecision());
+                postRepository.save(post);
                 response.setResult(true);
             } else {
                 response.setResult(false);
