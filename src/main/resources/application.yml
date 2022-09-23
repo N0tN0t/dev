@@ -5,7 +5,8 @@ db:
   schema: public
 
 spring.datasource:
-  url: jdbc:postgresql://localhost:5432/${db.dataBase}?currentSchema=${db.schema}
+  #url: jdbc:postgresql://localhost:5432/${db.dataBase}?currentSchema=${db.schema}
+  url: jdbc:${DATABASE_URL:postgresql://localhost:5432/${db.dataBase}?currentSchema=${db.schema}}
   username: ${db.user}
   password: ${db.password}
   driver-class-name: org.postgresql.Driver

@@ -85,6 +85,9 @@
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="15" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <envs>
+        <env name="DATABASE_URL" value="postgres://abpvleujrghwbd:efb6b1461b65c2dbcf2a31830cd27757beb730806ba045305fdc09f12af41859@ec2-52-207-90-231.compute-1.amazonaws.com:5432/d6j4entq7a1a01" />
+      </envs>
       <option name="MAIN_CLASS_NAME" value="main.Main" />
       <module name="ThesisProject" />
       <extension name="coverage">
