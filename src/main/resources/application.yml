@@ -1,12 +1,12 @@
 db:
   dataBase: my_blog
-  user: postgres
+  user: root
   password: testtest
   schema: public
 
 spring.datasource:
   #url: jdbc:postgresql://localhost:5432/${db.dataBase}?currentSchema=${db.schema}
-  url: jdbc:${DATABASE_URL:postgresql://localhost:5432/${db.dataBase}?currentSchema=${db.schema}}
+  url: jdbc:postgresql://ec2-52-207-90-231.compute-1.amazonaws.com:5432/d6j4entq7a1a01?sslmode=require
   username: ${db.user}
   password: ${db.password}
   driver-class-name: org.postgresql.Driver
