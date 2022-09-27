@@ -1,7 +1,7 @@
 db:
   dataBase: my_blog
-  user: root
-  password: testtest
+  user: abpvleujrghwbd
+  password: efb6b1461b65c2dbcf2a31830cd27757beb730806ba045305fdc09f12af41859
   schema: public
 
 spring.datasource:
