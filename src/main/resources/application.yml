@@ -35,7 +35,7 @@ spring:
     baseline-on-migrate: true
     open-in-view: false
 server:
-    port: 8090
+    port: ${PORT:8080}
 
 blog:
   title: DevPub
