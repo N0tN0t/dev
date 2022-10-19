@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,7 +50,7 @@ public class UserService {
     public RegResponse register(RegRequest regRequest) throws IOException {
         GlobalSettings multiuserMode = settingsRepository.findBySettingsCode("MULTIUSER_MODE");
         RegResponse response = new RegResponse();
-        Map<String, String> errors = null;
+        Map<String, String> errors = new HashMap<>();
         Users users = new Users();
         CaptchaResponse captchaResponse = captchaService.getCaptcha();
         if (multiuserMode.getValue() == "NO") {
