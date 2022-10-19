@@ -4,6 +4,7 @@ import main.dto.PostDTO;
 import main.entities.PostVotes;
 import main.entities.Posts;
 import main.entities.Users;
+import main.respositories.PostCommentsRepository;
 import main.respositories.PostVotesRepository;
 import main.respositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -15,11 +16,13 @@ public class PostMappingUtils {
     UserRepository userRepository;
     UserMappingUtils userMappingUtils;
     PostVotesRepository postVotesRepository;
+    PostCommentsRepository postCommentsRepository;
 
-    public PostMappingUtils(PostVotesRepository postVotesRepository, UserRepository userRepository, UserMappingUtils userMappingUtils) {
+    public PostMappingUtils(PostCommentsRepository postCommentsRepository,PostVotesRepository postVotesRepository, UserRepository userRepository, UserMappingUtils userMappingUtils) {
         this.userRepository = userRepository;
         this.userMappingUtils = userMappingUtils;
         this.postVotesRepository = postVotesRepository;
+        this.postCommentsRepository = postCommentsRepository;
     }
 
     public PostDTO mapToPostDto(Posts entity) {
@@ -39,6 +42,7 @@ public class PostMappingUtils {
                 dislikes += 1;
             }
         }
+        dto.setCommentCount(entity.getPostComments().size());
         dto.setLikeCount(likes);
         dto.setDislikeCount(dislikes);
         return dto;
@@ -52,6 +56,7 @@ public class PostMappingUtils {
         entity.setUsers(userMappingUtils.mapToPostEntity(dto.getUser()));
         entity.setTime(new Date(dto.getTimestamp()));
         entity.setViewCount(dto.getViewCount());
+        entity.setPostComments(postCommentsRepository.findPostById(dto.getId()));
         return entity;
     }
 }
