@@ -23,6 +23,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="17eff610-92e2-41a5-a508-e7950cf0fbba" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/main/respositories/Tag2PostRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/main/mappings/PostMappingUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/mappings/PostMappingUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -34,8 +35,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>

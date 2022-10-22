@@ -4,9 +4,7 @@ import main.dto.PostDTO;
 import main.entities.PostVotes;
 import main.entities.Posts;
 import main.entities.Users;
-import main.respositories.PostCommentsRepository;
-import main.respositories.PostVotesRepository;
-import main.respositories.UserRepository;
+import main.respositories.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -17,12 +15,14 @@ public class PostMappingUtils {
     UserMappingUtils userMappingUtils;
     PostVotesRepository postVotesRepository;
     PostCommentsRepository postCommentsRepository;
+    PostRepository postRepository;
 
-    public PostMappingUtils(PostCommentsRepository postCommentsRepository, PostVotesRepository postVotesRepository, UserRepository userRepository, UserMappingUtils userMappingUtils) {
+    public PostMappingUtils(PostRepository postRepository,PostCommentsRepository postCommentsRepository, PostVotesRepository postVotesRepository, UserRepository userRepository, UserMappingUtils userMappingUtils) {
         this.userRepository = userRepository;
         this.userMappingUtils = userMappingUtils;
         this.postVotesRepository = postVotesRepository;
         this.postCommentsRepository = postCommentsRepository;
+        this.postRepository = postRepository;
     }
 
     public PostDTO mapToPostDto(Posts entity) {
@@ -59,6 +59,7 @@ public class PostMappingUtils {
         entity.setTime(new Date(dto.getTimestamp()));
         entity.setViewCount(dto.getViewCount());
         entity.setPostComments(postCommentsRepository.findPostById(dto.getId()));
+        entity.setTags(postRepository.findPostById(dto.getId()).getTags());
         return entity;
     }
 }
