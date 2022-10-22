@@ -35,7 +35,7 @@ public class PostMappingUtils {
         dto.setViewCount(entity.getViewCount());
         int likes = 0;
         int dislikes = 0;
-        for (PostVotes postVote : postVotesRepository.findAll()) {
+        for (PostVotes postVote : postVotesRepository.findByPostIdAndUserId(entity.getId(),entity.getUsers().getId()).getPost().getPostVotes()) {
             if (postVote.getValue() == 1) {
                 likes += 1;
             } else {
