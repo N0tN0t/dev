@@ -22,7 +22,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="17eff610-92e2-41a5-a508-e7950cf0fbba" name="Default Changelist" comment="" />
+    <list default="true" id="17eff610-92e2-41a5-a508-e7950cf0fbba" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/mappings/PostMappingUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/mappings/PostMappingUtils.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
