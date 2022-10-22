@@ -24,8 +24,8 @@ public class TagService {
         if (postRepository.count() > 0) {
             int count = postRepository.countAllActiveAndAccepted().orElse(0);
             Map<String, Double> tagWeightsNoNormalize = null;
-            for (int i = 0; i < postRepository.count(); i++) {
-                Posts post = postRepository.getOne(i);
+            for (Posts posts:postRepository.findAll()) {
+                Posts post = postRepository.getOne(posts.getId());
                 if (post.getId() != 0) {
                     for (int ii = 0; ii < post.getTags().size(); ii++) {
                         if (post.getIsActive() == 1) {
