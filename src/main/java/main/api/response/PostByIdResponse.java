@@ -6,12 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import main.dto.CommentDTO;
 import main.dto.UserDTO;
-import main.entities.PostComments;
-import main.entities.Tags;
-import main.entities.Users;
-import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter

@@ -18,7 +18,7 @@ public class PostMappingUtils {
     PostVotesRepository postVotesRepository;
     PostCommentsRepository postCommentsRepository;
 
-    public PostMappingUtils(PostCommentsRepository postCommentsRepository,PostVotesRepository postVotesRepository, UserRepository userRepository, UserMappingUtils userMappingUtils) {
+    public PostMappingUtils(PostCommentsRepository postCommentsRepository, PostVotesRepository postVotesRepository, UserRepository userRepository, UserMappingUtils userMappingUtils) {
         this.userRepository = userRepository;
         this.userMappingUtils = userMappingUtils;
         this.postVotesRepository = postVotesRepository;

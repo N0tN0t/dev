@@ -6,10 +6,10 @@ import lombok.Setter;
 import org.springframework.context.annotation.PropertySource;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @PropertySource("classpath:my_blog.global_settings")
 public class GlobalSettings {
     @Id

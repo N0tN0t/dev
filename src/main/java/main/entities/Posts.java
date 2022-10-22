@@ -5,14 +5,14 @@ import lombok.Setter;
 import org.springframework.context.annotation.PropertySource;
 
 import javax.persistence.*;
-
 import java.util.Date;
 import java.util.List;
 
 import static java.time.Instant.now;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @PropertySource("classpath:my_blog.posts")
 public class Posts {
     @Id

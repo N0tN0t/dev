@@ -1,7 +1,6 @@
 package main.service;
 
 import lombok.AllArgsConstructor;
-import org.codehaus.plexus.component.annotations.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

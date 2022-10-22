@@ -53,7 +53,7 @@ public class UserService {
         Map<String, String> errors = new HashMap<>();
         Users users = new Users();
         CaptchaResponse captchaResponse = captchaService.getCaptcha();
-        if (multiuserMode.getValue() == "NO") {
+        if (multiuserMode.getValue().equals("NO")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Multiuser mode disabled");
         }
         if (regRequest.getEmail().contains("@") && regRequest.getEmail().contains(".")) {
@@ -81,7 +81,7 @@ public class UserService {
         if (regRequest.getPassword().length() <= 6) {
             errors.put("password", "Пароль короче 6-ти символов");
         }
-        if (captchaService.findCaptcha(regRequest.getCaptchaSecret()) == null) {
+        if (captchaService.findCaptcha(regRequest.getCaptchaSecret()).equals(null)) {
             errors.put("captcha", "Код с картинки введён неверно");
         }
         if (errors.isEmpty()) {

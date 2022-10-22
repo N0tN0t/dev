@@ -6,22 +6,21 @@ import main.api.response.ResultsResponse;
 import main.requests.PostRequest;
 import main.requests.PostVoteRequest;
 import main.service.PostService;
-import main.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
 
 @RestController
 @RequestMapping("/api")
 public class ApiPostController {
     private PostService postService;
+
     public ApiPostController(PostService postService) {
         this.postService = postService;
     }
+
     @GetMapping("/post")
     public ResponseEntity<PostListResponse> posts(
             @RequestParam(defaultValue = "0") int offset,
@@ -29,6 +28,7 @@ public class ApiPostController {
             @RequestParam(defaultValue = "recent") String mode) {
         return ResponseEntity.ok(postService.getPosts(offset, limit, mode));
     }
+
     @GetMapping("/post/search")
     public ResponseEntity<PostListResponse> postsWithQuery(
             @RequestParam(defaultValue = "0") int offset,
@@ -52,20 +52,24 @@ public class ApiPostController {
             @RequestParam String tag) {
         return ResponseEntity.ok(postService.findPostsByTag(offset, limit, tag));
     }
+
     @GetMapping("post/{id}")
     public ResponseEntity<PostByIdResponse> getById(@PathVariable int id) {
         return ResponseEntity.ok(postService.findPostsById(id));
     }
+
     @PreAuthorize("hasAuthority('user:write')")
     @PostMapping("/post")
     public ResponseEntity<ResultsResponse> postPost(@RequestBody PostRequest postRequest) {
         return ResponseEntity.ok(postService.postPost(postRequest));
     }
+
     @PreAuthorize("hasAuthority('user:write')")
     @PutMapping("/post/{ID}")
     public ResponseEntity<ResultsResponse> editPost(@RequestBody PostRequest postRequest) {
         return ResponseEntity.ok(postService.editPost(postRequest));
     }
+
     @PreAuthorize("hasAuthority('user:read')")
     @GetMapping("/post/moderation")
     public ResponseEntity<PostListResponse> postsWithStatus(
@@ -74,6 +78,7 @@ public class ApiPostController {
             @RequestParam(defaultValue = "new") String status) {
         return ResponseEntity.ok(postService.getPostsWithStatus(offset, limit, status));
     }
+
     @PreAuthorize("hasAuthority('user:read')")
     @GetMapping("/post/my")
     public ResponseEntity<PostListResponse> myPosts(
@@ -82,11 +87,13 @@ public class ApiPostController {
             @RequestParam(defaultValue = "published") String status) {
         return ResponseEntity.ok(postService.getMyPosts(offset, limit, status));
     }
+
     @PreAuthorize("hasAuthority('user:write')")
     @PostMapping("/post/like")
     public ResponseEntity<ResultsResponse> like(@RequestBody PostVoteRequest postVoteRequest) {
         return ResponseEntity.ok(postService.likePost(postVoteRequest));
     }
+
     @PreAuthorize("hasAuthority('user:write')")
     @PostMapping("/post/dislike")
     public ResponseEntity<ResultsResponse> dislike(@RequestBody PostVoteRequest postVoteRequest) {

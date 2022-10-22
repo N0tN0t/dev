@@ -13,13 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
 
 
 @RestController
@@ -48,11 +46,13 @@ public class ApiGeneralController {
     public InitResponse init() {
         return initResponse;
     }
+
     @PreAuthorize("hasAuthority('user:read')")
     @GetMapping("/settings")
     public ResponseEntity<SettingsResponse> settings() {
         return ResponseEntity.ok().body(settingsService.getGlobalSettings());
     }
+
     @PreAuthorize("hasAuthority('user:write')")
     @PutMapping("/settings")
     public ResponseEntity<SettingsResponse> putSettings(@RequestBody SettingsRequest settingsRequest) {
@@ -63,11 +63,13 @@ public class ApiGeneralController {
     public ResponseEntity<TagListResponse> tags(@RequestParam(required = false) String query) {
         return ResponseEntity.ok(tagService.getTags(query));
     }
+
     @PreAuthorize("hasAuthority('user:write')")
     @PostMapping("/image")
     public ResponseEntity<?> image(MultipartFile image) {
         return ResponseEntity.ok(generalService.postImage(image));
     }
+
     @PreAuthorize("hasAuthority('user:write')")
     @PostMapping("/comment")
     public ResponseEntity<?> comment(@RequestBody CommentRequest commentRequest) {
@@ -90,11 +92,13 @@ public class ApiGeneralController {
     public ResponseEntity<ResultsResponse> editProfile(@RequestBody ProfileRequest profileRequest) {
         return ResponseEntity.ok(generalService.editMyProfile(profileRequest));
     }
+
     @PreAuthorize("hasAuthority('user:read')")
     @GetMapping("/statistics/my")
     public ResponseEntity<StatisticsResponse> myStatistics() {
         return ResponseEntity.ok(generalService.myStatistics());
     }
+
     @GetMapping("/statistics/all")
     public ResponseEntity<StatisticsResponse> allStatistics(Principal principal) {
         if (!isStatisticsShown(principal)) {

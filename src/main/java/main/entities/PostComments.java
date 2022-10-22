@@ -5,12 +5,12 @@ import lombok.Setter;
 import org.springframework.context.annotation.PropertySource;
 
 import javax.persistence.*;
-
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @PropertySource("classpath:my_blog.post_comments")
 public class PostComments {
     @Id

@@ -3,9 +3,6 @@ package main.api.response;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
-import java.util.Date;
-
 @Getter
 @Setter
 public class StatisticsResponse {

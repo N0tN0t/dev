@@ -1,9 +1,7 @@
 package main.mappings;
 
 import main.dto.CommentDTO;
-import main.dto.PostDTO;
 import main.entities.PostComments;
-import main.entities.Posts;
 import main.entities.Users;
 import main.respositories.UserRepository;
 import org.springframework.stereotype.Service;

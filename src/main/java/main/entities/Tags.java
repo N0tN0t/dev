@@ -5,12 +5,11 @@ import lombok.Setter;
 import org.springframework.context.annotation.PropertySource;
 
 import javax.persistence.*;
-
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @PropertySource("classpath:my_blog.tags")
 public class Tags {
     @Id

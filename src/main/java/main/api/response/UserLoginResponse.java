@@ -1,7 +1,6 @@
 package main.api.response;
 
 import lombok.Data;
-import org.springframework.stereotype.Service;
 
 @Data
 public class UserLoginResponse {

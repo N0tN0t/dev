@@ -4,7 +4,6 @@ import main.api.response.RegResponse;
 import main.api.response.ResultsResponse;
 import main.api.response.StatisticsResponse;
 import main.dto.PostDTO;
-import main.entities.GlobalSettings;
 import main.entities.PostComments;
 import main.entities.Posts;
 import main.entities.Users;
@@ -16,7 +15,6 @@ import main.respositories.PostCommentsRepository;
 import main.respositories.PostRepository;
 import main.respositories.SettingsRepository;
 import main.respositories.UserRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -24,7 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.time.Instant;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 @Service
 public class GeneralService {
@@ -42,7 +43,7 @@ public class GeneralService {
         this.settingsRepository = settingsRepository;
     }
 
-    public Users getAuth(){
+    public Users getAuth() {
         return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).get();
     }
 
@@ -152,6 +153,14 @@ public class GeneralService {
         return response;
     }
 
+    public void SetResponse(StatisticsResponse statisticsResponse,int postCount,int likesCount,int dislikesCount,int viewsCount,Date firstPublication) {
+        statisticsResponse.setViewsCount(viewsCount);
+        statisticsResponse.setDislikesCount(dislikesCount);
+        statisticsResponse.setLikesCount(likesCount);
+        statisticsResponse.setPostsCount(postCount);
+        statisticsResponse.setFirstPublication(firstPublication.getTime() / 1000);
+    }
+
     public StatisticsResponse myStatistics() {
         StatisticsResponse statisticsResponse = new StatisticsResponse();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -172,11 +181,7 @@ public class GeneralService {
                     firstPublication = post.getTime();
                 }
             }
-            statisticsResponse.setViewsCount(viewsCount);
-            statisticsResponse.setDislikesCount(dislikesCount);
-            statisticsResponse.setLikesCount(likesCount);
-            statisticsResponse.setPostsCount(postCount);
-            statisticsResponse.setFirstPublication(firstPublication.getTime() / 1000);
+            SetResponse(statisticsResponse,postCount,likesCount,dislikesCount,viewsCount,firstPublication);
         }
         return statisticsResponse;
     }
@@ -203,11 +208,7 @@ public class GeneralService {
                     }
                 }
             }
-            statisticsResponse.setViewsCount(viewsCount);
-            statisticsResponse.setDislikesCount(dislikesCount);
-            statisticsResponse.setLikesCount(likesCount);
-            statisticsResponse.setPostsCount(postCount);
-            statisticsResponse.setFirstPublication(firstPublication.getTime() / 1000);
+            SetResponse(statisticsResponse,postCount,likesCount,dislikesCount,viewsCount,firstPublication);
         }
         return statisticsResponse;
     }

@@ -5,11 +5,11 @@ import lombok.Setter;
 import org.springframework.context.annotation.PropertySource;
 
 import javax.persistence.*;
-
 import java.util.Date;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @PropertySource("classpath:my_blog.post_votes")
 public class PostVotes {
     @Id

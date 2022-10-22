@@ -2,16 +2,14 @@ package main.entities;
 
 import lombok.Getter;
 import lombok.Setter;
-import main.dto.UserDTO;
 import org.springframework.context.annotation.PropertySource;
 
 import javax.persistence.*;
-
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @PropertySource("classpath:my_blog.users")
 public class Users {
     @Id
@@ -32,7 +30,8 @@ public class Users {
     private String code;
     @Column(columnDefinition = "TEXT", nullable = false)
     private String photo;
-    public Role getRole(){
+
+    public Role getRole() {
         return isModerator == 1 ? Role.MODERATOR : Role.USER;
     }
 }

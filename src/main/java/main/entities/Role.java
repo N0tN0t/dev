@@ -7,12 +7,14 @@ import java.util.stream.Collectors;
 
 public enum Role {
     USER(Set.of(Permission.USER)),
-    MODERATOR(Set.of(Permission.USER,Permission.MODERATE));
+    MODERATOR(Set.of(Permission.USER, Permission.MODERATE));
 
     private final Set<Permission> permissions;
+
     Role(Set<Permission> permissions) {
         this.permissions = permissions;
     }
+
     public Set<Permission> getPermissions() {
         return permissions;
     }

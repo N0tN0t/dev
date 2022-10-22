@@ -1,7 +1,5 @@
 package main.entities;
 
-import java.util.Set;
-
 public enum Permission {
     USER("user:write"),
     MODERATE("user:moderate");

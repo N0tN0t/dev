@@ -1,7 +1,10 @@
 package main.controllers;
 
 import main.api.response.*;
-import main.requests.*;
+import main.requests.EmailRequest;
+import main.requests.LoginRequest;
+import main.requests.PasswordRequest;
+import main.requests.RegRequest;
 import main.service.AuthCheckService;
 import main.service.CaptchaService;
 import main.service.UserService;
@@ -19,11 +22,12 @@ public class ApiAuthController {
     private CaptchaService captchaService;
     private AuthCheckService authCheckService;
 
-    public ApiAuthController(CaptchaService captchaService,AuthCheckService authCheckService, UserService userService) {
+    public ApiAuthController(CaptchaService captchaService, AuthCheckService authCheckService, UserService userService) {
         this.captchaService = captchaService;
         this.authCheckService = authCheckService;
         this.userService = userService;
     }
+
     @GetMapping("/check")
     public ResponseEntity<LoginResponse> check(Principal principal) {
         if (principal == null) {
@@ -41,15 +45,18 @@ public class ApiAuthController {
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(authCheckService.getLogin(loginRequest));
     }
+
     @PreAuthorize("hasAuthority('user:write')")
     @GetMapping("/logout")
     public ResponseEntity<ResultResponse> logout() {
         return ResponseEntity.ok(authCheckService.getLogoutResponse());
     }
+
     @GetMapping("/captcha")
     public ResponseEntity<CaptchaResponse> captcha() throws IOException {
         return ResponseEntity.ok(captchaService.getCaptcha());
     }
+
     @PostMapping("/password")
     public ResponseEntity<ResultsResponse> changePassword(@RequestBody PasswordRequest passwordRequest) throws IOException {
         return ResponseEntity.ok(captchaService.changePassword(passwordRequest));

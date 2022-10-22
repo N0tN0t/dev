@@ -2,9 +2,6 @@ package main.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import main.entities.Users;
-
-import java.util.Date;
 
 @Data
 public class PostDTO {
