@@ -7,7 +7,7 @@
 spring.datasource:
   #url: jdbc:${CLEARDB_DATABASE_URL:postgresql://ec2-52-207-90-231.compute-1.amazonaws.com:5432/d6j4entq7a1a01?sslmode=require}
   #url: jdbc:postgresql://localhost:5432/${db.dataBase}?currentSchema=${db.schema}
-  url: jdbc:postgresql://localhost:5432/my_blog?currentSchema=$my_blog
+  url: jdbc:postgresql://localhost:5432/my_blog
   username: postgres
   password: testtest
   driver-class-name: org.postgresql.Driver
