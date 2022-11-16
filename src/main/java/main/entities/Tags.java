@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@PropertySource("classpath:my_blog.tags")
+@Table(name = "tags", schema = "my_blog")
 public class Tags {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

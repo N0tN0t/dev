@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@PropertySource("classpath:my_blog.global_settings")
+@Table(name = "global_settings", schema = "my_blog")
 public class GlobalSettings {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -10,7 +10,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@PropertySource("classpath:my_blog.users")
+@Table(name = "users", schema = "my_blog")
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

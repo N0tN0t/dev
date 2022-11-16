@@ -10,8 +10,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Table(name = "captcha_code")
-@PropertySource("classpath:my_blog.captcha_codes")
+@Table(name = "captcha_code", schema = "my_blog")
 public class CaptchaCodes {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
