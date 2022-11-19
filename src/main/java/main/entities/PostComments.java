@@ -11,7 +11,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Table(name = "post_comments", schema = "my_blog")
+@Table(name = "post_comments")
 public class PostComments {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "tags", schema = "my_blog")
+@Table(name = "tags")
 public class Tags {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

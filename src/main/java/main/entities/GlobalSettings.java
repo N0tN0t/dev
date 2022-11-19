@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Table(name = "global_settings", schema = "my_blog")
+@Table(name = "global_settings")
 public class GlobalSettings {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

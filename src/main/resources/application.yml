@@ -27,7 +27,7 @@ spring:
   jpa:
     database: POSTGRESQL
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
-    hibernate.ddl-auto: validate
+    hibernate.ddl-auto: create
   flyway:
     user: postgres
     password: testtest

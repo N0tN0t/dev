@@ -13,7 +13,7 @@ import static java.time.Instant.now;
 @Entity
 @Getter
 @Setter
-@Table(name = "posts", schema = "my_blog")
+@Table(name = "posts")
 public class Posts {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
